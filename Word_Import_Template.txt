@@ -1,0 +1,85 @@
+Word Upload Template - Question Paper Format
+=============================================
+Copy and paste the formats below into your Microsoft Word document.
+Keep ONE BLANK LINE between each question.
+
+TYPE NAMES YOU CAN USE:
+  mcq          -> Multiple Choice Question
+  fill         -> Fill in the Blank / One Word Answer / Short Answer
+  jumbled      -> Scrambled Word or Sentence
+  match        -> Match the Following
+  truefalse    -> True or False
+
+---
+
+1. Multiple Choice (MCQ)
+
+Question: How many generations can computer languages be classified into?
+Type: mcq
+Marks: 1
+Options:
+A) Two
+B) Four
+C) Five
+D) Six
+Answer: C
+
+---
+
+2. Fill in the Blank / One Word Answer
+
+Question: The brain of the computer is called the ______.
+Type: fill
+Marks: 1
+Answer: CPU
+
+---
+
+3. True / False
+
+Question: The Internet was invented by Tim Berners-Lee.
+Type: truefalse
+Marks: 1
+Answer: true
+
+---
+
+4. Jumbled Word
+(System automatically scrambles the letters and shows them as tiles)
+
+Question: Unscramble the letters to form a device name.
+Type: jumbled
+Marks: 2
+Answer: computer
+
+---
+
+5. Jumbled Sentence
+(System automatically shuffles the words as tiles)
+
+Question: Rearrange the words to form a correct sentence.
+Type: jumbled
+Marks: 2
+Answer: The dog sat on the mat
+
+---
+
+6. Match the Following
+(Write Left : Right pairs, one per line)
+
+Question: Match the following countries with their capitals.
+Type: match
+Marks: 3
+Answer:
+India : New Delhi
+France : Paris
+Japan : Tokyo
+
+---
+
+QUICK TIPS:
+* Always include: Question:, Type:, Marks:, Answer:
+* For MCQ, also include Options: with A), B), C), D) on separate lines
+* For Match, write each pair on its own line using colon (:) between them
+* For Jumbled, just write the correct answer - the app scrambles it automatically
+* For True/False, write:  Answer: true  OR  Answer: false

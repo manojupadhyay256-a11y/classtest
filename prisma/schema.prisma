@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Student {
+  admno      String   @id
+  name       String
+  class      String
+  section    String
+  password   String
+  createdAt  DateTime @default(now())
+  results    Result[]
+}
+
+model Teacher {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  tests     Test[]
+}
+
+model Test {
+  id          String     @id @default(cuid())
+  title       String
+  subject     String
+  class       String
+  section     String
+  duration    Int        // in minutes
+  startTime   DateTime?
+  endTime     DateTime?
+  isActive    Boolean    @default(false)
+  createdBy   String
+  teacher     Teacher    @relation(fields: [createdBy], references: [id])
+  questions   Question[]
+  results     Result[]
+  createdAt   DateTime   @default(now())
+}
+
+model Question {
+  id             String   @id @default(cuid())
+  testId         String
+  test           Test     @relation(fields: [testId], references: [id])
+  questionText   String
+  questionType   String   // "mcq" | "fill" | "truefalse" | "jumbled" | "match" | "short"
+  options        Json?    // for MCQ, match pairs, etc.
+  correctAnswer  String
+  marks          Int      @default(1)
+  order          Int
+}
+
+model Result {
+  id           String   @id @default(cuid())
+  admno        String
+  testId       String
+  student      Student  @relation(fields: [admno], references: [admno])
+  test         Test     @relation(fields: [testId], references: [id])
+  answers      Json     // { questionId: studentAnswer }
+  score        Int
+  totalMarks   Int
+  timeTaken    Int      // in seconds
+  submittedAt  DateTime @default(now())
+}

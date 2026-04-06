@@ -1,3 +1,6 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { redirect } from "next/navigation"
 import Card from "@/components/ui/card"
 import prisma from "@/lib/prisma"
 import Link from "next/link"
@@ -6,9 +9,20 @@ import TestStatusToggle from "@/components/admin/test-status-toggle"
 export const dynamic = "force-dynamic"
 
 export default async function TestsListPage() {
+  const session = await getServerSession(authOptions)
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {
+    redirect("/login")
+  }
+
+  const isAdmin = session.user.role === "ADMIN"
+
   const tests = await prisma.test.findMany({
+    where: isAdmin ? {} : { createdBy: session.user.id },
     orderBy: { createdAt: "desc" },
-    include: { _count: { select: { questions: true, results: true } } }
+    include: { 
+      _count: { select: { questions: true, results: true } },
+      teacher: { select: { name: true } }
+    }
   })
 
   return (

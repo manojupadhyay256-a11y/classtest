@@ -97,19 +97,19 @@ export default function StudentsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <header className="flex justify-between items-end mb-10">
+    <div className="space-y-5">
+      <header className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Manage Students</h1>
-          <p className="text-gray-500">Add, delete or bulk upload students via Excel</p>
+          <h1 className="text-xl font-black text-slate-900 tracking-tight">Manage Students</h1>
+          <p className="text-slate-400 text-sm">Add, delete or bulk upload students via Excel</p>
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-3 items-center">
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Filter Class</span>
+            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-1">Filter Class</span>
             <select 
               value={filterClass}
               onChange={(e) => setFilterClass(e.target.value)}
-              className="bg-white border-2 border-gray-100 text-gray-900 font-bold px-4 py-2 rounded-lg focus:outline-none focus:border-teal-500 transition-all cursor-pointer shadow-sm min-w-[150px]"
+              className="bg-white border-2 border-slate-100 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-teal-500 transition-all cursor-pointer shadow-sm min-w-[130px]"
             >
               <option value="all">All Classes</option>
               {uniqueClasses.map(c => (
@@ -117,7 +117,7 @@ export default function StudentsPage() {
               ))}
             </select>
           </div>
-          <label className="cursor-pointer bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 mt-4 rounded-lg font-medium transition-colors h-[44px] flex items-center">
+          <label className="cursor-pointer bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 mt-5 rounded-lg font-medium transition-colors text-sm flex items-center h-[36px]">
             {isUploading ? "Uploading..." : "Bulk Upload Excel"}
             <input
               type="file"
@@ -134,30 +134,30 @@ export default function StudentsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b text-gray-500 uppercase text-xs">
-                <th className="py-3 px-4">Adm No</th>
-                <th className="py-3 px-4">Name</th>
-                <th className="py-3 px-4">Class</th>
-                <th className="py-3 px-4">Section</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+              <tr className="border-b text-slate-400 uppercase text-[10px] tracking-wider">
+                <th className="py-2.5 px-3">Adm No</th>
+                <th className="py-2.5 px-3">Name</th>
+                <th className="py-2.5 px-3">Class</th>
+                <th className="py-2.5 px-3">Section</th>
+                <th className="py-2.5 px-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-slate-50">
               {isLoading ? (
-                <tr><td colSpan={5} className="py-10 text-center text-gray-400">Loading...</td></tr>
+                <tr><td colSpan={5} className="py-10 text-center text-slate-400 text-sm">Loading...</td></tr>
               ) : filteredStudents.length === 0 ? (
-                <tr><td colSpan={5} className="py-10 text-center text-gray-400">No students found. Upload Excel to begin.</td></tr>
+                <tr><td colSpan={5} className="py-10 text-center text-slate-400 text-sm">No students found. Upload Excel to begin.</td></tr>
               ) : (
                 filteredStudents.map((student) => (
-                  <tr key={student.admno} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-3 px-4 font-medium text-gray-900">{student.admno}</td>
-                    <td className="py-3 px-4 text-gray-900 font-semibold">{student.name}</td>
-                    <td className="py-3 px-4 text-gray-900">{student.class}</td>
-                    <td className="py-3 px-4 text-gray-900">{student.section}</td>
-                    <td className="py-3 px-4 text-right">
+                  <tr key={student.admno} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="py-2.5 px-3 font-medium text-slate-700 text-sm">{student.admno}</td>
+                    <td className="py-2.5 px-3 text-slate-900 font-semibold text-sm">{student.name}</td>
+                    <td className="py-2.5 px-3 text-slate-600 text-sm">{student.class}</td>
+                    <td className="py-2.5 px-3 text-slate-600 text-sm">{student.section}</td>
+                    <td className="py-2.5 px-3 text-right">
                       <button
                         onClick={() => handleDelete(student.admno)}
-                        className="text-red-500 hover:text-red-700 text-sm font-semibold"
+                        className="text-red-400 hover:text-red-600 text-xs font-semibold transition-colors"
                       >
                         Delete
                       </button>
@@ -171,9 +171,9 @@ export default function StudentsPage() {
       </Card>
 
       <Card title="Expected Excel Format">
-        <p className="text-sm text-gray-600 mb-2">Ensure your Excel sheet has these exact headers in the first row:</p>
-        <code className="bg-gray-100 p-2 rounded block text-xs">admno, name, class, section</code>
-        <p className="text-xs text-gray-400 mt-2 italic">Supporting both .xlsx and .xls formats.</p>
+        <p className="text-sm text-slate-500 mb-2">Ensure your Excel sheet has these exact headers in the first row:</p>
+        <code className="bg-slate-50 p-2 rounded-lg block text-xs text-slate-700 font-mono">admno, name, class, section</code>
+        <p className="text-xs text-slate-400 mt-2 italic">Supporting both .xlsx and .xls formats.</p>
       </Card>
     </div>
   )

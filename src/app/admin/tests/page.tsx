@@ -12,17 +12,17 @@ export default async function TestsListPage() {
   })
 
   return (
-    <div className="space-y-6">
-      <header className="flex justify-between items-center mb-10">
+    <div className="space-y-5">
+      <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Manage Tests</h1>
-          <p className="text-gray-500">Create, edit, and toggle your tests</p>
+          <h1 className="text-xl font-black text-slate-900 tracking-tight">Manage Tests</h1>
+          <p className="text-slate-400 text-sm">Create, edit, and toggle your tests</p>
         </div>
         <Link 
           href="/admin/tests/create"
-          className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-bold transition-colors"
+          className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm"
         >
-          + Create New Test
+          + New Test
         </Link>
       </header>
 
@@ -30,33 +30,33 @@ export default async function TestsListPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b text-gray-500 uppercase text-xs">
-                <th className="py-3 px-4">Title</th>
-                <th className="py-3 px-4">Class/Sec</th>
-                <th className="py-3 px-4">Subject</th>
-                <th className="py-3 px-4 text-center">Status</th>
-                <th className="py-3 px-4 text-center">Qs/Submits</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+              <tr className="border-b text-slate-400 uppercase text-[10px] tracking-wider">
+                <th className="py-2.5 px-3">Title</th>
+                <th className="py-2.5 px-3">Class/Sec</th>
+                <th className="py-2.5 px-3">Subject</th>
+                <th className="py-2.5 px-3 text-center">Status</th>
+                <th className="py-2.5 px-3 text-center">Qs/Submits</th>
+                <th className="py-2.5 px-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-slate-50">
               {tests.length === 0 ? (
-                <tr><td colSpan={6} className="py-10 text-center text-gray-400">No tests created yet.</td></tr>
+                <tr><td colSpan={6} className="py-10 text-center text-slate-400 text-sm">No tests created yet.</td></tr>
               ) : (
                 tests.map((test) => (
-                  <tr key={test.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-4 px-4 font-bold text-gray-900">{test.title}</td>
-                    <td className="py-4 px-4 font-bold text-gray-900">{test.class} - {test.section}</td>
-                    <td className="py-4 px-4 font-bold text-gray-900">{test.subject}</td>
-                    <td className="py-4 px-4 text-center">
+                  <tr key={test.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="py-3 px-3 font-bold text-slate-900 text-sm">{test.title}</td>
+                    <td className="py-3 px-3 text-slate-600 text-sm font-medium">{test.class} - {test.section}</td>
+                    <td className="py-3 px-3 text-slate-600 text-sm">{test.subject}</td>
+                    <td className="py-3 px-3 text-center">
                       <TestStatusToggle id={test.id} isActive={test.isActive} />
                     </td>
-                    <td className="py-4 px-4 text-center font-bold text-gray-500">
+                    <td className="py-3 px-3 text-center font-bold text-slate-500 text-sm">
                       {test._count.questions} / {test._count.results}
                     </td>
-                    <td className="py-4 px-4 text-right space-x-3">
-                      <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-1 rounded-md text-xs font-black uppercase transition-colors">Edit</Link>
-                      <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-3 py-1 rounded-md text-xs font-black uppercase transition-colors">Results</Link>
+                    <td className="py-3 px-3 text-right space-x-2">
+                      <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit</Link>
+                      <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Results</Link>
                     </td>
                   </tr>
                 ))

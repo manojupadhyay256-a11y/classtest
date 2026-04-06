@@ -23,6 +23,7 @@ model Teacher {
   name      String
   email     String   @unique
   password  String
+  role      String   @default("ADMIN") // "ADMIN" | "TEACHER"
   tests     Test[]
 }
 
@@ -31,7 +32,7 @@ model Test {
   title       String
   subject     String
   class       String
-  section     String
+  sections    String[]
   duration    Int        // in minutes
   startTime   DateTime?
   endTime     DateTime?

@@ -128,6 +128,21 @@ export default function StudentTestPage() {
     )
   }
 
+  if (!test.questions || test.questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-mesh flex flex-col items-center justify-center p-6 text-center">
+        <h2 className="text-2xl font-black text-slate-800">This test has no questions.</h2>
+        <p className="text-slate-500 font-medium mt-2">Please contact your administrator.</p>
+        <button 
+          onClick={() => router.push("/student/dashboard")}
+          className="mt-6 bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold"
+        >
+          Back to Dashboard
+        </button>
+      </div>
+    )
+  }
+
   const isLast = currentIdx === test.questions.length - 1
   const progress = ((currentIdx + 1) / test.questions.length) * 100
   const answeredCount = Object.keys(answers).length
@@ -232,13 +247,13 @@ export default function StudentTestPage() {
             </div>
 
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-12">
-              {currentQ!.questionText}
+              {currentQ ? currentQ.questionText : "Loading question..."}
             </h2>
 
             <div className="space-y-6">
-              {currentQ!.questionType === "mcq" && currentQ!.options && (
+              {currentQ?.questionType === "mcq" && currentQ?.options && (
                 <div className="grid grid-cols-1 gap-4">
-                  {(["a","b","c","d"] as const).filter(key => currentQ!.options && (currentQ!.options as Record<string,string>)[key]).map((key) => (
+                  {(["a","b","c","d"] as const).filter(key => currentQ?.options && (currentQ?.options as Record<string,string>)[key]).map((key) => (
                     <button
                       key={key}
                       onClick={() => setAnswers({ ...answers, [currentQ!.id]: key })}

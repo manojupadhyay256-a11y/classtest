@@ -24,7 +24,8 @@ export const authOptions: NextAuthOptions = {
             where: { email: username.toLowerCase() }
           })
           if (teacher && bcrypt.compareSync(credentials.password, teacher.password)) {
-            return { id: teacher.id, email: teacher.email, name: teacher.name, role: "teacher" }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return { id: teacher.id, email: teacher.email, name: teacher.name, role: (teacher as any).role || "teacher" }
           }
         } 
         // Otherwise, Check if Student (AdmNo)

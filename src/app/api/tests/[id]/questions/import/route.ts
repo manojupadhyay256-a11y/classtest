@@ -16,11 +16,24 @@ interface ParsedQuestion {
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== "teacher") {
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
+  const isAdmin = session.user.role === "ADMIN"
+
   try {
+    // Check ownership if not admin
+    if (!isAdmin) {
+      const test = await prisma.test.findUnique({
+        where: { id: params.id },
+        select: { createdBy: true }
+      })
+      if (!test || test.createdBy !== session.user.id) {
+        return NextResponse.json({ error: "Unauthorized: You can only import questions to your own tests" }, { status: 403 })
+      }
+    }
+
     const formData = await req.formData()
     const file = formData.get("file") as File
     if (!file) {

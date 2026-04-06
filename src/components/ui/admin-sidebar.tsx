@@ -3,17 +3,21 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
-import { LayoutDashboard, Users, FileText, Settings, LogOut } from "lucide-react"
+import { LayoutDashboard, Users, FileText, Settings, LogOut, UserCog } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Students", href: "/admin/students", icon: Users },
+  { label: "Students", href: "/admin/students", icon: Users, adminOnly: true },
+  { label: "Teachers", href: "/admin/teachers", icon: UserCog, adminOnly: true },
   { label: "Tests", href: "/admin/tests", icon: FileText },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ]
 
 export default function AdminSidebar() {
   const pathname = usePathname()
+  const { data: session } = useSession()
+  const isAdmin = session?.user?.role === "ADMIN"
 
   return (
     <div className="w-full md:w-52 bg-slate-900 md:h-screen sticky top-0 z-50 text-white flex flex-col p-3 md:p-4 shadow-md border-b md:border-b-0 md:border-r border-slate-800">
@@ -32,7 +36,7 @@ export default function AdminSidebar() {
       </div>
 
       <nav className="flex md:flex-col space-x-1 md:space-x-0 md:space-y-1 overflow-x-auto hide-scrollbar pb-2 md:pb-0">
-        {navItems.map((item) => {
+        {navItems.filter(item => !item.adminOnly || isAdmin).map((item) => {
           const Icon = item.icon
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
           return (

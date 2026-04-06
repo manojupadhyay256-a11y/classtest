@@ -46,7 +46,7 @@ export default async function TestsListPage() {
                 tests.map((test) => (
                   <tr key={test.id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="py-3 px-3 font-bold text-slate-900 text-sm">{test.title}</td>
-                    <td className="py-3 px-3 text-slate-600 text-sm font-medium">{test.class} - {test.section}</td>
+                    <td className="py-3 px-3 text-slate-600 text-sm font-medium">{test.class} - {test.sections.join(", ")}</td>
                     <td className="py-3 px-3 text-slate-600 text-sm">{test.subject}</td>
                     <td className="py-3 px-3 text-center">
                       <TestStatusToggle id={test.id} isActive={test.isActive} />

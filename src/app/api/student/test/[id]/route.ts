@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -9,7 +10,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const test = await prisma.test.findUnique({
+  const test = await prisma.test.findFirst({
     where: { id: params.id, isActive: true },
     include: { questions: { orderBy: { order: "asc" } } }
   })
@@ -18,8 +19,10 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
   // Check if already attempted
   const student = await prisma.student.findUnique({ where: { admno: session.user.email! } })
+  if (!student) return NextResponse.json({ error: "Student not found" }, { status: 404 })
+
   const result = await prisma.result.findFirst({
-    where: { testId: test.id, admno: student!.admno }
+    where: { testId: test.id, admno: student.admno }
   })
 
   if (result) return NextResponse.json({ error: "Test already attempted" }, { status: 403 })

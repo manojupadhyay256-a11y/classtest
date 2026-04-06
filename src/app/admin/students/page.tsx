@@ -81,7 +81,8 @@ export default function StudentsPage() {
           toast.success("Bulk upload successful")
           fetchStudents()
         } else {
-          toast.error("Upload failed")
+          const errorData = await res.json()
+          toast.error(errorData.message || errorData.error || "Upload failed")
         }
       } catch (err) {
         toast.error("Error reading Excel file")

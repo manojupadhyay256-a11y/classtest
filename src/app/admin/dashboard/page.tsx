@@ -1,24 +1,43 @@
 import prisma from "@/lib/prisma"
 import Link from "next/link"
 import { Users, FileText, CheckCircle2, TrendingUp, Clock, ArrowUpRight } from "lucide-react"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { redirect } from "next/navigation"
 
 export const dynamic = "force-dynamic"
 
 export default async function AdminDashboardPage() {
+  const session = await getServerSession(authOptions)
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {
+    redirect("/login")
+  }
+
+  const isAdmin = session.user.role === "ADMIN"
+  const userId = session.user.id
+
   const studentCount = await prisma.student.count()
-  const testCount = await prisma.test.count()
-  const resultCount = await prisma.result.count()
+  const testCount = await prisma.test.count({
+    where: isAdmin ? {} : { createdBy: userId }
+  })
+  const resultCount = await prisma.result.count({
+    where: isAdmin ? {} : { test: { createdBy: userId } }
+  })
   
   const recentResults = await prisma.result.findMany({
     take: 6,
+    where: isAdmin ? {} : { test: { createdBy: userId } },
     orderBy: { submittedAt: "desc" },
     include: { student: true, test: true }
   })
 
   // Calculate average score percentage
-  const allResults = await prisma.result.findMany({ select: { score: true, totalMarks: true } })
+  const allResults = await prisma.result.findMany({ 
+    where: isAdmin ? {} : { test: { createdBy: userId } },
+    select: { score: true, totalMarks: true } 
+  })
   const avgPercentage = allResults.length > 0 
-    ? Math.round((allResults.reduce((acc, curr) => acc + (curr.score / curr.totalMarks), 0) / allResults.length) * 100)
+    ? Math.round((allResults.reduce((acc: number, curr: { score: number, totalMarks: number }) => acc + (curr.score / curr.totalMarks), 0) / allResults.length) * 100)
     : 0
 
   const stats = [
@@ -32,8 +51,12 @@ export default async function AdminDashboardPage() {
     <div className="space-y-6 pb-8">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Admin Overview</h1>
-          <p className="text-slate-400 text-sm font-medium">Control center for your class test ecosystem</p>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+            {isAdmin ? "Admin Overview" : "Teacher Overview"}
+          </h1>
+          <p className="text-slate-400 text-sm font-medium">
+            {isAdmin ? "Control center for your class test ecosystem" : "Your personal test management portal"}
+          </p>
         </div>
         <div className="flex space-x-3">
            <div className="flex items-center space-x-2 px-3 py-1.5 bg-white rounded-lg shadow-sm border border-slate-100 italic text-slate-400 text-xs">
@@ -89,7 +112,14 @@ export default async function AdminDashboardPage() {
                     <td colSpan={4} className="px-5 py-10 text-center text-slate-400 text-sm font-medium">No submission records found yet.</td>
                   </tr>
                 ) : (
-                  recentResults.map((result) => (
+                  recentResults.map((result: { 
+                    id: string, 
+                    score: number, 
+                    totalMarks: number, 
+                    submittedAt: Date,
+                    student: { name: string, admno: string }, 
+                    test: { title: string } 
+                  }) => (
                     <tr key={result.id} className="hover:bg-white/40 transition-colors group">
                       <td className="px-5 py-3">
                         <div className="flex items-center space-x-2.5">

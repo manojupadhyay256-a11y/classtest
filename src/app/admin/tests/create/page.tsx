@@ -10,7 +10,7 @@ export default function CreateTestPage() {
     title: "",
     subject: "",
     class: "",
-    section: "",
+    sections: "",
     duration: 60,
     startTime: "",
     endTime: "",
@@ -85,12 +85,13 @@ export default function CreateTestPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Section</label>
+              <label className="block text-sm font-medium text-gray-700">Sections (e.g. A, B, C)</label>
               <input
                 type="text"
-                value={formData.section}
-                onChange={(e) => setFormData({ ...formData, section: e.target.value })}
-                className="mt-1 block w-full px-4 py-2 border rounded-md text-gray-900 border-gray-300"
+                value={formData.sections}
+                onChange={(e) => setFormData({ ...formData, sections: e.target.value })}
+                className="mt-1 block w-full px-4 py-2 border rounded-md text-gray-900 border-gray-300 focus:ring-amber-500 focus:border-amber-500"
+                placeholder="A, B, C"
                 required
               />
             </div>

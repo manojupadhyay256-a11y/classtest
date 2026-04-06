@@ -10,7 +10,7 @@ export default withAuth(
       return NextResponse.redirect(new URL("/login", req.url))
     }
 
-    if (path.startsWith("/admin") && token.role !== "teacher") {
+    if (path.startsWith("/admin") && token.role !== "ADMIN" && token.role !== "TEACHER") {
       return NextResponse.redirect(new URL("/student/dashboard", req.url))
     }
 

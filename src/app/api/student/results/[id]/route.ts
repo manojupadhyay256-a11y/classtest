@@ -20,7 +20,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   if (!result) return NextResponse.json({ error: "Result not found" }, { status: 404 })
 
   // Security check: only the student themselves or a teacher can view this
-  if (session.user.role === "student" && result.admno !== session.user.email) {
+  if (session.user.role === "STUDENT" && result.admno !== session.user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 

@@ -6,15 +6,17 @@ export default withAuth(
     const token = req.nextauth.token
     const path = req.nextUrl.pathname
 
-    if (!token) {
+    if (!token || !token.role) {
       return NextResponse.redirect(new URL("/login", req.url))
     }
 
-    if (path.startsWith("/admin") && token.role !== "ADMIN" && token.role !== "TEACHER") {
-      return NextResponse.redirect(new URL("/student/dashboard", req.url))
+    const role = String(token.role).toUpperCase()
+
+    if (path.startsWith("/admin") && role !== "ADMIN" && role !== "TEACHER") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
-    if (path.startsWith("/student") && token.role !== "student") {
+    if (path.startsWith("/student") && role !== "STUDENT") {
       return NextResponse.redirect(new URL("/admin/dashboard", req.url))
     }
   },

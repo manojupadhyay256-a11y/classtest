@@ -7,7 +7,7 @@ export default async function LoginPage() {
   const session = await getServerSession(authOptions)
 
   if (session) {
-    if (session.user.role === "teacher") {
+    if (session.user.role === "TEACHER" || session.user.role === "ADMIN") {
       redirect("/admin/dashboard")
     } else {
       redirect("/student/dashboard")

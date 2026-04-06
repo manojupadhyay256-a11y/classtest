@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== "student") {
+  if (!session || session.user.role !== "STUDENT") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
@@ -32,7 +32,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== "student") {
+  if (!session || session.user.role !== "STUDENT") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 

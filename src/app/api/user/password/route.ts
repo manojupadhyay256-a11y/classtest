@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const userId = session.user.id
     const role = session.user.role
 
-    if (role === "student") {
+    if (role === "STUDENT") {
       const student = await prisma.student.findUnique({
         where: { admno: userId }
       })
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         where: { admno: userId },
         data: { password: bcrypt.hashSync(newPassword, 10) }
       })
-    } else if (role === "teacher") {
+    } else if (role === "TEACHER" || role === "ADMIN") {
       const teacher = await prisma.teacher.findUnique({
         where: { id: userId }
       })

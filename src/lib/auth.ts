@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
           })
           if (teacher && bcrypt.compareSync(credentials.password, teacher.password)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return { id: teacher.id, email: teacher.email, name: teacher.name, role: (teacher as any).role || "teacher" }
+            return { id: teacher.id, email: teacher.email, name: teacher.name, role: (teacher as any).role || "TEACHER" }
           }
         } 
         // Otherwise, Check if Student (AdmNo)
@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
             where: { admno: username }
           })
           if (student && bcrypt.compareSync(credentials.password, student.password)) {
-            return { id: student.admno, email: student.admno, name: student.name, role: "student" }
+            return { id: student.admno, email: student.admno, name: student.name, role: "STUDENT" }
           }
         }
 

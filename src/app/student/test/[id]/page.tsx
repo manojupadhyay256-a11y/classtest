@@ -122,7 +122,7 @@ export default function StudentTestPage() {
     return (
       <div className="min-h-screen bg-mesh flex flex-col items-center justify-center p-6 text-center">
         <div className="w-20 h-20 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mb-6" />
-        <h2 className="text-2xl font-black text-slate-800 animate-pulse">Synchronizing Examination Data...</h2>
+        <h2 className="text-2xl font-black text-slate-800 animate-pulse">Synchronizing Class Test Data...</h2>
         <p className="text-slate-500 font-medium mt-2">Preparing your secure environment</p>
       </div>
     )
@@ -482,7 +482,7 @@ export default function StudentTestPage() {
           <div className="bg-gradient-to-br from-indigo-600/10 to-indigo-900/10 p-8 rounded-[2rem] border border-indigo-100/50">
              <h4 className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-4">Integrity Monitor</h4>
              <p className="text-xs font-medium text-slate-500 leading-relaxed">
-               Secure browser monitoring is active. Do not switch tabs or minimize this window during the examination.
+               Secure browser monitoring is active. Do not switch tabs or minimize this window during the class test.
              </p>
           </div>
         </aside>

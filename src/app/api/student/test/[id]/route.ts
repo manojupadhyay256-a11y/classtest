@@ -49,8 +49,33 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
     // Auto-grading logic
     test.questions.forEach(q => {
-      const studentAnswer = answers[q.id]
-      if (studentAnswer === q.correctAnswer) {
+      const studentAnswer = answers[q.id]?.toString().trim() || ""
+      const correctAnswer = q.correctAnswer.trim()
+      
+      let isCorrect = false
+      
+      if (q.questionType === "match") {
+        // For Match the Following, order and internal whitespace around colons doesn't matter
+        const studentPairs = studentAnswer.split("|")
+          .map((p: string) => p.trim().toLowerCase())
+          .filter(Boolean)
+          .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
+          .sort()
+          
+        const correctPairs = correctAnswer.split("|")
+          .map((p: string) => p.trim().toLowerCase())
+          .filter(Boolean)
+          .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
+          .sort()
+
+        isCorrect = studentPairs.length === correctPairs.length && 
+                    studentPairs.every((p: string, i: number) => p === correctPairs[i])
+      } else {
+        // For other types, case-insensitive comparison
+        isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()
+      }
+
+      if (isCorrect) {
         score += q.marks
       }
       totalMarks += q.marks

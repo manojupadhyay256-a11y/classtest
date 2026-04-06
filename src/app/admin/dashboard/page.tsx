@@ -31,7 +31,7 @@ export default async function AdminDashboardPage() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">Admin Overview</h1>
-          <p className="text-slate-500 font-medium">Control center for your examination ecosystem</p>
+          <p className="text-slate-500 font-medium">Control center for your class test ecosystem</p>
         </div>
         <div className="flex space-x-3">
            <div className="flex items-center space-x-2 px-4 py-2 bg-white rounded-xl shadow-sm border border-slate-100 italic text-slate-400 text-sm">
@@ -130,7 +130,7 @@ export default async function AdminDashboardPage() {
               </div>
               <h3 className="text-xl font-bold mb-2 relative z-10">New Test?</h3>
               <p className="text-slate-400 text-sm mb-6 relative z-10 leading-relaxed font-medium">
-                Create and publish a new examination in minutes with our advanced question builder.
+                Create and publish a new class test in minutes with our advanced question builder.
               </p>
               <Link 
                 href="/admin/tests/create"

@@ -7,8 +7,8 @@ import "./globals.css"
 const plusJakartaTools = Plus_Jakarta_Sans({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "DPSMRN Mathura - Examination Portal",
-  description: "Advanced testing and examination portal for DPSMRN Mathura",
+  title: "DPSMRN Mathura - Class Test Portal",
+  description: "Advanced testing and class test portal for DPSMRN Mathura",
 }
 
 export default function RootLayout({

@@ -29,7 +29,7 @@ export default async function LoginPage() {
              </svg>
           </div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">DPSMRN Mathura</h1>
-          <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">Examination Portal</p>
+          <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">Class Test Portal</p>
         </div>
         
         <LoginForm />

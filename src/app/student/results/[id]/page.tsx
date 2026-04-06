@@ -60,8 +60,28 @@ export default function StudentResultsDetailPage() {
           <h2 className="text-2xl font-bold text-gray-800">Your Answer Sheet</h2>
           <div className="space-y-4">
             {result.test.questions.map((q, idx) => {
-              const studentAnswer = result.answers[q.id]
-              const isCorrect = studentAnswer === q.correctAnswer
+              const studentAnswer = result.answers[q.id]?.toString().trim() || ""
+              const correctAnswer = q.correctAnswer.trim()
+              let isCorrect = false
+
+              if (q.questionType === "match") {
+                const studentPairs = studentAnswer.split("|")
+                  .map((p: string) => p.trim().toLowerCase())
+                  .filter(Boolean)
+                  .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
+                  .sort()
+
+                const correctPairs = correctAnswer.split("|")
+                  .map((p: string) => p.trim().toLowerCase())
+                  .filter(Boolean)
+                  .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
+                  .sort()
+
+                isCorrect = studentPairs.length === correctPairs.length && 
+                            studentPairs.every((p: string, i: number) => p === correctPairs[i])
+              } else {
+                isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()
+              }
 
               return (
                 <div key={q.id} className={`bg-white p-8 rounded-2xl border-2 transition-all ${isCorrect ? "border-green-100" : "border-red-100"}`}>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { revalidatePath } from "next/cache"
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -23,6 +24,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       where: { id: params.id },
       data: { isActive: !!isActive }
     })
+    
+    revalidatePath("/admin/tests")
+    revalidatePath("/admin/dashboard")
 
     return NextResponse.json(test)
   } catch (error: unknown) {
@@ -39,6 +43,10 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
   try {
     await prisma.test.delete({ where: { id: params.id } })
+    
+    revalidatePath("/admin/tests")
+    revalidatePath("/admin/dashboard")
+
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
     const err = error as Error;

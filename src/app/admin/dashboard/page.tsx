@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma"
 import Link from "next/link"
 import { Users, FileText, CheckCircle2, TrendingUp, Clock, ArrowUpRight } from "lucide-react"
 
+export const dynamic = "force-dynamic"
+
 export default async function AdminDashboardPage() {
   const studentCount = await prisma.student.count()
   const testCount = await prisma.test.count()

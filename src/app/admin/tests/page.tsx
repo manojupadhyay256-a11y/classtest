@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma"
 import Link from "next/link"
 import TestStatusToggle from "@/components/admin/test-status-toggle"
 
+export const dynamic = "force-dynamic"
+
 export default async function TestsListPage() {
   const tests = await prisma.test.findMany({
     orderBy: { createdAt: "desc" },

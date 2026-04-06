@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { revalidatePath } from "next/cache"
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
@@ -25,6 +26,9 @@ export async function POST(req: Request) {
         createdBy: session.user.id!,
       }
     })
+    
+    revalidatePath("/admin/tests")
+    revalidatePath("/admin/dashboard")
 
     return NextResponse.json(test)
   } catch (error: unknown) {

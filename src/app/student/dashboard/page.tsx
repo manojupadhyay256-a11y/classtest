@@ -12,7 +12,8 @@ import {
   ExternalLink,
   LogOut,
   BrainCircuit,
-  Settings
+  Settings,
+  Download
 } from "lucide-react"
 
 interface Test {
@@ -195,6 +196,30 @@ export default function StudentDashboardPage() {
             </div>
           </div>
         </div>
+        {/* Study Materials Banner */}
+        <Link
+          href="/student/notes"
+          className="group block mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 p-5 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 hover:-translate-y-0.5 transition-all duration-300"
+        >
+          <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+            <BookOpen className="w-20 h-20 text-white" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <div className="inline-flex items-center gap-1.5 bg-white/20 px-2.5 py-0.5 rounded-full text-white/90 text-[9px] font-black uppercase tracking-wider mb-2">
+                <Download size={9} />
+                New
+              </div>
+              <h3 className="text-white font-black text-base leading-tight">Study Materials</h3>
+              <p className="text-amber-50/80 text-xs font-medium mt-0.5">
+                Download chapter notes & PDFs shared by your teachers
+              </p>
+            </div>
+            <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-white group-hover:bg-white/30 transition-all ml-4 flex-shrink-0">
+              <ExternalLink size={18} />
+            </div>
+          </div>
+        </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Active Tests Section */}

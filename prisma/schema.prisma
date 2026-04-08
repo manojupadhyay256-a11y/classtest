@@ -25,6 +25,7 @@ model Teacher {
   password  String
   role      String   @default("ADMIN") // "ADMIN" | "TEACHER"
   tests     Test[]
+  notes     Note[]
 }
 
 model Test {
@@ -67,4 +68,18 @@ model Result {
   totalMarks   Int
   timeTaken    Int      // in seconds
   submittedAt  DateTime @default(now())
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  title       String
+  subject     String
+  chapter     String
+  class       String
+  sections    String[] // which sections can see this note
+  fileName    String   // original file name
+  fileUrl     String   // Vercel Blob URL
+  uploadedBy  String   // Teacher.id
+  teacher     Teacher  @relation(fields: [uploadedBy], references: [id])
+  createdAt   DateTime @default(now())
 }

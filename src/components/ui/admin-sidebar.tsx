@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
-import { LayoutDashboard, Users, FileText, Settings, LogOut, UserCog } from "lucide-react"
+import { LayoutDashboard, Users, FileText, Settings, LogOut, UserCog, BookOpen } from "lucide-react"
 import { useSession } from "next-auth/react"
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
   { label: "Students", href: "/admin/students", icon: Users, adminOnly: true },
   { label: "Teachers", href: "/admin/teachers", icon: UserCog, adminOnly: true },
   { label: "Tests", href: "/admin/tests", icon: FileText },
+  { label: "Notes", href: "/admin/notes", icon: BookOpen },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ]
 

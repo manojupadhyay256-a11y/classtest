@@ -80,13 +80,14 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json(note, { status: 201 })
-  } catch (err: any) {
-    console.error("Notes upload error:", err)
-    console.error("Error Message:", err.message)
-    console.error("Error Stack:", err.stack)
+  } catch (err: unknown) {
+    const error = err as Error
+    console.error("Notes upload error:", error)
+    console.error("Error Message:", error.message)
+    console.error("Error Stack:", error.stack)
     return NextResponse.json({ 
       error: "Failed to upload note", 
-      details: err.message 
+      details: error.message 
     }, { status: 500 })
   }
 }

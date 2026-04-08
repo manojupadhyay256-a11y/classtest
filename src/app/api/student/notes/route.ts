@@ -20,8 +20,6 @@ export async function GET() {
     return NextResponse.json({ error: "Student not found" }, { status: 404 })
   }
 
-  console.log("[Student Notes] Student class:", JSON.stringify(student.class), "section:", JSON.stringify(student.section))
-
   const notes = await prisma.note.findMany({
     where: {
       class: student.class,
@@ -32,10 +30,6 @@ export async function GET() {
     },
     orderBy: { createdAt: "desc" }
   })
-
-  console.log("[Student Notes] Found", notes.length, "notes. All notes classes:", 
-    (await prisma.note.findMany({ select: { class: true, sections: true } }))
-  )
 
   return NextResponse.json(notes)
 }

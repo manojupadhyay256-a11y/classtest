@@ -13,7 +13,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { area, isLiked, comment } = await req.json()
+    const body = await req.json()
+    const { area, isLiked, comment } = body
 
     if (!area) {
       return NextResponse.json({ error: "Area is required" }, { status: 400 })
@@ -21,10 +22,10 @@ export async function POST(req: Request) {
 
     const feedback = await prisma.feedback.create({
       data: {
-        studentId: session.user.id,
-        area,
-        isLiked,
-        comment
+        studentId: session.user.id as string,
+        area: area as string,
+        isLiked: Boolean(isLiked),
+        comment: comment as string | undefined
       }
     })
 

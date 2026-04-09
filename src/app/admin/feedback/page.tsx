@@ -6,8 +6,6 @@ import {
   MessageSquare, 
   ThumbsUp, 
   ThumbsDown, 
-  User, 
-  Calendar,
   Filter,
   BarChart3,
   Clock
@@ -134,7 +132,7 @@ export default async function AdminFeedbackPage() {
                     </div>
                     {f.comment ? (
                       <p className="text-sm font-medium text-slate-700 leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-slate-100/50 italic">
-                        "{f.comment}"
+                        &quot;{f.comment}&quot;
                       </p>
                     ) : (
                       <p className="text-xs text-slate-400 font-bold italic uppercase tracking-wider">No comment provided.</p>

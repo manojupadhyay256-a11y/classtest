@@ -13,9 +13,7 @@ import {
   LogOut,
   Send,
   History,
-  CheckCircle2,
-  Loader2,
-  XCircle
+  Loader2
 } from "lucide-react"
 import { toast } from "react-hot-toast"
 
@@ -36,7 +34,7 @@ const FEEDBACK_AREAS = [
 ]
 
 export default function StudentFeedbackPage() {
-  const { data: session } = useSession()
+  useSession()
   const [history, setHistory] = useState<Feedback[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -278,7 +276,7 @@ export default function StudentFeedbackPage() {
                     </div>
                     {item.comment && (
                       <p className="text-sm text-slate-600 font-medium leading-relaxed italic">
-                        "{item.comment}"
+                        &quot;{item.comment}&quot;
                       </p>
                     )}
                   </div>

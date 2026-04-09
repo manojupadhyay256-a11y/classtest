@@ -4,6 +4,7 @@ import { Users, FileText, CheckCircle2, TrendingUp, Clock, ArrowUpRight } from "
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import DashboardSearch from "@/components/ui/dashboard-search"
 
 export const dynamic = "force-dynamic"
 
@@ -156,6 +157,7 @@ export default async function AdminDashboardPage() {
 
         {/* Action Center / Quick Tips */}
         <div className="lg:col-span-1 space-y-4">
+           <DashboardSearch />
            <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
                 <FileText className="w-16 h-16" />

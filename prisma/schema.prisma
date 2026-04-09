@@ -16,6 +16,7 @@ model Student {
   password   String
   createdAt  DateTime @default(now())
   results    Result[]
+  feedbacks  Feedback[]
 }
 
 model Teacher {
@@ -90,4 +91,14 @@ model LoginLog {
   userName  String
   userRole  String   // "STUDENT", "TEACHER", or "ADMIN"
   timestamp DateTime @default(now())
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [admno])
+  area      String   // "App Interface", "Academic Content", "Performance", "Features", "General"
+  isLiked   Boolean  @default(true)
+  comment   String?
+  createdAt DateTime @default(now())
 }

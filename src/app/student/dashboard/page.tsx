@@ -13,7 +13,8 @@ import {
   LogOut,
   BrainCircuit,
   Settings,
-  Download
+  Download,
+  MessageSquare
 } from "lucide-react"
 
 interface Test {
@@ -215,8 +216,31 @@ export default function StudentDashboardPage() {
                 Download chapter notes & PDFs shared by your teachers
               </p>
             </div>
-            <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center text-white group-hover:bg-white/30 transition-all ml-4 flex-shrink-0">
-              <ExternalLink size={18} />
+          </div>
+        </Link>
+        
+        {/* Feedback Banner — NEW */}
+        <Link
+          href="/student/feedback"
+          className="group block mb-8 relative overflow-hidden rounded-2xl bg-white border border-slate-200 p-5 shadow-sm hover:shadow-xl hover:border-teal-500/50 hover:-translate-y-0.5 transition-all duration-300"
+        >
+          <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:scale-110 group-hover:opacity-10 transition-all duration-500">
+            <MessageSquare className="w-20 h-20 text-slate-900" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all duration-300">
+                <MessageSquare size={24} />
+              </div>
+              <div>
+                <h3 className="text-slate-900 font-black text-base leading-tight">Help us Improve</h3>
+                <p className="text-slate-400 text-xs font-medium mt-0.5">
+                  Share your thoughts about the app. We&apos;d love to hear from you!
+                </p>
+              </div>
+            </div>
+            <div className="px-4 py-2 bg-slate-900 text-white rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/10 group-hover:bg-teal-600 group-hover:shadow-teal-600/20 transition-all">
+              Give Feedback
             </div>
           </div>
         </Link>

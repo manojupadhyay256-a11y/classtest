@@ -83,3 +83,11 @@ model Note {
   teacher     Teacher  @relation(fields: [uploadedBy], references: [id])
   createdAt   DateTime @default(now())
 }
+
+model LoginLog {
+  id        String   @id @default(cuid())
+  userId    String   // admno for students, id for teachers/admins
+  userName  String
+  userRole  String   // "STUDENT", "TEACHER", or "ADMIN"
+  timestamp DateTime @default(now())
+}

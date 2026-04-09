@@ -25,12 +25,18 @@ export default async function AdminDashboardPage() {
     where: isAdmin ? {} : { test: { createdBy: userId } }
   })
   
-  const recentResults = await prisma.result.findMany({
+   const recentResults = await prisma.result.findMany({
     take: 6,
     where: isAdmin ? {} : { test: { createdBy: userId } },
     orderBy: { submittedAt: "desc" },
     include: { student: true, test: true }
   })
+
+  // Fetch recent logins if admin
+  const recentLogins = isAdmin ? await prisma.loginLog.findMany({
+    take: 8,
+    orderBy: { timestamp: "desc" }
+  }) : []
 
   // Calculate average score percentage
   const allResults = await prisma.result.findMany({ 
@@ -185,13 +191,45 @@ export default async function AdminDashboardPage() {
                    <span className="text-xs font-bold text-slate-600">Secure Auth Service</span>
                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
                  </div>
-                 <div className="flex items-center justify-between">
-                   <span className="text-xs font-bold text-slate-600">Storage API</span>
-                   <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
-                 </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-600">Storage API</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                  </div>
+               </div>
+            </div>
+
+            {isAdmin && (
+              <div className="glass p-5 rounded-2xl border border-white/40">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center">
+                  <Clock className="w-3 h-3 mr-1.5" />
+                  Recent User Logins
+                </h4>
+                <div className="space-y-3">
+                  {recentLogins.length === 0 ? (
+                    <p className="text-[10px] text-slate-400 italic">No login activity recorded.</p>
+                  ) : (
+                    recentLogins.map((log) => (
+                      <div key={log.id} className="flex items-center justify-between group">
+                        <div className="flex items-center space-x-2 overflow-hidden">
+                          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                            log.userRole === 'ADMIN' ? 'bg-amber-400' : 
+                            log.userRole === 'TEACHER' ? 'bg-indigo-400' : 'bg-slate-300'
+                          }`} />
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-xs font-bold text-slate-700 truncate">{log.userName}</span>
+                            <span className="text-[9px] font-medium text-slate-400">{log.userRole}</span>
+                          </div>
+                        </div>
+                        <span className="text-[9px] font-bold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded ml-2 whitespace-nowrap">
+                          {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-           </div>
-        </div>
+            )}
+         </div>
       </div>
     </div>
   )

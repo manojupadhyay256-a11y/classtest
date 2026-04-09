@@ -58,6 +58,24 @@ export const authOptions: NextAuthOptions = {
       return session;
     }
   },
+  events: {
+    async signIn({ user }) {
+      if (user) {
+        try {
+          const userWithRole = user as { id: string; name?: string | null; role?: string };
+          await prisma.loginLog.create({
+            data: {
+              userId: userWithRole.id || "unknown",
+              userName: userWithRole.name || "Unknown",
+              userRole: userWithRole.role || "STUDENT"
+            }
+          })
+        } catch (error) {
+          console.error("Error recording login log:", error)
+        }
+      }
+    }
+  },
   pages: {
     signIn: "/login",
   },

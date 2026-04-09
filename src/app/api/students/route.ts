@@ -86,16 +86,23 @@ export async function POST(req: Request) {
         }
       }))
 
-      const result = await prisma.$transaction(async (tx) => {
-        return Promise.all(
-          studentsToCreate.map(s => tx.student.upsert({
+      // Process in batches of 50 to avoid transaction timeouts
+      const BATCH_SIZE = 50
+      const results = []
+
+      for (let i = 0; i < studentsToCreate.length; i += BATCH_SIZE) {
+        const batch = studentsToCreate.slice(i, i + BATCH_SIZE)
+        const batchResult = await prisma.$transaction(
+          batch.map(s => prisma.student.upsert({
             where: { admno: s.admno },
             update: { name: s.name, class: s.class, section: s.section },
             create: s
           }))
         )
-      }, { timeout: 30000 })
-      return NextResponse.json({ count: result.length })
+        results.push(...batchResult)
+      }
+
+      return NextResponse.json({ count: results.length })
     }
     
     // Individual creation

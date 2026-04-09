@@ -41,7 +41,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 w-full relative z-10">
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-slate-600 ml-1">Identity</label>
+        <label className="text-xs font-bold text-slate-600 ml-1">Admission No.</label>
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@ export default function LoginForm() {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Admission No. or Email"
+            placeholder="Admission No."
             className="block w-full pl-10 pr-4 py-2.5 bg-white/50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 focus:bg-white text-slate-900 placeholder:text-slate-400 transition-all outline-none text-sm font-medium shadow-sm"
             required
           />
@@ -60,7 +60,7 @@ export default function LoginForm() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-slate-600 ml-1">Secure Key</label>
+        <label className="text-xs font-bold text-slate-600 ml-1">Password</label>
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo, Suspense } from "react"
 import toast from "react-hot-toast"
 import * as XLSX from "xlsx"
 import Card from "@/components/ui/card"
@@ -15,7 +15,7 @@ interface Student {
   section: string
 }
 
-export default function StudentsPage() {
+function StudentsContent() {
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === "ADMIN"
 
@@ -212,3 +212,16 @@ export default function StudentsPage() {
     </div>
   )
 }
+
+export default function StudentsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+      </div>
+    }>
+      <StudentsContent />
+    </Suspense>
+  )
+}
+

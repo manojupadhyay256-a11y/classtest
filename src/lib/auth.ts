@@ -60,18 +60,21 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     async signIn({ user }) {
+      console.log("NextAuth: signIn event triggered for user:", user?.id);
       if (user) {
         try {
           const userWithRole = user as { id: string; name?: string | null; role?: string };
-          await prisma.loginLog.create({
+          console.log("NextAuth: Attempting to create LoginLog for:", userWithRole.name, "with role:", userWithRole.role);
+          const newLog = await prisma.loginLog.create({
             data: {
               userId: userWithRole.id || "unknown",
               userName: userWithRole.name || "Unknown",
               userRole: userWithRole.role || "STUDENT"
             }
           })
+          console.log("NextAuth: LoginLog created successfully:", newLog.id);
         } catch (error) {
-          console.error("Error recording login log:", error)
+          console.error("NextAuth Error: Failed to record login log:", error)
         }
       }
     }

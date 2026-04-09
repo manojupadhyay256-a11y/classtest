@@ -206,7 +206,10 @@ export default async function AdminDashboardPage() {
                 </h4>
                 <div className="space-y-3">
                   {recentLogins.length === 0 ? (
-                    <p className="text-[10px] text-slate-400 italic">No login activity recorded.</p>
+                    <div className="text-center py-2">
+                       <p className="text-[10px] text-slate-400 italic">No login activity recorded.</p>
+                       <p className="text-[8px] text-amber-600 mt-1 font-bold">(Logout & Login again to record activity)</p>
+                    </div>
                   ) : (
                     recentLogins.map((log) => (
                       <div key={log.id} className="flex items-center justify-between group">
@@ -221,7 +224,12 @@ export default async function AdminDashboardPage() {
                           </div>
                         </div>
                         <span className="text-[9px] font-bold text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded ml-2 whitespace-nowrap">
-                          {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(log.timestamp).toLocaleString('en-IN', {
+                            timeZone: 'Asia/Kolkata',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })}
                         </span>
                       </div>
                     ))

@@ -18,6 +18,7 @@ interface Note {
   sections: string[]
   fileName: string
   fileUrl: string
+  instructions: string | null
   createdAt: string
   teacher: {
     id: string
@@ -47,6 +48,7 @@ export default function NotesPage() {
     chapter: "",
     class: "",
     sections: [] as string[],
+    instructions: "",
     file: null as File | null,
   })
 
@@ -96,13 +98,14 @@ export default function NotesPage() {
     fd.append("chapter", form.chapter)
     fd.append("class", form.class)
     fd.append("sections", JSON.stringify(form.sections))
+    if (form.instructions.trim()) fd.append("instructions", form.instructions.trim())
     fd.append("file", form.file)
 
     try {
       const res = await fetch("/api/notes", { method: "POST", body: fd })
       if (res.ok) {
         toast.success("Note uploaded successfully!")
-        setForm({ title: "", subject: "", chapter: "", class: "", sections: [], file: null })
+        setForm({ title: "", subject: "", chapter: "", class: "", sections: [], instructions: "", file: null })
         if (fileRef.current) fileRef.current.value = ""
         setShowForm(false)
         fetchNotes()
@@ -265,9 +268,25 @@ export default function NotesPage() {
               </div>
             </div>
 
+            {/* Instructions */}
+            <div className="space-y-1.5 md:col-span-2">
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-1.5">
+                Instructions for Students
+                <span className="text-[10px] text-slate-400 normal-case font-medium tracking-normal">(optional)</span>
+              </label>
+              <textarea
+                value={form.instructions}
+                onChange={e => setForm({ ...form, instructions: e.target.value })}
+                rows={3}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 text-sm transition-all outline-none resize-none text-slate-800 placeholder:text-slate-400"
+                placeholder="e.g. Read pages 45–60 before the test. Solve all practice questions at the end of the chapter."
+              />
+              <p className="text-[11px] text-slate-500 font-medium">Students will see this message when they open the note on their dashboard.</p>
+            </div>
+
             {/* File */}
             <div className="space-y-1.5 md:col-span-2">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">PDF File * (max 10MB)</label>
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-widest">PDF File * (max 10MB)</label>
               <div
                 className="relative border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-amber-400 transition-colors cursor-pointer group"
                 onClick={() => fileRef.current?.click()}
@@ -360,10 +379,18 @@ export default function NotesPage() {
                   {note.title}
                 </h3>
 
-                <p className="text-xs text-slate-400 font-semibold mb-1">
-                  <span className="font-black text-slate-600">{note.subject}</span>
+                <p className="text-sm text-slate-500 font-medium mb-1">
+                  <span className="font-bold text-slate-700">{note.subject}</span>
                   {" · "}{note.chapter}
                 </p>
+
+                {/* Instructions preview */}
+                {note.instructions && (
+                  <div className="mt-2 mb-3 px-3 py-2.5 bg-amber-50 border-l-4 border-amber-400 rounded-r-xl">
+                    <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-0.5">Instructions</p>
+                    <p className="text-xs text-amber-800 leading-relaxed line-clamp-3">{note.instructions}</p>
+                  </div>
+                )}
 
                 {/* Uploader credit */}
                 <div className="mt-auto pt-4 border-t border-slate-50">
@@ -380,13 +407,13 @@ export default function NotesPage() {
                         }
                       </div>
                       <div>
-                        <p className="text-[11px] font-black text-slate-700 leading-none">{note.teacher.name}</p>
-                        <p className="text-[9px] text-slate-400 font-mono tracking-tight mt-0.5">
+                        <p className="text-xs font-bold text-slate-800 leading-none">{note.teacher.name}</p>
+                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">
                           @{getEmailPrefix(note.teacher.email)}
                         </p>
                       </div>
                     </div>
-                    <p className="text-[9px] text-slate-400 font-bold">
+                    <p className="text-[10px] text-slate-500 font-semibold">
                       {new Date(note.createdAt).toLocaleDateString("en-IN", {
                         day: "2-digit", month: "short", year: "numeric"
                       })}

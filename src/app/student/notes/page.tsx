@@ -18,6 +18,7 @@ interface Note {
   sections: string[]
   fileName: string
   fileUrl: string
+  instructions: string | null
   createdAt: string
   teacher: {
     name: string
@@ -188,25 +189,33 @@ export default function StudentNotesPage() {
 
                       <div className="p-5">
                         {/* Chapter badge */}
-                        <span className="inline-block px-2.5 py-0.5 bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest rounded-full mb-3">
+                        <span className="inline-block px-2.5 py-1 bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-full mb-3">
                           {note.chapter}
                         </span>
 
-                        <h3 className="font-black text-slate-900 text-sm leading-snug line-clamp-2 mb-4 group-hover:text-amber-600 transition-colors">
+                        <h3 className="font-black text-slate-900 text-sm leading-snug line-clamp-2 mb-3 group-hover:text-amber-600 transition-colors">
                           {note.title}
                         </h3>
 
-                        {/* Uploader credit — KEY FEATURE */}
+                        {/* Instructions callout */}
+                        {note.instructions && (
+                          <div className="mb-4 px-3.5 py-3 bg-amber-50 border-l-4 border-amber-400 rounded-r-xl">
+                            <p className="text-[10px] font-black text-amber-700 uppercase tracking-wider mb-1">📋 Teacher’s Instructions</p>
+                            <p className="text-xs text-amber-900 leading-relaxed">{note.instructions}</p>
+                          </div>
+                        )}
+
+                        {/* Uploader credit */}
                         <div className="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl mb-4">
                           <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
                             {/* We show Shield for ADMIN role is not available here, fallback to User */}
                             <User size={12} className="text-amber-600" />
                           </div>
                           <div className="min-w-0">
-                            <p className="text-[11px] font-black text-slate-700 leading-none truncate">
+                            <p className="text-xs font-bold text-slate-800 leading-none truncate">
                               {note.teacher.name}
                             </p>
-                            <p className="text-[9px] text-slate-400 font-mono mt-0.5 truncate">
+                            <p className="text-[10px] text-slate-500 font-medium mt-0.5 truncate">
                               ID: @{getEmailPrefix(note.teacher.email)}
                             </p>
                           </div>
@@ -216,14 +225,14 @@ export default function StudentNotesPage() {
                         </div>
 
                         {/* File name */}
-                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400 mb-4 truncate">
+                        <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mb-4 truncate">
                           <FileText size={11} className="flex-shrink-0" />
-                          <span className="truncate">{note.fileName}</span>
+                          <span className="truncate font-medium">{note.fileName}</span>
                         </div>
 
                         {/* Date + Download */}
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] text-slate-400 font-bold">
+                          <span className="text-[10px] text-slate-500 font-semibold">
                             {new Date(note.createdAt).toLocaleDateString("en-IN", {
                               day: "2-digit", month: "short", year: "numeric"
                             })}

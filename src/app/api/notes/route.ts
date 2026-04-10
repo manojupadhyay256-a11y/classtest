@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     const chapter = formData.get("chapter") as string
     const cls = formData.get("class") as string
     const sectionsRaw = formData.get("sections") as string
+    const instructions = (formData.get("instructions") as string) || null
     const file = formData.get("file") as File
 
     if (!title || !subject || !chapter || !cls || !sectionsRaw || !file) {
@@ -72,6 +73,7 @@ export async function POST(req: NextRequest) {
         sections,
         fileName: file.name,
         fileUrl: blob.url,
+        instructions: instructions || undefined,
         uploadedBy: session.user.id as string,
       },
       include: {

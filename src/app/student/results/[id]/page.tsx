@@ -12,6 +12,7 @@ interface Result {
   test: {
     title: string
     subject: string
+    isResultsHidden?: boolean
     questions: {
       id: string
       questionText: string
@@ -57,9 +58,43 @@ export default function StudentResultsDetailPage() {
         </header>
 
         <section className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-800">Your Answer Sheet</h2>
-          <div className="space-y-4">
-            {result.test.questions.map((q, idx) => {
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-800">Your Answer Sheet</h2>
+            {result.test.isResultsHidden && (
+              <span className="flex items-center space-x-2 bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                <span>Restricted Access</span>
+              </span>
+            )}
+          </div>
+
+          {result.test.isResultsHidden ? (
+            <div className="relative group overflow-hidden">
+               <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-600 opacity-[0.03]"></div>
+               <div className="bg-white border-2 border-amber-100 p-12 rounded-[2.5rem] text-center shadow-xl shadow-amber-900/5 relative z-10">
+                  <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-amber-500 shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight leading-none uppercase">Analysis Not Yet Ready</h3>
+                  <p className="text-slate-500 font-medium max-w-sm mx-auto leading-relaxed">
+                    Detailed answer review and correct explanations will be unlocked once the teacher deactivates this test session.
+                  </p>
+                  <div className="mt-8 inline-flex items-center space-x-4">
+                     <div className="flex flex-col items-center">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Status</span>
+                        <div className="px-3 py-1 bg-teal-50 text-teal-600 rounded-lg text-xs font-black">Score Released</div>
+                     </div>
+                     <div className="w-px h-8 bg-slate-100"></div>
+                     <div className="flex flex-col items-center">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Review</span>
+                        <div className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-xs font-black">Pending Closure</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {result.test.questions.map((q, idx) => {
               const studentAnswer = result.answers[q.id]?.toString().trim() || ""
               const correctAnswer = q.correctAnswer.trim()
               let isCorrect = false
@@ -111,8 +146,9 @@ export default function StudentResultsDetailPage() {
                   </div>
                 </div>
               )
-            })}
-          </div>
+              })}
+            </div>
+          )}
         </section>
 
         <footer className="text-center pt-10">

@@ -17,6 +17,10 @@ export default withAuth(
     }
 
     if (path.startsWith("/student") && role !== "STUDENT") {
+      // Allow Teachers and Admins to access test pages for preview
+      if (path.includes("/test/") && (role === "TEACHER" || role === "ADMIN")) {
+        return NextResponse.next()
+      }
       return NextResponse.redirect(new URL("/admin/dashboard", req.url))
     }
   },

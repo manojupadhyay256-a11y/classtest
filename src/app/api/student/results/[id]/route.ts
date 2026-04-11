@@ -24,5 +24,17 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
+  // Hide detailed results if test is still active (for students only)
+  if (session.user.role === "STUDENT" && result.test.isActive) {
+    return NextResponse.json({
+      ...result,
+      test: {
+        ...result.test,
+        questions: [], // Empty questions to hide breakdown
+        isResultsHidden: true
+      }
+    })
+  }
+
   return NextResponse.json(result)
 }

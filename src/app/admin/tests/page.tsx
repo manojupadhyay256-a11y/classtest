@@ -68,7 +68,8 @@ export default async function TestsListPage() {
                     <td className="py-3 px-3 text-center font-bold text-slate-500 text-sm">
                       {test._count.questions} / {test._count.results}
                     </td>
-                    <td className="py-3 px-3 text-right space-x-2">
+                    <td className="py-3 px-3 text-right space-x-2 flex items-center justify-end">
+                      <Link href={`/student/test/${test.id}?mode=preview`} className="bg-amber-50 text-amber-700 hover:bg-amber-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Preview</Link>
                       <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit</Link>
                       <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Results</Link>
                     </td>

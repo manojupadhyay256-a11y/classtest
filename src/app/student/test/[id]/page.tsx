@@ -1,14 +1,17 @@
 "use client"
 
 import { useEffect, useState, useCallback, useMemo } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
 import toast from "react-hot-toast"
-import { Timer, ChevronLeft, ChevronRight, CheckCircle2, Flag, X, ArrowRight } from "lucide-react"
+import { Timer, ChevronLeft, ChevronRight, CheckCircle2, Flag, X, ArrowRight, Eye } from "lucide-react"
+import TestPreviewSummary from "@/components/student/test-preview-summary"
 
 interface Question {
   id: string
   questionText: string
   questionType: string
+  correctAnswer: string
   options: {
     tokens?: string[]
     left?: string[]
@@ -28,13 +31,20 @@ interface Test {
 export default function StudentTestPage() {
   const params = useParams()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { data: session } = useSession()
+  
   const testId = params.id as string
+  const isPreview = searchParams.get("mode") === "preview"
+  const isTeacher = session?.user?.role === "TEACHER" || session?.user?.role === "ADMIN"
+
   const [test, setTest] = useState<Test | null>(null)
   const [currentIdx, setCurrentIdx] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [timeLeft, setTimeLeft] = useState<number>(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [showPreviewSummary, setShowPreviewSummary] = useState(false)
 
   // Local state for interactive questions
   const [matchSelection, setMatchSelection] = useState<string | null>(null)
@@ -45,7 +55,7 @@ export default function StudentTestPage() {
       const data = await res.json()
       if (data.error) {
         toast.error(data.error)
-        router.push("/student/dashboard")
+        router.push(isTeacher ? "/admin/tests" : "/student/dashboard")
         return
       }
       setTest(data)
@@ -53,9 +63,9 @@ export default function StudentTestPage() {
       setIsLoading(false)
     } catch {
       toast.error("Failed to load test")
-      router.push("/student/dashboard")
+      router.push(isTeacher ? "/admin/tests" : "/student/dashboard")
     }
-  }, [testId, router])
+  }, [testId, router, isTeacher])
 
   useEffect(() => {
     fetchTest()
@@ -63,6 +73,12 @@ export default function StudentTestPage() {
 
   const submitTest = useCallback(async () => {
     if (isSubmitting) return
+
+    if (isPreview && isTeacher) {
+      setShowPreviewSummary(true)
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
@@ -86,7 +102,7 @@ export default function StudentTestPage() {
       toast.error("Network error during submission")
       setIsSubmitting(false)
     }
-  }, [testId, answers, timeLeft, test?.duration, router, isSubmitting])
+  }, [testId, answers, timeLeft, test?.duration, router, isSubmitting, isPreview, isTeacher])
 
   useEffect(() => {
     if (timeLeft <= 0 && !isLoading && test) {
@@ -134,7 +150,7 @@ export default function StudentTestPage() {
         <h2 className="text-2xl font-black text-slate-800">This test has no questions.</h2>
         <p className="text-slate-500 font-medium mt-2">Please contact your administrator.</p>
         <button 
-          onClick={() => router.push("/student/dashboard")}
+          onClick={() => router.push(isTeacher ? "/admin/tests" : "/student/dashboard")}
           className="mt-6 bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold"
         >
           Back to Dashboard
@@ -183,6 +199,14 @@ export default function StudentTestPage() {
 
   return (
     <div className="min-h-screen bg-mesh text-slate-900 font-sans">
+      {showPreviewSummary && isTeacher && (
+        <TestPreviewSummary 
+          test={test} 
+          answers={answers} 
+          onClose={() => setShowPreviewSummary(false)} 
+        />
+      )}
+
       <nav className="glass sticky top-0 z-50 px-6 py-4 flex flex-col md:flex-row justify-between items-center border-b border-white/40 gap-4">
         <div className="flex items-center space-x-4">
           <div className="p-3 bg-slate-900 rounded-2xl shadow-lg shadow-slate-900/10">
@@ -191,10 +215,17 @@ export default function StudentTestPage() {
           <div>
             <h1 className="text-xl font-black tracking-tight text-slate-900">{test.title}</h1>
             <div className="flex items-center space-x-3 mt-0.5">
-              <span className="text-[10px] font-bold text-teal-600 uppercase tracking-widest bg-teal-50 px-2 py-0.5 rounded-full border border-teal-100 flex items-center">
-                <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mr-1.5 animate-pulse" />
-                Live Session
-              </span>
+              {isPreview && isTeacher ? (
+                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100 flex items-center">
+                  <Eye className="w-3 h-3 mr-1.5" />
+                  Teacher Preview
+                </span>
+              ) : (
+                <span className="text-[10px] font-bold text-teal-600 uppercase tracking-widest bg-teal-50 px-2 py-0.5 rounded-full border border-teal-100 flex items-center">
+                  <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mr-1.5 animate-pulse" />
+                  Live Session
+                </span>
+              )}
               <span className="text-xs font-semibold text-slate-400">
                 {answeredCount} of {test.questions.length} Attempted
               </span>
@@ -246,9 +277,19 @@ export default function StudentTestPage() {
               </div>
             </div>
 
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-8">
               {currentQ ? currentQ.questionText : "Loading question..."}
             </h2>
+
+            {isPreview && isTeacher && (
+              <div className="mb-10 bg-indigo-50 border border-indigo-100 p-6 rounded-[2rem] animate-in slide-in-from-top-4 duration-500">
+                 <p className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-2">Teacher Reference</p>
+                 <div className="flex items-center gap-3">
+                    <span className="text-sm font-bold text-slate-500">Correct Answer:</span>
+                    <span className="text-lg font-black text-slate-900 select-all">{currentQ?.correctAnswer}</span>
+                 </div>
+              </div>
+            )}
 
             <div className="space-y-6">
               {currentQ?.questionType === "mcq" && currentQ?.options && (
@@ -260,13 +301,17 @@ export default function StudentTestPage() {
                       className={`group w-full text-left p-4 md:p-6 rounded-3xl border-2 transition-all flex items-center space-x-4 md:space-x-6 relative overflow-hidden ${
                         answers[currentQ!.id] === key 
                         ? "bg-slate-900 text-white border-slate-900 shadow-2xl shadow-slate-900/20" 
-                        : "bg-white/50 text-slate-700 border-slate-200/60 hover:border-teal-400 hover:bg-white shadow-sm"
+                        : isPreview && isTeacher && currentQ!.correctAnswer === key
+                          ? "bg-teal-50 border-teal-200 text-teal-900 shadow-sm"
+                          : "bg-white/50 text-slate-700 border-slate-200/60 hover:border-teal-400 hover:bg-white shadow-sm"
                       }`}
                     >
                       <span className={`w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-2xl flex items-center justify-center font-black text-lg md:text-xl transition-colors ${
                         answers[currentQ!.id] === key 
                         ? "bg-white/10 text-white" 
-                        : "bg-slate-100 text-slate-400 group-hover:bg-teal-50 group-hover:text-teal-600"
+                        : isPreview && isTeacher && currentQ!.correctAnswer === key
+                          ? "bg-teal-200 text-teal-700"
+                          : "bg-slate-100 text-slate-400 group-hover:bg-teal-50 group-hover:text-teal-600"
                       }`}>
                         {key.toUpperCase()}
                       </span>
@@ -277,6 +322,11 @@ export default function StudentTestPage() {
                              <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-white" />
                            </div>
                         </div>
+                      )}
+                      {isPreview && isTeacher && currentQ.correctAnswer === key && answers[currentQ!.id] !== key && (
+                         <div className="absolute right-4 md:right-6 text-teal-500 font-black text-[10px] uppercase tracking-widest bg-white/80 px-3 py-1 rounded-full border border-teal-100">
+                           Correct
+                         </div>
                       )}
                     </button>
                   ))}
@@ -294,7 +344,9 @@ export default function StudentTestPage() {
                         ? opt === "true" 
                           ? "bg-teal-600 border-teal-600 text-white shadow-teal-600/30" 
                           : "bg-rose-600 border-rose-600 text-white shadow-rose-600/30"
-                        : "bg-white/50 border-slate-100 text-slate-300 hover:border-teal-200 hover:text-slate-400"
+                        : isPreview && isTeacher && currentQ!.correctAnswer === opt
+                          ? "bg-teal-50 border-teal-400 text-teal-600"
+                          : "bg-white/50 border-slate-100 text-slate-300 hover:border-teal-200 hover:text-slate-400"
                       }`}
                     >
                       {opt}
@@ -302,6 +354,11 @@ export default function StudentTestPage() {
                         <div className="absolute top-4 right-4">
                            <CheckCircle2 className="w-8 h-8 opacity-40 shadow-none" />
                         </div>
+                      )}
+                      {isPreview && isTeacher && currentQ!.correctAnswer === opt && (
+                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs font-black tracking-widest text-teal-600">
+                           {answers[currentQ!.id] === opt ? "" : "Correct Choice"}
+                         </div>
                       )}
                     </button>
                   ))}
@@ -439,7 +496,7 @@ export default function StudentTestPage() {
                     disabled={isSubmitting}
                     className="w-full sm:w-auto px-10 md:px-16 py-4 md:py-5 rounded-2xl bg-gradient-to-r from-teal-500 to-teal-700 text-white font-black text-lg md:text-xl transition-all shadow-xl hover:shadow-2xl hover:shadow-teal-600/30 hover:scale-105 active:scale-95 disabled:grayscale"
                 >
-                    {isSubmitting ? "Finalising..." : "Confirm & Submit"}
+                    {isSubmitting ? "Finalising..." : isPreview && isTeacher ? "View Preview Results" : "Confirm & Submit"}
                 </button>
               ) : (
                 <button 
@@ -497,7 +554,9 @@ export default function StudentTestPage() {
           <div className="bg-gradient-to-br from-indigo-600/10 to-indigo-900/10 p-8 rounded-[2rem] border border-indigo-100/50">
              <h4 className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-4">Integrity Monitor</h4>
              <p className="text-xs font-medium text-slate-500 leading-relaxed">
-               Secure browser monitoring is active. Do not switch tabs or minimize this window during the class test.
+               {isPreview && isTeacher 
+                 ? "Integrity monitoring is disabled for teacher preview mode." 
+                 : "Secure browser monitoring is active. Do not switch tabs or minimize this window during the class test."}
              </p>
           </div>
         </aside>

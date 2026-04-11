@@ -6,26 +6,39 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== "STUDENT") {
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
+  const isStudent = session.user.role === "STUDENT"
+
   const test = await prisma.test.findFirst({
-    where: { id: params.id, isActive: true },
+    where: { 
+      id: params.id, 
+      ...(isStudent ? { isActive: true } : {}) 
+    },
     include: { questions: { orderBy: { order: "asc" } } }
   })
 
   if (!test) return NextResponse.json({ error: "Test not found" }, { status: 404 })
 
-  // Check if already attempted
-  const student = await prisma.student.findUnique({ where: { admno: session.user.email! } })
-  if (!student) return NextResponse.json({ error: "Student not found" }, { status: 404 })
+  if (isStudent) {
+    // Check if already attempted
+    const student = await prisma.student.findUnique({ where: { admno: session.user.email! } })
+    if (!student) return NextResponse.json({ error: "Student not found" }, { status: 404 })
 
-  const result = await prisma.result.findFirst({
-    where: { testId: test.id, admno: student.admno }
-  })
+    const result = await prisma.result.findFirst({
+      where: { testId: test.id, admno: student.admno }
+    })
 
-  if (result) return NextResponse.json({ error: "Test already attempted" }, { status: 403 })
+    if (result) return NextResponse.json({ error: "Test already attempted" }, { status: 403 })
+
+    // Hide correct answers from student response
+    test.questions = test.questions.map(q => ({
+      ...q,
+      correctAnswer: ""
+    }))
+  }
 
   return NextResponse.json(test)
 }
@@ -73,6 +86,9 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
         isCorrect = studentPairs.length === correctPairs.length && 
                     studentPairs.every((p: string, i: number) => p === correctPairs[i])
+      } else if (q.questionType === "jumbled") {
+        // For jumbled questions, remove all whitespace to handle tokens joined by spaces
+        isCorrect = studentAnswer.toLowerCase().replace(/\s+/g, "") === correctAnswer.toLowerCase().replace(/\s+/g, "")
       } else {
         // For other types, case-insensitive comparison
         isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()

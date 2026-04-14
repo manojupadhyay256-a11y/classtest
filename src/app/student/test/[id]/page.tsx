@@ -207,47 +207,47 @@ export default function StudentTestPage() {
         />
       )}
 
-      <nav className="glass sticky top-0 z-50 px-6 py-4 flex flex-col md:flex-row justify-between items-center border-b border-white/40 gap-4">
-        <div className="flex items-center space-x-4">
-          <div className="p-3 bg-slate-900 rounded-2xl shadow-lg shadow-slate-900/10">
-            <Timer className="w-6 h-6 text-white" />
+      <nav className="glass sticky top-0 z-50 px-3 md:px-4 py-1.5 md:py-2.5 flex flex-col md:flex-row justify-between items-center border-b border-white/40 gap-2 md:gap-4">
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <div className="p-1.5 md:p-2 bg-slate-900 rounded-lg md:rounded-xl shadow-lg shadow-slate-900/10">
+            <Timer className="w-4 h-4 md:w-5 md:h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-black tracking-tight text-slate-900">{test.title}</h1>
-            <div className="flex items-center space-x-3 mt-0.5">
+            <h1 className="text-lg font-black tracking-tight text-slate-900">{test.title}</h1>
+            <div className="flex items-center space-x-2 mt-0.5">
               {isPreview && isTeacher ? (
-                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100 flex items-center">
-                  <Eye className="w-3 h-3 mr-1.5" />
+                <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-100 flex items-center">
+                  <Eye className="w-2.5 h-2.5 mr-1" />
                   Teacher Preview
                 </span>
               ) : (
-                <span className="text-[10px] font-bold text-teal-600 uppercase tracking-widest bg-teal-50 px-2 py-0.5 rounded-full border border-teal-100 flex items-center">
-                  <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mr-1.5 animate-pulse" />
+                <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest bg-teal-50 px-1.5 py-0.5 rounded-full border border-teal-100 flex items-center">
+                  <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mr-1 animate-pulse" />
                   Live Session
                 </span>
               )}
-              <span className="text-xs font-semibold text-slate-400">
-                {answeredCount} of {test.questions.length} Attempted
+              <span className="text-[10px] font-semibold text-slate-400">
+                {answeredCount}/{test.questions.length} Attempted
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-6">
-          <div className={`flex items-center space-x-3 px-6 py-3 rounded-2xl font-mono text-2xl font-black shadow-inner transition-all ${
+        <div className="flex items-center space-x-3 md:space-x-4">
+          <div className={`flex items-center space-x-1.5 md:space-x-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl font-mono text-lg md:text-xl font-black shadow-inner transition-all ${
             timeLeft < 300 
             ? "bg-red-50 text-red-600 border border-red-100 animate-pulse" 
             : "bg-slate-900 text-white"
           }`}>
-            <span className="text-sm font-bold uppercase tracking-widest opacity-60 mr-2">Ends in</span>
+            <span className="text-[9px] md:text-xs font-bold uppercase tracking-widest opacity-60 mr-1">Ends in</span>
             {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
           </div>
           
           <button 
             onClick={submitTest}
-            className="hidden md:flex bg-teal-600 hover:bg-teal-700 text-white font-black px-8 py-3 rounded-2xl shadow-xl shadow-teal-700/20 transition-all active:scale-95 items-center space-x-2"
+            className="hidden md:flex bg-teal-600 hover:bg-teal-700 text-white font-black px-5 py-2 rounded-xl shadow-xl shadow-teal-700/20 transition-all active:scale-95 items-center space-x-2 text-sm"
           >
-            <CheckCircle2 className="w-5 h-5" />
+            <CheckCircle2 className="w-4 h-4" />
             <span>Finish Test</span>
           </button>
         </div>
@@ -260,24 +260,24 @@ export default function StudentTestPage() {
         />
       </div>
 
-      <main className="max-w-7xl mx-auto p-6 md:p-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-3 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-          <div className="glass p-6 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-2 h-full bg-teal-500" />
+      <main className="max-w-6xl mx-auto p-3 md:p-6 grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="lg:col-span-3 space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="glass p-4 md:p-8 rounded-[1.2rem] md:rounded-[1.8rem] shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1 md:w-1.5 h-full bg-teal-500" />
             
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-              <span className="text-sm font-black text-slate-400 uppercase tracking-[0.2em]">Question {currentIdx + 1}</span>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Question {currentIdx + 1}</span>
               <div className="flex items-center space-x-2">
-                 <span className="bg-amber-50 text-amber-600 text-xs font-black px-3 py-1.5 rounded-xl border border-amber-100 uppercase tracking-wider">
-                   {currentQ!.marks} Marks Value
+                 <span className="bg-amber-50 text-amber-600 text-[10px] font-black px-2 py-1 rounded-lg border border-amber-100 uppercase tracking-wider">
+                   {currentQ!.marks} Marks
                  </span>
-                 <button className="p-2 text-slate-400 hover:text-indigo-600 transition-colors">
-                   <Flag className="w-5 h-5" />
+                 <button className="p-1.5 text-slate-400 hover:text-indigo-600 transition-colors">
+                   <Flag className="w-4 h-4" />
                  </button>
               </div>
             </div>
 
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-8">
+            <h2 className="text-lg md:text-2xl font-bold text-slate-900 leading-tight mb-4 md:mb-6">
               {currentQ ? currentQ.questionText : "Loading question..."}
             </h2>
 
@@ -298,15 +298,15 @@ export default function StudentTestPage() {
                     <button
                       key={key}
                       onClick={() => setAnswers({ ...answers, [currentQ!.id]: key })}
-                      className={`group w-full text-left p-4 md:p-6 rounded-3xl border-2 transition-all flex items-center space-x-4 md:space-x-6 relative overflow-hidden ${
+                      className={`group w-full text-left p-2.5 md:p-4 rounded-xl md:rounded-2xl border-2 transition-all flex items-center space-x-3 md:space-x-4 relative overflow-hidden ${
                         answers[currentQ!.id] === key 
-                        ? "bg-slate-900 text-white border-slate-900 shadow-2xl shadow-slate-900/20" 
+                        ? "bg-slate-900 text-white border-slate-900 shadow-md" 
                         : isPreview && isTeacher && currentQ!.correctAnswer === key
                           ? "bg-teal-50 border-teal-200 text-teal-900 shadow-sm"
                           : "bg-white/50 text-slate-700 border-slate-200/60 hover:border-teal-400 hover:bg-white shadow-sm"
                       }`}
                     >
-                      <span className={`w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-2xl flex items-center justify-center font-black text-lg md:text-xl transition-colors ${
+                      <span className={`w-7 h-7 md:w-9 md:h-9 flex-shrink-0 rounded-lg md:rounded-xl flex items-center justify-center font-black text-xs md:text-base transition-colors ${
                         answers[currentQ!.id] === key 
                         ? "bg-white/10 text-white" 
                         : isPreview && isTeacher && currentQ!.correctAnswer === key
@@ -315,11 +315,11 @@ export default function StudentTestPage() {
                       }`}>
                         {key.toUpperCase()}
                       </span>
-                      <span className="font-bold text-base md:text-lg break-words flex-1">{(currentQ!.options as Record<string,string>)[key]}</span>
+                      <span className="font-bold text-sm md:text-base break-words flex-1">{(currentQ!.options as Record<string,string>)[key]}</span>
                       {answers[currentQ!.id] === key && (
-                        <div className="absolute right-4 md:right-6">
-                           <div className="w-6 h-6 md:w-8 md:h-8 bg-teal-500 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
-                             <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                        <div className="absolute right-3 md:right-4">
+                           <div className="w-5 h-5 md:w-6 md:h-6 bg-teal-500 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
+                             <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />
                            </div>
                         </div>
                       )}
@@ -339,7 +339,7 @@ export default function StudentTestPage() {
                     <button
                       key={opt}
                       onClick={() => setAnswers({ ...answers, [currentQ!.id]: opt })}
-                      className={`group relative overflow-hidden py-10 rounded-[2rem] border-2 text-3xl font-black uppercase transition-all shadow-xl ${
+                      className={`group relative overflow-hidden py-4 md:py-6 rounded-xl md:rounded-2xl border-2 text-xl md:text-2xl font-black uppercase transition-all shadow-md ${
                         answers[currentQ!.id] === opt
                         ? opt === "true" 
                           ? "bg-teal-600 border-teal-600 text-white shadow-teal-600/30" 
@@ -351,8 +351,8 @@ export default function StudentTestPage() {
                     >
                       {opt}
                       {answers[currentQ!.id] === opt && (
-                        <div className="absolute top-4 right-4">
-                           <CheckCircle2 className="w-8 h-8 opacity-40 shadow-none" />
+                        <div className="absolute top-3 right-3">
+                           <CheckCircle2 className="w-6 h-6 opacity-40 shadow-none" />
                         </div>
                       )}
                       {isPreview && isTeacher && currentQ!.correctAnswer === opt && (
@@ -372,54 +372,53 @@ export default function StudentTestPage() {
                     value={answers[currentQ!.id] || ""}
                     onChange={(e) => setAnswers({ ...answers, [currentQ!.id]: e.target.value })}
                     placeholder="Enter your response here..."
-                    className="w-full p-8 text-2xl font-bold rounded-[2rem] border-2 bg-white/50 border-slate-100 text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-8 focus:ring-teal-500/5 transition-all outline-none shadow-sm"
+                    className="w-full p-4 md:p-6 text-base md:text-lg font-bold rounded-xl md:rounded-2xl border-2 bg-white/50 border-slate-100 text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 transition-all outline-none shadow-sm"
                   />
                   {answers[currentQ!.id] && (
-                    <div className="absolute right-8 top-1/2 -translate-y-1/2">
-                       <CheckCircle2 className="w-8 h-8 text-teal-500" />
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                       <CheckCircle2 className="w-6 h-6 text-teal-500" />
                     </div>
                   )}
                 </div>
               )}
 
               {currentQ!.questionType === "jumbled" && (
-                <div className="space-y-8 animate-in fade-in zoom-in duration-500">
-                  <div className="p-8 min-h-[120px] rounded-[2rem] border-2 border-dashed border-slate-200 bg-slate-50/50 flex flex-wrap gap-3 items-center justify-center relative">
+                <div className="space-y-4 md:space-y-6 animate-in fade-in zoom-in duration-500">
+                  <div className="p-4 md:p-6 min-h-[80px] rounded-xl md:rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 flex flex-wrap gap-2 items-center justify-center relative transition-all">
                     {(answers[currentQ!.id] || "").split(" ").filter(t => t).map((token, i) => (
                       <button
                         key={`${token}-${i}`}
                         onClick={() => handleJumbledClick(token, false)}
-                        className="bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-slate-900/20 active:scale-95 transition-all flex items-center hover:bg-red-600 group"
+                        className="bg-slate-900 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl font-bold shadow-md shadow-slate-900/10 active:scale-95 transition-all flex items-center hover:bg-red-600 group text-xs md:text-sm"
                       >
                         {token}
-                        <X className="w-4 h-4 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <X className="w-3 h-3 ml-1.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </button>
                     ))}
                     {!(answers[currentQ!.id]) && (
-                       <span className="text-slate-400 font-bold uppercase tracking-widest text-xs">Tap tiles below to build answer</span>
+                       <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Tap tiles to build answer</span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap gap-3 justify-center">
+                  <div className="flex flex-wrap gap-2 justify-center">
                     {availableJumbledTokens.map((token, i) => (
                       <button
                         key={`${token}-${i}`}
                         onClick={() => handleJumbledClick(token, true)}
-                        className="bg-white border-2 border-slate-200 px-6 py-3 rounded-2xl font-black text-slate-700 hover:border-teal-500 hover:text-teal-600 hover:shadow-md transition-all active:scale-95 shadow-sm"
+                        className="bg-white border-2 border-slate-200 px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl font-black text-slate-700 hover:border-teal-500 hover:text-teal-600 transition-all active:scale-95 shadow-sm text-xs md:text-sm"
                       >
                         {token}
                       </button>
                     ))}
                   </div>
 
-                  <div className="pt-8 border-t border-slate-100/80">
-                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 text-center">Prefer using a keyboard?</p>
+                  <div className="pt-4 border-t border-slate-100">
                      <input 
                         type="text"
                         value={answers[currentQ!.id] || ""}
                         onChange={(e) => setAnswers({ ...answers, [currentQ!.id]: e.target.value })}
-                        placeholder="Type your answer directly here..."
-                        className="w-full text-center p-6 text-xl font-bold rounded-2xl border-2 bg-white/50 border-slate-200 text-slate-900 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all outline-none"
+                        placeholder="Or type answer directly..."
+                        className="w-full text-center p-3 md:p-4 text-base md:text-lg font-bold rounded-xl border-2 bg-white/50 border-slate-200 text-slate-900 focus:bg-white focus:border-teal-500 transition-all outline-none shadow-sm"
                       />
                   </div>
                 </div>
@@ -433,7 +432,7 @@ export default function StudentTestPage() {
                          <button
                            key={item}
                            onClick={() => handleMatchClick(item, true)}
-                           className={`w-full text-left p-6 rounded-2xl border-2 transition-all font-bold flex justify-between items-center ${
+                           className={`w-full text-left p-4 md:p-6 rounded-xl md:rounded-2xl border-2 transition-all font-bold flex justify-between items-center text-sm md:text-base ${
                              matchMapping[item] 
                                ? "bg-teal-50 border-teal-200 text-teal-800" 
                                : matchSelection === item
@@ -450,15 +449,15 @@ export default function StudentTestPage() {
                     <div className="space-y-4">
                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Column B</h3>
                        {(currentQ!.options?.right || []).map((item: string) => (
-                         <button
-                           key={item}
-                           onClick={() => handleMatchClick(item, false)}
-                           className={`w-full text-left p-6 rounded-2xl border-2 transition-all font-bold group ${
-                             Object.values(matchMapping).includes(item)
-                               ? "bg-indigo-50 border-indigo-200 text-indigo-800"
-                               : "bg-white/50 border-slate-100 text-slate-600 hover:border-indigo-400"
-                           }`}
-                         >
+                          <button
+                            key={item}
+                            onClick={() => handleMatchClick(item, false)}
+                            className={`w-full text-left p-4 md:p-6 rounded-xl md:rounded-2xl border-2 transition-all font-bold group text-sm md:text-base ${
+                              Object.values(matchMapping).includes(item)
+                                ? "bg-indigo-50 border-indigo-200 text-indigo-800"
+                                : "bg-white/50 border-slate-100 text-slate-600 hover:border-indigo-400"
+                            }`}
+                          >
                            <div className="flex justify-between items-center">
                               {item}
                               {Object.entries(matchMapping).some(([, v]) => v === item) && (
@@ -474,37 +473,31 @@ export default function StudentTestPage() {
               )}
             </div>
 
-            <div className="flex flex-col sm:flex-row flex-wrap justify-between items-center gap-4 md:gap-6 pt-10 mt-12 border-t-2 border-slate-100">
+            <div className="flex justify-between items-center pt-4 md:pt-6 mt-6 md:mt-8 border-t border-slate-100 gap-4">
               <button 
                 disabled={currentIdx === 0}
                 onClick={() => setCurrentIdx(currentIdx - 1)}
-                className="w-full sm:w-auto px-6 md:px-10 py-4 md:py-5 rounded-2xl font-black text-slate-700 bg-white border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 disabled:opacity-30 disabled:hover:border-slate-200 transition-all flex items-center justify-center space-x-2 group active:scale-95 shadow-sm"
+                className="px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl font-black text-slate-700 bg-white border-2 border-slate-100 hover:border-slate-300 hover:bg-slate-50 disabled:opacity-30 transition-all flex items-center justify-center space-x-2 group active:scale-95 shadow-sm text-sm"
               >
-                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 <span>Previous</span>
               </button>
-              
-              <div className="hidden xl:flex space-x-2 bg-slate-50 px-4 py-2 rounded-full border border-slate-100/50">
-                {test.questions.map((__, i) => (
-                  <div key={__.id} className={`w-2.5 h-2.5 rounded-full transition-all duration-500 shadow-sm ${i === currentIdx ? "w-8 bg-teal-500" : "bg-slate-300"}`} />
-                ))}
-              </div>
 
               {isLast ? (
                 <button 
                     onClick={submitTest}
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto px-10 md:px-16 py-4 md:py-5 rounded-2xl bg-gradient-to-r from-teal-500 to-teal-700 text-white font-black text-lg md:text-xl transition-all shadow-xl hover:shadow-2xl hover:shadow-teal-600/30 hover:scale-105 active:scale-95 disabled:grayscale"
+                    className="px-6 md:px-10 py-2.5 md:py-3.5 rounded-lg md:rounded-xl bg-gradient-to-r from-teal-500 to-teal-700 text-white font-black text-sm md:text-base transition-all shadow-lg hover:shadow-xl hover:shadow-teal-600/30 hover:scale-105 active:scale-95 disabled:grayscale"
                 >
-                    {isSubmitting ? "Finalising..." : isPreview && isTeacher ? "View Preview Results" : "Confirm & Submit"}
+                    {isSubmitting ? "Finalising..." : isPreview && isTeacher ? "Results" : "Submit Test"}
                 </button>
               ) : (
                 <button 
                   onClick={() => setCurrentIdx(currentIdx + 1)}
-                  className="w-full sm:w-auto px-8 md:px-12 py-4 md:py-5 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-black text-base md:text-lg transition-all shadow-xl hover:shadow-2xl hover:shadow-indigo-600/30 hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-3 group"
+                  className="px-5 md:px-8 py-2.5 md:py-3.5 rounded-lg md:rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-black text-sm md:text-base transition-all shadow-lg hover:shadow-xl hover:shadow-indigo-600/30 hover:-translate-y-1 active:scale-95 flex items-center justify-center space-x-2 group"
                 >
-                  <span>Save & Continue</span>
-                  <ChevronRight className="w-5 md:w-6 h-5 md:h-6 group-hover:translate-x-1 transition-transform" />
+                  <span>Continue</span>
+                  <ChevronRight className="w-4 md:w-5 h-4 md:h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               )}
             </div>
@@ -512,16 +505,16 @@ export default function StudentTestPage() {
         </div>
 
         <aside className="lg:col-span-1 space-y-6">
-          <div className="glass p-8 rounded-[2rem] shadow-xl">
-            <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">Exam Navigation</h3>
-            <div className="grid grid-cols-4 gap-3">
+          <div className="glass p-5 md:p-6 rounded-[1.2rem] shadow-lg">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Exam Navigation</h3>
+            <div className="grid grid-cols-5 md:grid-cols-4 gap-2">
               {test.questions.map((q, i) => (
                 <button
                   key={q.id}
                   onClick={() => setCurrentIdx(i)}
-                  className={`aspect-square rounded-xl flex items-center justify-center text-sm font-black transition-all border-2 ${
+                  className={`aspect-square rounded-lg flex items-center justify-center text-xs font-black transition-all border-2 ${
                     i === currentIdx
-                    ? "bg-teal-500 border-teal-500 text-white shadow-lg shadow-teal-500/30 scale-110 z-10"
+                    ? "bg-teal-500 border-teal-500 text-white shadow-md shadow-teal-500/30 scale-105 z-10"
                     : answers[q.id]
                       ? "bg-teal-50 border-teal-200 text-teal-600"
                       : "bg-white border-slate-100 text-slate-300 hover:border-slate-300"

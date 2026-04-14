@@ -48,7 +48,43 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json()
-    const { studentId, content } = body
+    const { studentId, content, type, class: className, sections } = body
+
+    if (type === "broadcast") {
+      if (!className || !sections || !Array.isArray(sections) || !content) {
+        return NextResponse.json({ error: "Missing required fields for broadcast" }, { status: 400 })
+      }
+
+      const students = await prisma.student.findMany({
+        where: {
+          class: className,
+          section: { in: sections }
+        },
+        select: { admno: true }
+      })
+
+      if (students.length === 0) {
+        return NextResponse.json({ error: "No students found in selected sections" }, { status: 404 })
+      }
+
+      // Create messages for all students
+      // Using a loop to handle creating many records while maintaining teacherId context
+      // Prisma createMany is faster but individual creates ensure we follow the model relations perfectly
+      const messages = await Promise.all(
+        students.map(student => 
+          prisma.message.create({
+            data: {
+              studentId: student.admno,
+              teacherId: session.user.id as string,
+              content,
+              senderRole: "TEACHER"
+            }
+          })
+        )
+      )
+
+      return NextResponse.json({ success: true, count: messages.length })
+    }
 
     if (!studentId || !content) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })

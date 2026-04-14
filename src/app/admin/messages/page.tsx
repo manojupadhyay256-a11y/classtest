@@ -9,7 +9,10 @@ import {
   Loader2,
   CheckCheck,
   Check,
-  Search
+  Search,
+  Megaphone,
+  X,
+  ChevronDown
 } from "lucide-react"
 import { toast } from "react-hot-toast"
 
@@ -37,6 +40,9 @@ interface Thread {
   unreadCount: number
 }
 
+const CLASS_OPTIONS = ["VI", "VII", "VIII", "IX", "X", "XI", "XII"]
+const SECTION_OPTIONS = ["A", "B", "C", "D", "E"]
+
 export default function AdminMessagesPage() {
   const { data: session } = useSession()
   const [students, setStudents] = useState<Student[]>([])
@@ -50,6 +56,13 @@ export default function AdminMessagesPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSending, setIsSending] = useState(false)
   const [isChatLoading, setIsChatLoading] = useState(false)
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false)
+  const [isBroadcasting, setIsBroadcasting] = useState(false)
+  const [broadcastForm, setBroadcastForm] = useState({
+    class: "",
+    sections: [] as string[],
+    content: ""
+  })
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -143,35 +156,85 @@ export default function AdminMessagesPage() {
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newMessage.trim() || !selectedStudent || isSending) return
+    if (!selectedStudent || !newMessage.trim() || isSending) return
 
     setIsSending(true)
     try {
       const res = await fetch("/api/admin/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId: selectedStudent.admno, content: newMessage.trim() })
+        body: JSON.stringify({ 
+          studentId: selectedStudent.admno, 
+          content: newMessage.trim() 
+        })
       })
       
       if (res.ok) {
         const msg = await res.json()
         setMessages(prev => [...prev, msg])
         setNewMessage("")
-        setTimeout(scrollToBottom, 50)
         
-        setThreads(prev => {
-          const idx = prev.findIndex(t => t.id === selectedStudent.admno)
-          if (idx === -1) return prev
-          const copy = [...prev]
-          copy[idx] = { ...copy[idx], lastMessage: msg.content, lastMessageTime: msg.createdAt }
-          return copy.sort((a,b) => new Date(b.lastMessageTime || 0).getTime() - new Date(a.lastMessageTime || 0).getTime())
-        })
+        // Update thread preview
+        setThreads(prev => prev.map(t => 
+          t.id === selectedStudent.admno 
+            ? { ...t, lastMessage: msg.content, lastMessageTime: msg.createdAt } 
+            : t
+        ))
+        
+        setTimeout(scrollToBottom, 50)
+      } else {
+        toast.error("Failed to send message")
       }
     } catch {
       toast.error("Failed to send message")
     } finally {
       setIsSending(false)
     }
+  }
+
+  const handleBroadcast = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!broadcastForm.class || broadcastForm.sections.length === 0 || !broadcastForm.content.trim() || isBroadcasting) {
+      toast.error("Please fill all fields and select at least one section")
+      return
+    }
+
+    setIsBroadcasting(true)
+    try {
+      const res = await fetch("/api/admin/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          type: "broadcast",
+          class: broadcastForm.class,
+          sections: broadcastForm.sections,
+          content: broadcastForm.content.trim()
+        })
+      })
+      
+      if (res.ok) {
+        toast.success("Broadcast message sent successfully!")
+        setBroadcastForm({ class: "", sections: [], content: "" })
+        setShowBroadcastModal(false)
+        // Optionally refresh threads here if needed, but it will refresh on next interval
+      } else {
+        const err = await res.json()
+        toast.error(err.error || "Failed to send broadcast")
+      }
+    } catch {
+      toast.error("Failed to send broadcast")
+    } finally {
+      setIsBroadcasting(false)
+    }
+  }
+
+  const toggleBroadcastSection = (sec: string) => {
+    setBroadcastForm(prev => ({
+      ...prev,
+      sections: prev.sections.includes(sec)
+        ? prev.sections.filter(s => s !== sec)
+        : [...prev.sections, sec]
+    }))
   }
 
   const formatTime = (dateStr: string) => {
@@ -202,6 +265,13 @@ export default function AdminMessagesPage() {
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Messages</h1>
           <p className="text-slate-400 text-sm font-medium">Communicate with students</p>
         </div>
+        <button
+          onClick={() => setShowBroadcastModal(true)}
+          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
+        >
+          <Megaphone size={18} />
+          <span>Section Broadcast</span>
+        </button>
       </header>
 
       <div className="flex-1 flex gap-4 overflow-hidden">
@@ -370,6 +440,106 @@ export default function AdminMessagesPage() {
           )}
         </div>
       </div>
+
+      {/* Broadcast Modal */}
+      {showBroadcastModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="w-full max-w-lg bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="px-8 py-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-black text-slate-900 flex items-center gap-3">
+                  <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl">
+                    <Megaphone size={20} />
+                  </div>
+                  Section Broadcast
+                </h2>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Send to entire classes/sections</p>
+              </div>
+              <button 
+                onClick={() => setShowBroadcastModal(false)}
+                className="p-2 hover:bg-slate-200 text-slate-400 hover:text-slate-600 rounded-xl transition-all"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleBroadcast} className="p-8 space-y-6">
+              <div className="grid grid-cols-1 gap-6">
+                {/* Class Select */}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Target Class *</label>
+                  <div className="relative">
+                    <select
+                      required
+                      value={broadcastForm.class}
+                      onChange={e => setBroadcastForm({ ...broadcastForm, class: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-bold appearance-none transition-all focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 text-slate-800"
+                    >
+                      <option value="">Select a class</option>
+                      {CLASS_OPTIONS.map(c => (
+                        <option key={c} value={c}>Class {c}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Sections Multi-Select */}
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Visible to Sections *</label>
+                  <div className="flex flex-wrap gap-2">
+                    {SECTION_OPTIONS.map(sec => (
+                      <button
+                        key={sec}
+                        type="button"
+                        onClick={() => toggleBroadcastSection(sec)}
+                        className={`px-5 py-2 rounded-xl text-sm font-black border transition-all ${
+                          broadcastForm.sections.includes(sec)
+                            ? "bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-600/20"
+                            : "bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-300"
+                        }`}
+                      >
+                        Section {sec}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-bold italic ml-1">Choose at least one section</p>
+                </div>
+
+                {/* Message Content */}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Your Message *</label>
+                  <textarea
+                    required
+                    value={broadcastForm.content}
+                    onChange={e => setBroadcastForm({ ...broadcastForm, content: e.target.value })}
+                    rows={4}
+                    placeholder="Type your announcement to the class..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-medium transition-all focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 text-slate-800 placeholder:text-slate-400 resize-none"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  disabled={isBroadcasting || !broadcastForm.class || broadcastForm.sections.length === 0 || !broadcastForm.content.trim()}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-black py-4 rounded-2xl transition-all shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-3 active:scale-95"
+                >
+                  {isBroadcasting ? (
+                    <><Loader2 size={20} className="animate-spin" /> Broadcasting...</>
+                  ) : (
+                    <><Send size={18} /> Send Section Broadcast</>
+                  )}
+                </button>
+                <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest mt-4">
+                  Messages will appear in individual student chats
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

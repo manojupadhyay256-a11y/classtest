@@ -1,9 +1,10 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
-import { LayoutDashboard, Users, FileText, Settings, LogOut, UserCog, BookOpen, MessageSquare } from "lucide-react"
+import { LayoutDashboard, Users, FileText, Settings, LogOut, UserCog, BookOpen, MessageSquare, Mail } from "lucide-react"
 import { useSession } from "next-auth/react"
 
 const navItems = [
@@ -12,6 +13,7 @@ const navItems = [
   { label: "Teachers", href: "/admin/teachers", icon: UserCog, adminOnly: true },
   { label: "Tests", href: "/admin/tests", icon: FileText },
   { label: "Notes", href: "/admin/notes", icon: BookOpen },
+  { label: "Messages", href: "/admin/messages", icon: Mail },
   { label: "Feedback", href: "/admin/feedback", icon: MessageSquare, adminOnly: true },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ]
@@ -20,6 +22,18 @@ export default function AdminSidebar() {
   const pathname = usePathname()
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === "ADMIN"
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  useEffect(() => {
+    fetch("/api/messages/unread")
+      .then(res => res.json())
+      .then(data => {
+        if (data.unreadCount) {
+          setUnreadCount(data.unreadCount)
+        }
+      })
+      .catch(err => console.error("Failed to fetch unread messages", err))
+  }, [])
 
   return (
     <div className="w-full md:w-52 bg-slate-900 md:h-screen sticky top-0 z-50 text-white flex flex-col p-3 md:p-4 shadow-md border-b md:border-b-0 md:border-r border-slate-800">
@@ -45,14 +59,21 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-shrink-0 items-center space-x-2.5 px-3 py-2 rounded-lg transition-all whitespace-nowrap text-sm ${
+              className={`flex flex-shrink-0 items-center justify-between space-x-2.5 px-3 py-2 rounded-lg transition-all whitespace-nowrap text-sm ${
                 isActive
                   ? "bg-amber-500 text-white shadow-md shadow-amber-500/20 font-bold"
                   : "hover:bg-slate-800 text-slate-400 hover:text-slate-200 font-medium"
               }`}
             >
-              <Icon size={15} className="flex-shrink-0" />
-              <span>{item.label}</span>
+              <div className="flex items-center space-x-2.5">
+                <Icon size={15} className="flex-shrink-0" />
+                <span>{item.label}</span>
+              </div>
+              {item.label === "Messages" && unreadCount > 0 && (
+                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+                  {unreadCount}
+                </span>
+              )}
             </Link>
           )
         })}

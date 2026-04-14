@@ -1,0 +1,23 @@
+"Read the uploaded Ch1.pdf about Networking Concepts and generate a question bank.
+
+    Requirements:
+
+        Create exactly 10 questions for each type: MCQ, Fill in the Blanks, Jumbled Words, Match, and True/False (50 questions total).
+
+        For MCQs and Fill in the Blanks: Use a 'double-spaced' style where there is an empty line between the Question, the Type, each Option, and the Answer.
+
+        For Matching questions: Keep all the pairs for a single answer on one line, separated by commas (e.g., Answer: A : 1, B : 2).
+
+        Style Guide: Follow the pattern from the sample document exactly (Question: [text], Type: [type], Answer: [text]).
+
+        For Fill in the Blanks: Use \_____\_ as the placeholder in the question text."
+
+Summary of what this prompt achieves in Canvas:
+
+    Vertical MCQ Spacing: Ensures you don't have to manually press 'Enter' between options.
+
+    One-Line Match Answers: Prevents the matching section from becoming too long vertically.
+
+    Specific Placeholders: Uses the exact underscores you prefer for the "Fill in the Blanks" section.
+
+    Comprehensive Coverage: Ensures every topic in the PDF is converted into a testable format.

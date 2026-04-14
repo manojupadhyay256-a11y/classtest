@@ -17,6 +17,7 @@ model Student {
   createdAt  DateTime @default(now())
   results    Result[]
   feedbacks  Feedback[]
+  messages   Message[]
 }
 
 model Teacher {
@@ -27,6 +28,7 @@ model Teacher {
   role      String   @default("ADMIN") // "ADMIN" | "TEACHER"
   tests     Test[]
   notes     Note[]
+  messages  Message[]
 }
 
 model Test {
@@ -102,4 +104,16 @@ model Feedback {
   isLiked   Boolean  @default(true)
   comment   String?
   createdAt DateTime @default(now())
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  studentId  String
+  teacherId  String
+  student    Student  @relation(fields: [studentId], references: [admno])
+  teacher    Teacher  @relation(fields: [teacherId], references: [id])
+  content    String
+  senderRole String   // "STUDENT" | "TEACHER"
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
 }

@@ -45,6 +45,7 @@ export default function StudentDashboardPage() {
   const [availableTests, setAvailableTests] = useState<Test[]>([])
   const [results, setResults] = useState<Result[]>([])
   const [stats, setStats] = useState<Stats>({ totalTests: 0, avgPercentage: 0, lastAttemptDate: null })
+  const [unreadCount, setUnreadCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchData = async () => {
@@ -54,6 +55,14 @@ export default function StudentDashboardPage() {
       setAvailableTests(data.availableTests || [])
       setResults(data.results || [])
       setStats(data.stats || { totalTests: 0, avgPercentage: 0, lastAttemptDate: null })
+
+      const unreadRes = await fetch("/api/messages/unread")
+      if (unreadRes.ok) {
+        const unreadData = await unreadRes.json()
+        if (unreadData.unreadCount !== undefined) {
+          setUnreadCount(unreadData.unreadCount)
+        }
+      }
     } catch {
       console.error("Failed to fetch dashboard data")
     } finally {
@@ -113,6 +122,18 @@ export default function StudentDashboardPage() {
           </div>
           
           <div className="flex items-center space-x-1">
+            <Link
+              href="/student/messages"
+              className="relative flex items-center space-x-1.5 text-slate-500 hover:text-indigo-600 transition-all duration-300 py-1.5 px-3 rounded-lg hover:bg-indigo-50 border border-transparent hover:border-indigo-100 text-sm"
+            >
+              <MessageSquare size={15} />
+              <span className="font-bold text-xs tracking-tight hidden md:inline">Messages</span>
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 -translate-y-1/3 translate-x-1/3 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                  {unreadCount}
+                </span>
+              )}
+            </Link>
             <Link
               href="/student/settings"
               className="flex items-center space-x-1.5 text-slate-500 hover:text-teal-600 transition-all duration-300 py-1.5 px-3 rounded-lg hover:bg-teal-50 border border-transparent hover:border-teal-100 text-sm"

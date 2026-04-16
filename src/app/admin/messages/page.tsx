@@ -430,7 +430,7 @@ export default function AdminMessagesPage() {
               </div>
             </>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-slate-400 hidden lg:flex">
+            <div className="h-full flex-col items-center justify-center text-slate-400 hidden lg:flex">
                 <MessageSquare size={64} className="text-slate-200 mb-6" />
                 <h3 className="text-lg font-black text-slate-900 mb-2">Student Communication</h3>
                 <p className="text-sm font-medium max-w-xs text-center text-slate-500">

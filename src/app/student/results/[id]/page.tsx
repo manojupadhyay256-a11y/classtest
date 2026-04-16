@@ -3,6 +3,20 @@
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
+import { 
+  Trophy, 
+  ChevronLeft, 
+  CheckCircle2, 
+  XCircle, 
+  Lock, 
+  BookOpen, 
+  Star,
+  Target,
+  Clock,
+  Layout,
+  ExternalLink,
+  Sparkles
+} from "lucide-react"
 
 interface Result {
   id: string
@@ -39,122 +53,240 @@ export default function StudentResultsDetailPage() {
       })
   }, [resultId])
 
-  if (isLoading || !result) return <div className="p-10 text-center font-bold text-teal-600">Loading Result Breakdown...</div>
+  if (isLoading || !result) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Sparkles className="text-teal-500 w-6 h-6 animate-pulse" />
+            </div>
+          </div>
+          <p className="text-teal-500/80 font-black uppercase tracking-[0.2em] text-sm animate-pulse">Calculating Performance...</p>
+        </div>
+      </div>
+    )
+  }
 
-  const percentage = ((result.score / result.totalMarks) * 100).toFixed(1)
+  const percentage = Number(((result.score / result.totalMarks) * 100).toFixed(1))
+  const isHighScorer = percentage >= 80
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto space-y-10">
-        <header className="flex justify-between items-center bg-white p-10 rounded-3xl shadow-xl shadow-teal-700/5">
-          <div className="space-y-1">
-             <h1 className="text-3xl font-black text-gray-900 leading-tight">{result.test.title}</h1>
-             <p className="text-teal-600 font-bold uppercase tracking-widest text-sm">{result.test.subject}</p>
+    <div className="min-h-screen bg-[#0f172a] text-slate-200 selection:bg-teal-500/30">
+      {/* Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-teal-600/10 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="bg-mesh opacity-20 absolute inset-0"></div>
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-5 py-12 space-y-10">
+        {/* Header Section */}
+        <header className="glass p-8 md:p-12 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+            <Trophy size={160} className="text-white" />
           </div>
-          <div className="text-right">
-             <div className="text-5xl font-black text-teal-600 leading-none">{result.score} <span className="text-lg font-bold text-gray-300">/ {result.totalMarks}</span></div>
-             <div className="mt-2 inline-block px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-xs font-black uppercase">{percentage}% Score</div>
+          
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
+            <div className="space-y-4">
+              <Link 
+                href="/student/dashboard" 
+                className="inline-flex items-center space-x-2 text-teal-400 font-bold text-xs uppercase tracking-widest transition-colors mb-2"
+              >
+                <ChevronLeft size={16} />
+                <span>Dashboard</span>
+              </Link>
+              <div className="space-y-1">
+                <h1 className="text-3xl md:text-4xl font-black text-white leading-tight tracking-tight">
+                  {result.test.title}
+                </h1>
+                <div className="flex items-center space-x-3">
+                  <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-teal-400 text-[10px] font-black uppercase tracking-widest">
+                    {result.test.subject}
+                  </span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+                    <Star size={12} className="text-amber-500" /> Assessment Feedback
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <div className="flex items-baseline justify-end space-x-2">
+                  <span className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 leading-none">
+                    {result.score}
+                  </span>
+                  <span className="text-xl md:text-2xl font-bold text-slate-600">/ {result.totalMarks}</span>
+                </div>
+                <div className={`mt-3 inline-flex items-center space-x-2 px-4 py-1.5 rounded-xl border font-black uppercase tracking-widest text-[11px] ${
+                  isHighScorer ? 'bg-teal-500/10 border-teal-500/30 text-teal-400' : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400'
+                }`}>
+                  <Target size={14} />
+                  <span>{percentage}% Mastery</span>
+                </div>
+              </div>
+            </div>
           </div>
         </header>
 
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-800">Your Answer Sheet</h2>
+        {/* Detailed Analysis Section */}
+        <section className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
+          <div className="flex items-center justify-between px-2">
+            <h2 className="text-xl font-black text-white tracking-tight flex items-center space-x-3">
+              <span className="w-8 h-1 bg-teal-500 rounded-full"></span>
+              <span>Performance Breakdown</span>
+            </h2>
             {result.test.isResultsHidden && (
-              <span className="flex items-center space-x-2 bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
-                <span>Restricted Access</span>
-              </span>
+              <div className="flex items-center space-x-2 bg-amber-500/10 border border-amber-500/20 text-amber-500 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/5">
+                <Lock size={12} />
+                <span>Verification Required</span>
+              </div>
             )}
           </div>
 
           {result.test.isResultsHidden ? (
-            <div className="relative group overflow-hidden">
-               <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-600 opacity-[0.03]"></div>
-               <div className="bg-white border-2 border-amber-100 p-12 rounded-[2.5rem] text-center shadow-xl shadow-amber-900/5 relative z-10">
-                  <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-amber-500 shadow-inner">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  </div>
-                  <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight leading-none uppercase">Analysis Not Yet Ready</h3>
-                  <p className="text-slate-500 font-medium max-w-sm mx-auto leading-relaxed">
-                    Detailed answer review and correct explanations will be unlocked once the teacher deactivates this test session.
+            <div className="glass p-16 rounded-[3rem] border-white/10 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent"></div>
+              <div className="relative z-10 max-w-md mx-auto space-y-6">
+                <div className="w-24 h-24 bg-amber-500/10 border-2 border-amber-500/30 rounded-3xl flex items-center justify-center mx-auto text-amber-500 shadow-xl shadow-amber-500/10">
+                  <Lock size={40} strokeWidth={2.5} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tight">Review Period Active</h3>
+                  <p className="text-slate-400 font-medium text-sm leading-relaxed">
+                    Detailed answer analysis and correct explanations are currently restricted. They will be automatically unlocked once the teacher officially closes the testing window.
                   </p>
-                  <div className="mt-8 inline-flex items-center space-x-4">
-                     <div className="flex flex-col items-center">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Status</span>
-                        <div className="px-3 py-1 bg-teal-50 text-teal-600 rounded-lg text-xs font-black">Score Released</div>
-                     </div>
-                     <div className="w-px h-8 bg-slate-100"></div>
-                     <div className="flex flex-col items-center">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Review</span>
-                        <div className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-xs font-black">Pending Closure</div>
-                     </div>
+                </div>
+                <div className="pt-4 flex flex-wrap justify-center gap-4">
+                  <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-2xl">
+                     <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Score Availability</p>
+                     <p className="text-teal-400 text-xs font-black">Released</p>
                   </div>
-               </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {result.test.questions.map((q, idx) => {
-              const studentAnswer = result.answers[q.id]?.toString().trim() || ""
-              const correctAnswer = q.correctAnswer.trim()
-              let isCorrect = false
-
-              if (q.questionType === "match") {
-                const studentPairs = studentAnswer.split("|")
-                  .map((p: string) => p.trim().toLowerCase())
-                  .filter(Boolean)
-                  .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
-                  .sort()
-
-                const correctPairs = correctAnswer.split("|")
-                  .map((p: string) => p.trim().toLowerCase())
-                  .filter(Boolean)
-                  .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
-                  .sort()
-
-                isCorrect = studentPairs.length === correctPairs.length && 
-                            studentPairs.every((p: string, i: number) => p === correctPairs[i])
-              } else {
-                isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()
-              }
-
-              return (
-                <div key={q.id} className={`bg-white p-8 rounded-2xl border-2 transition-all ${isCorrect ? "border-green-100" : "border-red-100"}`}>
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex items-start space-x-4">
-                       <span className="bg-gray-100 text-gray-500 font-black px-3 py-1 rounded text-sm">{idx + 1}</span>
-                       <h3 className="text-xl font-bold text-gray-900 pt-1 leading-snug">{q.questionText}</h3>
-                    </div>
-                    {isCorrect ? (
-                      <span className="text-2xl">✅</span>
-                    ) : (
-                      <span className="text-2xl">❌</span>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className={`p-4 rounded-xl border ${isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
-                      <p className="text-[10px] font-black uppercase text-gray-400 mb-1 tracking-widest">Your Answer</p>
-                      <p className={`font-black text-lg ${isCorrect ? "text-green-700" : "text-red-700"}`}>{studentAnswer || "No Answer"}</p>
-                    </div>
-                    {!isCorrect && (
-                      <div className="p-4 rounded-xl border bg-teal-50 border-teal-200">
-                        <p className="text-[10px] font-black uppercase text-gray-400 mb-1 tracking-widest">Correct Answer</p>
-                        <p className="font-black text-lg text-teal-800">{q.correctAnswer}</p>
-                      </div>
-                    )}
+                  <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-2xl">
+                     <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Detailed Review</p>
+                     <p className="text-amber-500 text-xs font-black">Locked</p>
                   </div>
                 </div>
-              )
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {result.test.questions.map((q, idx) => {
+                const studentAnswer = result.answers[q.id]?.toString().trim() || ""
+                const correctAnswer = q.correctAnswer.trim()
+                let isCorrect = false
+
+                if (q.questionType === "match") {
+                  const studentPairs = studentAnswer.split("|")
+                    .map((p: string) => p.trim().toLowerCase())
+                    .filter(Boolean)
+                    .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
+                    .sort()
+
+                  const correctPairs = correctAnswer.split("|")
+                    .map((p: string) => p.trim().toLowerCase())
+                    .filter(Boolean)
+                    .map((p: string) => p.split(":").map(part => part.trim()).join(":"))
+                    .sort()
+
+                  isCorrect = studentPairs.length === correctPairs.length && 
+                              studentPairs.every((p: string, i: number) => p === correctPairs[i])
+                } else {
+                  isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()
+                }
+
+                return (
+                  <div 
+                    key={q.id} 
+                    className={`glass p-8 rounded-3xl border-2 transition-all duration-500 hover:translate-x-1 ${
+                      isCorrect ? "border-teal-500/20 shadow-lg shadow-teal-500/5" : "border-rose-500/20 shadow-lg shadow-rose-500/5"
+                    }`}
+                  >
+                    <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
+                      <div className="flex items-start space-x-5">
+                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm flex-shrink-0 border ${
+                           isCorrect ? "bg-teal-500/10 border-teal-500/30 text-teal-400" : "bg-rose-500/10 border-rose-500/30 text-rose-400"
+                         }`}>
+                           {idx + 1}
+                         </div>
+                         <div className="space-y-1.5 pt-0.5">
+                           <h3 className="text-lg md:text-xl font-bold text-white leading-tight tracking-tight">
+                             {q.questionText}
+                           </h3>
+                           <div className="flex items-center gap-3">
+                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1">
+                               <Layout size={12} /> {q.questionType}
+                             </span>
+                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1">
+                               <Clock size={12} /> {q.marks} Marks
+                             </span>
+                           </div>
+                         </div>
+                      </div>
+                      
+                      <div className={`flex items-center gap-2 px-4 py-2 rounded-2xl border-2 transition-transform hover:scale-110 ${
+                        isCorrect ? "bg-teal-500/10 border-teal-500/20 text-teal-400 shadow-lg shadow-teal-500/10" : "bg-rose-500/10 border-rose-500/20 text-rose-400 shadow-lg shadow-rose-500/10"
+                      }`}>
+                        {isCorrect ? (
+                          <>
+                            <CheckCircle2 size={18} strokeWidth={3} />
+                            <span className="text-xs font-black uppercase tracking-widest font-mono">Precision</span>
+                          </>
+                        ) : (
+                          <>
+                            <XCircle size={18} strokeWidth={3} />
+                            <span className="text-xs font-black uppercase tracking-widest font-mono">Error detected</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 relative">
+                      <div className={`p-6 rounded-2xl border transition-all hover:bg-white/5 ${
+                        isCorrect ? "bg-teal-500/5 border-teal-500/20" : "bg-rose-500/5 border-rose-500/20"
+                      }`}>
+                        <p className="text-[9px] font-black uppercase text-slate-500 mb-2 tracking-[0.2em]">Record of Submission</p>
+                        <div className="flex items-start gap-3">
+                           <p className={`font-extrabold text-lg leading-snug ${isCorrect ? "text-teal-300" : "text-rose-300"}`}>
+                             {studentAnswer || "MISSING DATA"}
+                           </p>
+                        </div>
+                      </div>
+                      
+                      {!isCorrect && (
+                        <div className="p-6 rounded-2xl border border-teal-500/20 bg-teal-500/5 hover:bg-teal-500/10 transition-all">
+                          <p className="text-[9px] font-black uppercase text-slate-500 mb-2 tracking-[0.2em]">Validated Correlation</p>
+                          <p className="font-extrabold text-lg text-teal-400 leading-snug">{q.correctAnswer}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
               })}
             </div>
           )}
         </section>
 
-        <footer className="text-center pt-10">
-          <Link href="/student/dashboard" className="text-teal-600 font-bold hover:underline text-lg">
-             ← Back to My Dashboard
+        {/* Footer Navigation */}
+        <footer className="pt-8 flex flex-col items-center space-y-6">
+          <div className="w-16 h-1 bg-white/5 rounded-full"></div>
+          <Link 
+            href="/student/dashboard" 
+            className="group flex items-center space-x-3 bg-white/5 hover:bg-teal-500 border border-white/10 hover:border-teal-400/50 px-8 py-4 rounded-2xl transition-all duration-500 shadow-lg hover:shadow-teal-500/20"
+          >
+            <div className="w-8 h-8 bg-white/10 rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+               <BookOpen size={16} />
+            </div>
+            <span className="font-black text-sm uppercase tracking-widest text-slate-300 group-hover:text-white">Return to Control Center</span>
+            <ExternalLink size={14} className="text-slate-500 group-hover:text-white" />
           </Link>
+          
+          <div className="text-center space-y-1">
+            <p className="text-[9px] text-slate-500 font-black uppercase tracking-[0.3em]">Evaluation Integrity Verified</p>
+            <p className="text-[9px] text-slate-600 font-medium">Digital Evaluation Platform • DPSMRN Mathura</p>
+          </div>
         </footer>
       </div>
     </div>

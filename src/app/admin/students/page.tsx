@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, Suspense } from "react"
 import toast from "react-hot-toast"
 import * as XLSX from "xlsx"
 import Card from "@/components/ui/card"
-import { Search } from "lucide-react"
+import { Search, Plus, X } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 
@@ -25,6 +25,9 @@ function StudentsContent() {
   const [students, setStudents] = useState<Student[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [newStudent, setNewStudent] = useState({ admno: '', name: '', class: '', section: '' })
+  const [isAdding, setIsAdding] = useState(false)
   const [filterClass, setFilterClass] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState(initialQuery)
 
@@ -67,6 +70,37 @@ function StudentsContent() {
       fetchStudents()
     } else {
       toast.error("Failed to delete")
+    }
+  }
+
+  const handleAddStudent = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newStudent.admno || !newStudent.name || !newStudent.class || !newStudent.section) {
+      toast.error("Please fill all fields")
+      return
+    }
+    setIsAdding(true)
+    try {
+      const res = await fetch("/api/students", {
+        method: "POST",
+        body: JSON.stringify(newStudent),
+        headers: { "Content-Type": "application/json" }
+      })
+      
+      if (res.ok) {
+        toast.success("Student added successfully!")
+        setNewStudent({ admno: '', name: '', class: '', section: '' })
+        setShowAddForm(false)
+        fetchStudents()
+      } else {
+        const errorData = await res.json()
+        toast.error(errorData.error || "Failed to add student")
+      }
+    } catch (err) {
+      toast.error("Error adding student")
+      console.error(err)
+    } finally {
+      setIsAdding(false)
     }
   }
 
@@ -146,19 +180,93 @@ function StudentsContent() {
             </select>
           </div>
           {isAdmin && (
-            <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 mt-5 rounded-lg font-bold transition-all text-xs flex items-center h-[36px] shadow-lg shadow-slate-200">
-              {isUploading ? "Uploading..." : "Bulk Upload Excel"}
-              <input
-                type="file"
-                accept=".xlsx, .xls"
-                className="hidden"
-                onChange={handleFileUpload}
-                disabled={isUploading}
-              />
-            </label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowAddForm(!showAddForm)}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 mt-5 rounded-lg font-bold transition-all text-xs flex items-center h-[36px] shadow-lg shadow-indigo-200 gap-1.5"
+              >
+                {showAddForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                {showAddForm ? "Cancel" : "Add Student"}
+              </button>
+              <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 mt-5 rounded-lg font-bold transition-all text-xs flex items-center h-[36px] shadow-lg shadow-slate-200">
+                {isUploading ? "Uploading..." : "Bulk Upload Excel"}
+                <input
+                  type="file"
+                  accept=".xlsx, .xls"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+                />
+              </label>
+            </div>
           )}
         </div>
       </header>
+
+      {showAddForm && isAdmin && (
+        <Card title="Add New Student">
+          <form onSubmit={handleAddStudent} className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Admission No</label>
+                <input
+                  type="text"
+                  required
+                  value={newStudent.admno}
+                  onChange={(e) => setNewStudent({...newStudent, admno: e.target.value})}
+                  className="w-full bg-slate-50 border-2 border-slate-100 text-slate-900 font-bold px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all focus:bg-white"
+                  placeholder="e.g. 1001"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Student Name</label>
+                <input
+                  type="text"
+                  required
+                  value={newStudent.name}
+                  onChange={(e) => setNewStudent({...newStudent, name: e.target.value})}
+                  className="w-full bg-slate-50 border-2 border-slate-100 text-slate-900 font-bold px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all focus:bg-white"
+                  placeholder="e.g. John Doe"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Class</label>
+                <input
+                  type="text"
+                  required
+                  value={newStudent.class}
+                  onChange={(e) => setNewStudent({...newStudent, class: e.target.value})}
+                  className="w-full bg-slate-50 border-2 border-slate-100 text-slate-900 font-bold px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all focus:bg-white"
+                  placeholder="e.g. 10"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Section</label>
+                <input
+                  type="text"
+                  required
+                  value={newStudent.section}
+                  onChange={(e) => setNewStudent({...newStudent, section: e.target.value})}
+                  className="w-full bg-slate-50 border-2 border-slate-100 text-slate-900 font-bold px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all focus:bg-white"
+                  placeholder="e.g. A"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between items-end mt-2">
+              <p className="text-[10px] text-slate-400 font-medium max-w-sm">
+                * Note: The Admission Number provided here will be used as both the Student Login ID and initial Password for their account.
+              </p>
+              <button
+                type="submit"
+                disabled={isAdding}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-bold transition-all text-sm shadow-md shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isAdding ? "Saving..." : "Save Student"}
+              </button>
+            </div>
+          </form>
+        </Card>
+      )}
 
       <Card title={`Student List (${filteredStudents.length})`}>
         <div className="overflow-x-auto">

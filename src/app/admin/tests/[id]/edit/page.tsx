@@ -57,7 +57,10 @@ export default function EditTestPage() {
       <div className="lg:col-span-2 space-y-6">
         <header className="mb-10 flex justify-between items-end">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Edit Test Questions</h1>
+            <div className="flex items-center space-x-3 mb-2">
+              <h1 className="text-3xl font-bold text-gray-900">Edit Test Questions</h1>
+              <a href={`/admin/tests/${testId}/setup`} className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-3 py-1 rounded-full text-xs font-bold uppercase transition-colors">Edit Setup</a>
+            </div>
             <p className="text-gray-500">Arrange and manage your test content</p>
           </div>
           {questions.length > 0 && (

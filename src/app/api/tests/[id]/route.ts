@@ -4,6 +4,33 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
 
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions)
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const isAdmin = session.user.role === "ADMIN"
+
+  try {
+    const test = await prisma.test.findUnique({
+      where: { id: params.id }
+    })
+
+    if (!test) {
+      return NextResponse.json({ error: "Test not found" }, { status: 404 })
+    }
+
+    if (!isAdmin && test.createdBy !== session.user.id) {
+      return NextResponse.json({ error: "Unauthorized: You can only view your own tests" }, { status: 403 })
+    }
+
+    return NextResponse.json(test)
+  } catch (error: unknown) {
+    const err = error as Error;
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
   if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {

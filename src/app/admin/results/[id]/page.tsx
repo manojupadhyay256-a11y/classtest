@@ -71,6 +71,25 @@ export default function AdminResultsPage() {
     toast.success("CSV Exported successfully")
   }
 
+  const deleteResult = async (resultId: string, studentName: string) => {
+    if (!confirm(`Are you sure you want to delete ${studentName}'s submission? This will allow them to retake the test.`)) return;
+
+    const loadingToast = toast.loading("Deleting submission...");
+    try {
+      const res = await fetch(`/api/results/${id}?resultId=${resultId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to delete result");
+      
+      toast.success("Submission deleted successfully", { id: loadingToast });
+      setResults(results.filter((r) => r.id !== resultId));
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete submission", { id: loadingToast });
+    }
+  }
+
   const avgScore = results.length > 0 
     ? (results.reduce((acc, r) => acc + r.score, 0) / results.length).toFixed(1) 
     : 0
@@ -112,6 +131,7 @@ export default function AdminResultsPage() {
                 <th className="py-4 px-4">Score</th>
                 <th className="py-4 px-4">%</th>
                 <th className="py-4 px-4 text-right">Time Taken</th>
+                <th className="py-4 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -138,6 +158,17 @@ export default function AdminResultsPage() {
                        <div className="text-[10px] font-black text-gray-400">{((result.score/result.totalMarks)*100).toFixed(0)}%</div>
                     </td>
                     <td className="py-4 px-4 text-right font-bold text-gray-400">{Math.floor(result.timeTaken / 60)}m {result.timeTaken % 60}s</td>
+                    <td className="py-4 px-4 text-right">
+                      <button 
+                        onClick={() => deleteResult(result.id, result.student.name)}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Delete submission and allow retake"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

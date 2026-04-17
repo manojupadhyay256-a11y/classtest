@@ -74,8 +74,7 @@ export default function PerformanceDashboard() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-5 py-12 space-y-10">
-        {/* Header Section */}
-        <header className="glass p-8 md:p-12 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
+        <header className="bg-slate-900/80 backdrop-blur-xl shadow-2xl p-8 md:p-12 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
             <BarChart3 size={160} className="text-white" />
           </div>
@@ -105,7 +104,7 @@ export default function PerformanceDashboard() {
             </div>
 
             <div className="flex items-center gap-6">
-              <div className="glass bg-white/5 px-6 py-4 rounded-3xl border-white/10 flex items-center gap-4">
+              <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl bg-white/5 px-6 py-4 rounded-3xl border-white/10 flex items-center gap-4">
                 <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400 shadow-lg shadow-indigo-500/10">
                   <TrendingUp size={24} />
                 </div>
@@ -121,7 +120,7 @@ export default function PerformanceDashboard() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Trend Chart */}
-          <div className="glass p-8 md:p-10 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
+          <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl p-8 md:p-10 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-8">
               <div className="space-y-1">
                 <h3 className="text-lg font-black text-white uppercase tracking-tight">Performance Velocity</h3>
@@ -186,7 +185,7 @@ export default function PerformanceDashboard() {
           </div>
 
           {/* Subject Bar Chart */}
-          <div className="glass p-8 md:p-10 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
+          <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl p-8 md:p-10 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-8">
               <div className="space-y-1">
                 <h3 className="text-lg font-black text-white uppercase tracking-tight">Subject Domain Mastery</h3>
@@ -245,7 +244,7 @@ export default function PerformanceDashboard() {
         </div>
 
         {/* Motivational Section */}
-        <section className="glass p-12 rounded-[3.5rem] border-white/10 text-center relative overflow-hidden group">
+        <section className="bg-slate-900/80 backdrop-blur-xl shadow-2xl p-12 rounded-[3.5rem] border-white/10 text-center relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
           <div className="relative z-10 space-y-8 max-w-2xl mx-auto">
             <div className="relative inline-block">

@@ -20,6 +20,7 @@ import {
   AlertCircle,
   Star,
   MessageCircle,
+  Lightbulb,
 } from "lucide-react"
 
 interface Test {
@@ -44,6 +45,20 @@ interface Stats {
   avgPercentage: number
   lastAttemptDate: string | null
 }
+
+// "Did you know?" tips for the dashboard
+const DID_YOU_KNOW_TIPS = [
+  "You can change your password anytime from the Settings page.",
+  "Take tests as soon as they appear — they may expire after a deadline!",
+  "Check your Performance page regularly to track your progress over time.",
+  "You can message your teacher directly from the Messages section.",
+  "Review your past results to learn from your mistakes and improve.",
+  "Your overall score updates automatically after every test you complete.",
+  "Study notes uploaded by your teachers are available in the Study Notes section.",
+  "Got feedback? Use the Feedback section to share your thoughts with teachers.",
+  "The quicker you complete a test, the better your time score looks!",
+  "You can view detailed answer breakdowns after your teacher releases results.",
+]
 
 // Map subject names to accent colors for visual distinction
 const SUBJECT_ACCENT: Record<string, { bg: string; text: string; border: string; dot: string }> = {
@@ -85,6 +100,21 @@ export default function StudentDashboardPage() {
   const [stats, setStats] = useState<Stats>({ totalTests: 0, avgPercentage: 0, lastAttemptDate: null })
   const [unreadCount, setUnreadCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+
+  // "Did you know?" tip rotation
+  const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * DID_YOU_KNOW_TIPS.length))
+  const [tipVisible, setTipVisible] = useState(true)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTipVisible(false)
+      setTimeout(() => {
+        setTipIndex((prev) => (prev + 1) % DID_YOU_KNOW_TIPS.length)
+        setTipVisible(true)
+      }, 400)
+    }, 6000)
+    return () => clearInterval(interval)
+  }, [])
 
   const fetchData = async () => {
     try {
@@ -227,6 +257,23 @@ export default function StudentDashboardPage() {
                   : "No tests right now. Check back soon or review your past performance."
                 }
               </p>
+
+              {/* 💡 Did You Know? Rotating Tips */}
+              <div className="mt-3 flex items-start gap-2.5 bg-amber-500/[0.07] border border-amber-500/15 rounded-xl px-3.5 py-2.5 max-w-md">
+                <div className="flex-shrink-0 w-5 h-5 bg-amber-500/20 rounded-md flex items-center justify-center mt-0.5">
+                  <Lightbulb size={12} className="text-amber-400" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold text-amber-400/80 uppercase tracking-widest mb-0.5">Did you know?</p>
+                  <p
+                    className={`text-xs text-slate-300 font-medium leading-relaxed transition-all duration-400 ${
+                      tipVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"
+                    }`}
+                  >
+                    {DID_YOU_KNOW_TIPS[tipIndex]}
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Overall Score Badge */}

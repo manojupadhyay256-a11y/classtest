@@ -83,7 +83,7 @@ export default function StudentResultsDetailPage() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-5 py-12 space-y-10">
         {/* Header Section */}
-        <header className="glass p-8 md:p-12 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
+        <header className="bg-slate-900/80 backdrop-blur-xl shadow-2xl p-8 md:p-12 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
             <Trophy size={160} className="text-white" />
           </div>
@@ -147,7 +147,7 @@ export default function StudentResultsDetailPage() {
           </div>
 
           {result.test.isResultsHidden ? (
-            <div className="glass p-16 rounded-[3rem] border-white/10 text-center relative overflow-hidden">
+            <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl p-16 rounded-[3rem] border-white/10 text-center relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent"></div>
               <div className="relative z-10 max-w-md mx-auto space-y-6">
                 <div className="w-24 h-24 bg-amber-500/10 border-2 border-amber-500/30 rounded-3xl flex items-center justify-center mx-auto text-amber-500 shadow-xl shadow-amber-500/10">
@@ -200,7 +200,7 @@ export default function StudentResultsDetailPage() {
                 return (
                   <div 
                     key={q.id} 
-                    className={`glass p-8 rounded-3xl border-2 transition-all duration-500 hover:translate-x-1 ${
+                    className={`bg-slate-900/80 backdrop-blur-xl shadow-2xl p-8 rounded-3xl border-2 transition-all duration-500 hover:translate-x-1 ${
                       isCorrect ? "border-teal-500/20 shadow-lg shadow-teal-500/5" : "border-rose-500/20 shadow-lg shadow-rose-500/5"
                     }`}
                   >

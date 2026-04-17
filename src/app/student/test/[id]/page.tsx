@@ -320,10 +320,10 @@ export default function StudentTestPage() {
             <button 
               onClick={submitTest}
               disabled={isSubmitting}
-              className="hidden md:flex bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 items-center space-x-2 text-sm border border-emerald-400/20 disabled:opacity-50"
+              className="flex bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 items-center space-x-1.5 md:space-x-2 text-xs md:text-sm border border-emerald-400/20 disabled:opacity-50"
             >
-              <Send className="w-4 h-4" />
-              <span>Submit</span>
+              <Send className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span>Final Submit</span>
             </button>
           </div>
         </div>
@@ -652,16 +652,6 @@ export default function StudentTestPage() {
                   <span className="hidden md:inline">Previous</span>
                 </button>
 
-                {/* Mobile submit button */}
-                <button 
-                  onClick={submitTest}
-                  disabled={isSubmitting}
-                  className="md:hidden bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95 flex items-center gap-2 text-sm disabled:opacity-50"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  Submit
-                </button>
-
                 {isLast ? (
                   <button 
                     onClick={submitTest}
@@ -669,14 +659,14 @@ export default function StudentTestPage() {
                     className="px-6 md:px-10 py-3 md:py-3.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-900 font-black text-sm md:text-base transition-all shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-95 disabled:grayscale disabled:opacity-50 flex items-center gap-2"
                   >
                     <Send className="w-4 h-4" />
-                    {isSubmitting ? "Submitting..." : isPreview && isTeacher ? "View Results" : "Submit Test"}
+                    {isSubmitting ? "Submitting..." : isPreview && isTeacher ? "View Results" : "Final Submit"}
                   </button>
                 ) : (
                   <button 
                     onClick={() => navigateQuestion(currentIdx + 1)}
                     className="px-5 md:px-8 py-3 md:py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-black text-sm md:text-base transition-all shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-[1.02] active:scale-95 flex items-center space-x-2 group"
                   >
-                    <span>Next</span>
+                    <span>Next Question</span>
                     <ChevronRight className="w-4 md:w-5 h-4 md:h-5 group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 )}

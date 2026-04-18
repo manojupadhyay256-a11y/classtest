@@ -132,7 +132,9 @@ export default function StudentTestPage() {
   const availableJumbledTokens = useMemo(() => {
     if (!currentQ || currentQ.questionType !== "jumbled") return []
     const allTokens = [...(currentQ.options?.tokens || [])]
-    const selectedTokens = (answers[currentQ.id] || "").split(" ").filter(Boolean)
+    const isLetterJumble = allTokens.every(t => typeof t === 'string' && t.length === 1)
+    const separator = isLetterJumble ? "" : " "
+    const selectedTokens = (answers[currentQ.id] || "").split(separator).filter(Boolean)
     
     const pool = [...allTokens]
     selectedTokens.forEach(t => {
@@ -204,17 +206,20 @@ export default function StudentTestPage() {
 
   const handleJumbledClick = (token: string, isFromPool: boolean) => {
     if (!currentQ) return
+    const isLetterJumble = (currentQ.options as { tokens?: string[] })?.tokens?.every((t: string | unknown) => typeof t === 'string' && t.length === 1) || false
+    const separator = isLetterJumble ? "" : " "
+    
     const currentAnswer = answers[currentQ.id] || ""
-    const selectedTokens = currentAnswer ? currentAnswer.split(" ") : []
+    const selectedTokens = currentAnswer ? currentAnswer.split(separator).filter(Boolean) : []
     
     if (isFromPool) {
-      const newAnswer = [...selectedTokens, token].join(" ")
+      const newAnswer = [...selectedTokens, token].join(separator)
       setAnswers({ ...answers, [currentQ.id]: newAnswer })
     } else {
       const firstOccurrenceIdx = selectedTokens.indexOf(token)
       if (firstOccurrenceIdx !== -1) {
         selectedTokens.splice(firstOccurrenceIdx, 1)
-        const newAnswer = selectedTokens.join(" ")
+        const newAnswer = selectedTokens.join(separator)
         setAnswers({ ...answers, [currentQ.id]: newAnswer })
       }
     }
@@ -531,23 +536,29 @@ export default function StudentTestPage() {
                   <div className="space-y-5">
                     {/* Drop zone */}
                     <div className="p-5 md:p-6 min-h-[90px] rounded-2xl border-2 border-dashed border-white/10 bg-white/[0.02] flex flex-wrap gap-2 items-center justify-center relative transition-all">
-                      {(answers[currentQ!.id] || "").split(" ").filter(t => t).length > 0 ? (
-                        (answers[currentQ!.id] || "").split(" ").filter(t => t).map((token, i) => (
-                          <button
-                            key={`${token}-${i}`}
-                            onClick={() => handleJumbledClick(token, false)}
-                            className="bg-gradient-to-r from-teal-400 to-indigo-500 text-white px-3.5 py-2 md:px-4 md:py-2.5 rounded-xl font-bold shadow-lg shadow-teal-500/20 active:scale-95 transition-all flex items-center hover:from-red-400 hover:to-rose-500 hover:shadow-red-500/20 group text-xs md:text-sm"
-                          >
-                            {token}
-                            <X className="w-3 h-3 ml-1.5 opacity-50 group-hover:opacity-100 transition-opacity" />
-                          </button>
-                        ))
-                      ) : (
-                        <div className="text-center py-2">
-                          <Sparkles className="w-5 h-5 text-slate-600 mx-auto mb-1.5" />
-                          <span className="text-slate-600 font-semibold text-xs">Tap tiles below to build your answer</span>
-                        </div>
-                      )}
+                      {(() => {
+                        const isLetterJumble = (currentQ!.options as { tokens?: string[] })?.tokens?.every((t: string | unknown) => typeof t === 'string' && t.length === 1) || false;
+                        const separator = isLetterJumble ? "" : " ";
+                        const tokens = (answers[currentQ!.id] || "").split(separator).filter(t => t);
+                        
+                        return tokens.length > 0 ? (
+                          tokens.map((token, i) => (
+                            <button
+                              key={`${token}-${i}`}
+                              onClick={() => handleJumbledClick(token, false)}
+                              className="bg-gradient-to-r from-teal-400 to-indigo-500 text-white px-3.5 py-2 md:px-4 md:py-2.5 rounded-xl font-bold shadow-lg shadow-teal-500/20 active:scale-95 transition-all flex items-center hover:from-red-400 hover:to-rose-500 hover:shadow-red-500/20 group text-xs md:text-sm"
+                            >
+                              {token}
+                              <X className="w-3 h-3 ml-1.5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                            </button>
+                          ))
+                        ) : (
+                          <div className="text-center py-2">
+                            <Sparkles className="w-5 h-5 text-slate-600 mx-auto mb-1.5" />
+                            <span className="text-slate-600 font-semibold text-xs">Tap tiles below to build your answer</span>
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     {/* Pool */}

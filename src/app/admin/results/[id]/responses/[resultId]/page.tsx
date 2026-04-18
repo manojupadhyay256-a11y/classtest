@@ -55,6 +55,11 @@ function isAnswerCorrect(question: Question, studentAnswer: string): boolean {
 
     return studentPairs.length === correctPairs.length &&
            studentPairs.every((p: string, i: number) => p === correctPairs[i])
+  } else if (question.questionType === "jumbled") {
+    return answer.toLowerCase().replace(/\s+/g, "") === correctAnswer.toLowerCase().replace(/\s+/g, "")
+  } else if (question.questionType === "fill" || question.questionType === "short") {
+    const validAnswers = correctAnswer.split(",").map(a => a.trim().toLowerCase())
+    return validAnswers.includes(answer.toLowerCase())
   }
 
   return answer.toLowerCase() === correctAnswer.toLowerCase()

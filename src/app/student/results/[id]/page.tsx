@@ -193,6 +193,11 @@ export default function StudentResultsDetailPage() {
 
                   isCorrect = studentPairs.length === correctPairs.length && 
                               studentPairs.every((p: string, i: number) => p === correctPairs[i])
+                } else if (q.questionType === "jumbled") {
+                  isCorrect = studentAnswer.toLowerCase().replace(/\s+/g, "") === correctAnswer.toLowerCase().replace(/\s+/g, "")
+                } else if (q.questionType === "fill" || q.questionType === "short") {
+                  const validAnswers = correctAnswer.split(",").map((a: string) => a.trim().toLowerCase())
+                  isCorrect = validAnswers.includes(studentAnswer.toLowerCase())
                 } else {
                   isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()
                 }

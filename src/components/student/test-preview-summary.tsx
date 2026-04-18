@@ -40,6 +40,9 @@ export default function TestPreviewSummary({ test, answers, onClose }: TestPrevi
       isCorrect = studentPairs.length === correctPairs.length && studentPairs.every((p, i) => p === correctPairs[i])
     } else if (q.questionType === "jumbled") {
       isCorrect = studentAnswer.toLowerCase().replace(/\s+/g, "") === correctAnswer.toLowerCase().replace(/\s+/g, "")
+    } else if (q.questionType === "fill" || q.questionType === "short") {
+      const validAnswers = correctAnswer.split(",").map(a => a.trim().toLowerCase())
+      isCorrect = validAnswers.includes(studentAnswer.toLowerCase())
     } else {
       isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()
     }

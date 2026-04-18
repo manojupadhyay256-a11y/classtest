@@ -1,0 +1,60 @@
+SAMPLE COMPUTER SCIENCE EXAM PAPER
+=================================
+
+This file serves as a template for how to enter correct answers for various question types.
+
+---------------------------------------------------------
+TYPE: MULTIPLE CHOICE (MCQ)
+---------------------------------------------------------
+Q1: Which part of the computer is known as its brain?
+Options: A) RAM, B) CPU, C) Hard Disk, D) Monitor
+Correct Answer: CPU
+
+---------------------------------------------------------
+TYPE: TRUE / FALSE
+---------------------------------------------------------
+Q2: Assembly language is a high-level language.
+Correct Answer: False
+
+---------------------------------------------------------
+TYPE: FILL IN THE BLANKS
+---------------------------------------------------------
+Q3: ______ language is the only language that a computer directly understands.
+Correct Answer: machine, machine language, machine code
+
+Q4: ICT stands for Information and ______ Technology.
+Correct Answer: communication, communications
+
+---------------------------------------------------------
+TYPE: SHORT ANSWER
+---------------------------------------------------------
+Q5: What converts a high-level language program into machine language line-by-line?
+Correct Answer: interpreter, an interpreter
+
+Q6: What card provides the interconnection between the network and the computer?
+Correct Answer: network interface, NIC, network interface card
+
+---------------------------------------------------------
+TYPE: JUMBLED WORDS
+---------------------------------------------------------
+Q7: Unscramble: E R O P W O T N K (Hint: A system of connected computers)
+Correct Answer: NETWORK
+
+Q8: Unscramble: O G T O P Y O L (Hint: Arrangement of a network)
+Correct Answer: TOPOLOGY
+
+---------------------------------------------------------
+TYPE: MATCH THE FOLLOWING
+---------------------------------------------------------
+Q9: Match the following networking components:
+A) Bluetooth  1) Global Network
+B) Internet   2) Wireless PAN
+C) Extranet   3) Private/Public mix
+
+Correct Answer: A:2 | B:1 | C:3
+
+---------------------------------------------------------
+TIPS FOR TEACHERS:
+1. Use commas (,) to separate multiple correct answers for Fill & Short types.
+2. For Jumbled words, just enter the clean word. Students can type with spaces, and they will still be marked correct.
+3. For Match, always use the format 'A:1 | B:2'.

@@ -89,8 +89,12 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       } else if (q.questionType === "jumbled") {
         // For jumbled questions, remove all whitespace to handle tokens joined by spaces
         isCorrect = studentAnswer.toLowerCase().replace(/\s+/g, "") === correctAnswer.toLowerCase().replace(/\s+/g, "")
+      } else if (q.questionType === "fill" || q.questionType === "short") {
+        // Allow multiple correct answers separated by commas
+        const validAnswers = correctAnswer.split(",").map(a => a.trim().toLowerCase())
+        isCorrect = validAnswers.includes(studentAnswer.toLowerCase())
       } else {
-        // For other types, case-insensitive comparison
+        // For other types like mcq and truefalse, case-insensitive comparison
         isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()
       }
 

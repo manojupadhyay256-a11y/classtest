@@ -30,7 +30,9 @@ export async function GET() {
   }))
 
   const lineData = results.map(r => ({
-    date: new Date(r.submittedAt).toLocaleDateString(),
+    date: new Date(r.submittedAt).toLocaleDateString('en-IN', {
+      day: '2-digit', month: 'short', timeZone: 'Asia/Kolkata'
+    }),
     percentage: parseFloat(((r.score / r.totalMarks) * 100).toFixed(1))
   }))
 

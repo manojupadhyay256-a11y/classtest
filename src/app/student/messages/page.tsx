@@ -175,14 +175,19 @@ export default function StudentMessagesPage() {
 
   const formatTime = (dateStr: string) => {
     return new Date(dateStr).toLocaleTimeString("en-IN", {
-      hour: '2-digit', minute:'2-digit'
+      hour: '2-digit', minute:'2-digit', timeZone: 'Asia/Kolkata'
     })
   }
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-IN", {
-      month: 'short', day: 'numeric'
-    })
+    const d = new Date(dateStr)
+    const today = new Date()
+    // Compare in IST
+    const options: Intl.DateTimeFormatOptions = { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric' };
+    if (d.toLocaleDateString("en-IN", options) === today.toLocaleDateString("en-IN", options)) {
+      return d.toLocaleTimeString("en-IN", { hour: '2-digit', minute:'2-digit', timeZone: 'Asia/Kolkata' })
+    }
+    return d.toLocaleDateString("en-IN", { month: 'short', day: 'numeric', timeZone: 'Asia/Kolkata' })
   }
 
   return (

@@ -68,7 +68,7 @@ export default async function AdminDashboardPage() {
         <div className="flex space-x-3">
            <div className="flex items-center space-x-2 px-3 py-1.5 bg-white rounded-lg shadow-sm border border-slate-100 italic text-slate-400 text-xs">
              <Clock className="w-3.5 h-3.5" />
-             <span>Last updated: just now</span>
+             <span>Last updated: {new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' })} (IST)</span>
            </div>
         </div>
       </header>
@@ -100,7 +100,7 @@ export default async function AdminDashboardPage() {
               <Clock className="w-4 h-4 mr-2 text-indigo-500" />
               Latest Exam Activity
             </h3>
-            <button className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors">View All &rarr;</button>
+            <Link href="/admin/tests" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors">View All &rarr;</Link>
           </div>
           
           <div className="overflow-x-auto">
@@ -150,7 +150,12 @@ export default async function AdminDashboardPage() {
                       </td>
                       <td className="px-5 py-3 text-right">
                         <span className="text-[10px] font-bold text-slate-400">
-                          {new Date(result.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(result.submittedAt).toLocaleTimeString('en-IN', { 
+                            timeZone: 'Asia/Kolkata',
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            hour12: true 
+                          })}
                         </span>
                       </td>
                     </tr>

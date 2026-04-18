@@ -152,7 +152,7 @@ export default async function AdminFeedbackPage() {
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-md">
                       <Clock size={10} />
                       {new Date(f.createdAt).toLocaleString('en-IN', {
-                         day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+                         day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata'
                       })}
                     </div>
                   </div>

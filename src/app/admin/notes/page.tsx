@@ -415,7 +415,7 @@ export default function NotesPage() {
                     </div>
                     <p className="text-[10px] text-slate-500 font-semibold">
                       {new Date(note.createdAt).toLocaleDateString("en-IN", {
-                        day: "2-digit", month: "short", year: "numeric"
+                        day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata"
                       })}
                     </p>
                   </div>

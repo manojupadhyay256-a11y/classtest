@@ -239,17 +239,19 @@ export default function AdminMessagesPage() {
 
   const formatTime = (dateStr: string) => {
     return new Date(dateStr).toLocaleTimeString("en-IN", {
-      hour: '2-digit', minute:'2-digit'
+      hour: '2-digit', minute:'2-digit', timeZone: 'Asia/Kolkata'
     })
   }
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr)
     const today = new Date()
-    if (d.toDateString() === today.toDateString()) {
-      return d.toLocaleTimeString("en-IN", { hour: '2-digit', minute:'2-digit' })
+    // Compare in IST
+    const options: Intl.DateTimeFormatOptions = { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'numeric', day: 'numeric' };
+    if (d.toLocaleDateString("en-IN", options) === today.toLocaleDateString("en-IN", options)) {
+      return d.toLocaleTimeString("en-IN", { hour: '2-digit', minute:'2-digit', timeZone: 'Asia/Kolkata' })
     }
-    return d.toLocaleDateString("en-IN", { month: 'short', day: 'numeric' })
+    return d.toLocaleDateString("en-IN", { month: 'short', day: 'numeric', timeZone: 'Asia/Kolkata' })
   }
 
   const filteredThreads = threads.filter(t => 

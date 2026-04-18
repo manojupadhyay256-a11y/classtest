@@ -146,7 +146,8 @@ export default function StudentDashboardPage() {
     return new Date(dateStr).toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
-      year: "numeric"
+      year: "numeric",
+      timeZone: "Asia/Kolkata"
     })
   }
 
@@ -158,8 +159,8 @@ export default function StudentDashboardPage() {
 
   const firstName = session?.user?.name ? session.user.name.split(" ")[0] : "Student"
 
-  // Greeting based on time of day
-  const hour = new Date().getHours()
+  // Greeting based on time of day (IST)
+  const hour = parseInt(new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false, hour: '2-digit' }))
   const greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening"
 
   if (isLoading) {

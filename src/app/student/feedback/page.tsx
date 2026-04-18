@@ -270,7 +270,7 @@ export default function StudentFeedbackPage() {
                       </div>
                       <span className="text-[9px] font-bold text-slate-400">
                         {new Date(item.createdAt).toLocaleDateString("en-IN", {
-                          day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
+                          day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata"
                         })}
                       </span>
                     </div>

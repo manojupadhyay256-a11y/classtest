@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import Card from "@/components/ui/card"
 import toast from "react-hot-toast"
 
@@ -28,6 +28,7 @@ interface TestInfo {
 
 export default function AdminResultsPage() {
   const params = useParams()
+  const router = useRouter()
   const id = params.id as string
   const [results, setResults] = useState<Result[]>([])
   const [testInfo, setTestInfo] = useState<TestInfo | null>(null)
@@ -96,20 +97,20 @@ export default function AdminResultsPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex justify-between items-center mb-10">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{testInfo?.title || "Test Results"}</h1>
-          <p className="text-gray-500">{testInfo?.subject} • Class {results[0]?.student.class || "-"}</p>
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{testInfo?.title || "Test Results"}</h1>
+          <p className="text-gray-500 text-sm">{testInfo?.subject} • Class {results[0]?.student.class || "-"}</p>
         </div>
         <button 
           onClick={exportCSV}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold transition-colors"
+          className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-bold transition-colors text-sm w-full sm:w-auto text-center"
         >
           📥 Export CSV
         </button>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <Card title="Avg Score">
           <div className="text-3xl font-black text-blue-600">{avgScore}</div>
         </Card>
@@ -122,7 +123,63 @@ export default function AdminResultsPage() {
       </div>
 
       <Card title="Student Submissions">
-        <div className="overflow-x-auto">
+        {/* Mobile Card View */}
+        <div className="block md:hidden space-y-3">
+          {isLoading ? (
+            <div className="py-10 text-center text-slate-400 text-sm">Loading results...</div>
+          ) : results.length === 0 ? (
+            <div className="py-10 text-center text-gray-400 text-sm">No submissions found.</div>
+          ) : (
+            results.map((result) => (
+              <div key={result.id} className="p-4 bg-slate-50/60 rounded-xl border border-slate-100 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-gray-900 text-sm truncate">{result.student.name}</h3>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                      {result.student.admno} · {result.student.class}-{result.student.section}
+                    </p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-black text-lg text-teal-600">{result.score}</span>
+                      <span className="text-xs font-bold text-gray-300">/ {result.totalMarks}</span>
+                    </div>
+                    <div className="text-[10px] font-black text-gray-400">{((result.score/result.totalMarks)*100).toFixed(0)}%</div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-gray-400">
+                    {Math.floor(result.timeTaken / 60)}m {result.timeTaken % 60}s
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => router.push(`/admin/results/${id}/responses/${result.id}`)}
+                      className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                      title="View student responses"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
+                    <button 
+                      onClick={() => deleteResult(result.id, result.student.name)}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete submission and allow retake"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b text-gray-400 uppercase text-xs font-black tracking-widest">
@@ -136,9 +193,9 @@ export default function AdminResultsPage() {
             </thead>
             <tbody className="divide-y">
               {isLoading ? (
-                <tr><td colSpan={5} className="py-10 text-center">Loading results...</td></tr>
+                <tr><td colSpan={6} className="py-10 text-center">Loading results...</td></tr>
               ) : results.length === 0 ? (
-                <tr><td colSpan={5} className="py-10 text-center text-gray-400">No submissions found.</td></tr>
+                <tr><td colSpan={6} className="py-10 text-center text-gray-400">No submissions found.</td></tr>
               ) : (
                 results.map((result) => (
                   <tr key={result.id} className="hover:bg-gray-50 transition-colors">
@@ -159,15 +216,27 @@ export default function AdminResultsPage() {
                     </td>
                     <td className="py-4 px-4 text-right font-bold text-gray-400">{Math.floor(result.timeTaken / 60)}m {result.timeTaken % 60}s</td>
                     <td className="py-4 px-4 text-right">
-                      <button 
-                        onClick={() => deleteResult(result.id, result.student.name)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Delete submission and allow retake"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button 
+                          onClick={() => router.push(`/admin/results/${id}/responses/${result.id}`)}
+                          className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="View student responses"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </button>
+                        <button 
+                          onClick={() => deleteResult(result.id, result.student.name)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete submission and allow retake"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

@@ -147,48 +147,22 @@ function StudentsContent() {
 
   return (
     <div className="space-y-5">
-      <header className="flex justify-between items-end">
-        <div>
-          <h1 className="text-xl font-black text-slate-900 tracking-tight">Manage Students</h1>
-          <p className="text-slate-400 text-sm">Add, delete or bulk upload students via Excel</p>
-        </div>
-        <div className="flex gap-4 items-center">
-          <div className="flex flex-col gap-1 w-full md:w-64">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-1">Search Students</span>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-3.5 h-3.5" />
-              <input
-                type="text"
-                placeholder="Name, Adm No or Class..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white border-2 border-slate-100 text-slate-900 font-bold pl-9 pr-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all shadow-sm"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-1">Filter Class</span>
-            <select 
-              value={filterClass}
-              onChange={(e) => setFilterClass(e.target.value)}
-              className="bg-white border-2 border-slate-100 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all cursor-pointer shadow-sm min-w-[130px]"
-            >
-              <option value="all">All Classes</option>
-              {uniqueClasses.map(c => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
+      <header className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
+          <div>
+            <h1 className="text-xl font-black text-slate-900 tracking-tight">Manage Students</h1>
+            <p className="text-slate-400 text-sm">Add, delete or bulk upload students via Excel</p>
           </div>
           {isAdmin && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={() => setShowAddForm(!showAddForm)}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 mt-5 rounded-lg font-bold transition-all text-xs flex items-center h-[36px] shadow-lg shadow-indigo-200 gap-1.5"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold transition-all text-xs flex items-center h-[36px] shadow-lg shadow-indigo-200 gap-1.5 flex-1 sm:flex-none justify-center"
               >
                 {showAddForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                 {showAddForm ? "Cancel" : "Add Student"}
               </button>
-              <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 mt-5 rounded-lg font-bold transition-all text-xs flex items-center h-[36px] shadow-lg shadow-slate-200">
+              <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-bold transition-all text-xs flex items-center h-[36px] shadow-lg shadow-slate-200 flex-1 sm:flex-none justify-center">
                 {isUploading ? "Uploading..." : "Bulk Upload Excel"}
                 <input
                   type="file"
@@ -201,12 +175,40 @@ function StudentsContent() {
             </div>
           )}
         </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col gap-1 flex-1">
+            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-1">Search Students</span>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-3.5 h-3.5" />
+              <input
+                type="text"
+                placeholder="Name, Adm No or Class..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white border-2 border-slate-100 text-slate-900 font-bold pl-9 pr-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all shadow-sm"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 w-full sm:w-[160px]">
+            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-1">Filter Class</span>
+            <select 
+              value={filterClass}
+              onChange={(e) => setFilterClass(e.target.value)}
+              className="bg-white border-2 border-slate-100 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all cursor-pointer shadow-sm w-full"
+            >
+              <option value="all">All Classes</option>
+              {uniqueClasses.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+        </div>
       </header>
 
       {showAddForm && isAdmin && (
         <Card title="Add New Student">
           <form onSubmit={handleAddStudent} className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Admission No</label>
                 <input
@@ -252,14 +254,14 @@ function StudentsContent() {
                 />
               </div>
             </div>
-            <div className="flex justify-between items-end mt-2">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mt-2">
               <p className="text-[10px] text-slate-400 font-medium max-w-sm">
                 * Note: The Admission Number provided here will be used as both the Student Login ID and initial Password for their account.
               </p>
               <button
                 type="submit"
                 disabled={isAdding}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-bold transition-all text-sm shadow-md shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-bold transition-all text-sm shadow-md shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {isAdding ? "Saving..." : "Save Student"}
               </button>
@@ -269,7 +271,43 @@ function StudentsContent() {
       )}
 
       <Card title={`Student List (${filteredStudents.length})`}>
-        <div className="overflow-x-auto">
+        {/* Mobile Card View */}
+        <div className="block sm:hidden space-y-3">
+          {isLoading ? (
+            <div className="py-10 text-center text-slate-400 text-sm">Loading...</div>
+          ) : filteredStudents.length === 0 ? (
+            <div className="py-10 text-center text-slate-400 text-sm">No students found. Upload Excel to begin.</div>
+          ) : (
+            filteredStudents.map((student) => (
+              <div key={student.admno} className="flex items-center justify-between p-3 bg-slate-50/60 rounded-xl border border-slate-100">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-black text-sm flex-shrink-0 border border-indigo-100">
+                    {student.name.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-bold text-slate-900 text-sm truncate">{student.name}</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      {student.admno} · {student.class}-{student.section}
+                    </p>
+                  </div>
+                </div>
+                {isAdmin ? (
+                  <button
+                    onClick={() => handleDelete(student.admno)}
+                    className="text-red-400 hover:text-red-600 text-xs font-semibold transition-colors flex-shrink-0 ml-2 p-2"
+                  >
+                    Delete
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-slate-300 font-bold italic flex-shrink-0 ml-2">Read Only</span>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="overflow-x-auto hidden sm:block">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b text-slate-400 uppercase text-[10px] tracking-wider">
@@ -314,7 +352,7 @@ function StudentsContent() {
 
       <Card title="Expected Excel Format">
         <p className="text-sm text-slate-500 mb-2">Ensure your Excel sheet has these exact headers in the first row:</p>
-        <code className="bg-slate-50 p-2 rounded-lg block text-xs text-slate-700 font-mono">admno, name, class, section</code>
+        <code className="bg-slate-50 p-2 rounded-lg block text-xs text-slate-700 font-mono overflow-x-auto">admno, name, class, section</code>
         <p className="text-xs text-slate-400 mt-2 italic">Supporting both .xlsx and .xls formats.</p>
       </Card>
     </div>
@@ -332,4 +370,3 @@ export default function StudentsPage() {
     </Suspense>
   )
 }
-

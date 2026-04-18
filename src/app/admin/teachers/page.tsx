@@ -99,14 +99,14 @@ export default function TeachersPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
         <div>
-          <h1 className="text-3xl font-bold font-plus-jakarta text-slate-900">Teacher Management</h1>
-          <p className="text-slate-500 mt-1">Create and manage staff accounts and roles.</p>
+          <h1 className="text-xl sm:text-3xl font-bold font-plus-jakarta text-slate-900">Teacher Management</h1>
+          <p className="text-slate-500 mt-1 text-sm">Create and manage staff accounts and roles.</p>
         </div>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-amber-500/20 transition-all flex items-center space-x-2"
+          className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-amber-500/20 transition-all flex items-center space-x-2 w-full sm:w-auto justify-center"
         >
           <UserPlus size={18} />
           <span>{showAddForm ? "Cancel" : "Add Teacher"}</span>

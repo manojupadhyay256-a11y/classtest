@@ -186,7 +186,7 @@ export default function NotesPage() {
               Upload New Note
             </h2>
           </div>
-          <form onSubmit={handleUpload} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+          <form onSubmit={handleUpload} className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Title */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">Note Title *</label>

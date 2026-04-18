@@ -58,7 +58,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="flex justify-between items-end">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
         <div>
           <h1 className="text-xl font-black text-slate-900 tracking-tight">Account Settings</h1>
           <p className="text-slate-400 text-sm mt-0.5">Manage your administrative security and login credentials</p>
@@ -67,7 +67,7 @@ export default function AdminSettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+          <div className="bg-white rounded-3xl p-4 sm:p-8 border border-gray-100 shadow-sm">
             <h3 className="text-lg font-bold text-gray-900 mb-8 border-b border-gray-50 pb-4 flex items-center">
               <KeyRound size={20} className="mr-3 text-amber-500" />
               Update Administrator Password

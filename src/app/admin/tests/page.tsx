@@ -27,21 +27,53 @@ export default async function TestsListPage() {
 
   return (
     <div className="space-y-5">
-      <header className="flex justify-between items-center">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h1 className="text-xl font-black text-slate-900 tracking-tight">Manage Tests</h1>
           <p className="text-slate-400 text-sm">Create, edit, and toggle your tests</p>
         </div>
         <Link 
           href="/admin/tests/create"
-          className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm"
+          className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm w-full sm:w-auto text-center"
         >
           + New Test
         </Link>
       </header>
 
       <Card title="Your Tests">
-        <div className="overflow-x-auto">
+        {/* Mobile Card View */}
+        <div className="block md:hidden space-y-3">
+          {tests.length === 0 ? (
+            <div className="py-10 text-center text-slate-400 text-sm">No tests created yet.</div>
+          ) : (
+            tests.map((test) => (
+              <div key={test.id} className="p-4 bg-slate-50/60 rounded-xl border border-slate-100 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-slate-900 text-sm truncate">{test.title}</h3>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
+                      {test.class}-{test.sections.join(", ")} · {test.subject}
+                    </p>
+                  </div>
+                  <TestStatusToggle id={test.id} isActive={test.isActive} />
+                </div>
+                <div className="flex items-center gap-4 text-[10px] font-bold text-slate-500">
+                  <span>{test._count.questions} Questions</span>
+                  <span>{test._count.results} Submissions</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  <Link href={`/student/test/${test.id}?mode=preview`} className="bg-amber-50 text-amber-700 hover:bg-amber-100 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase transition-colors">Preview</Link>
+                  <Link href={`/admin/tests/${test.id}/setup`} className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase transition-colors">Edit Info</Link>
+                  <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase transition-colors">Edit Qs</Link>
+                  <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase transition-colors">Results</Link>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b text-slate-400 uppercase text-[10px] tracking-wider">
@@ -68,11 +100,13 @@ export default async function TestsListPage() {
                     <td className="py-3 px-3 text-center font-bold text-slate-500 text-sm">
                       {test._count.questions} / {test._count.results}
                     </td>
-                    <td className="py-3 px-3 text-right space-x-2 flex items-center justify-end">
-                      <Link href={`/student/test/${test.id}?mode=preview`} className="bg-amber-50 text-amber-700 hover:bg-amber-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Preview</Link>
-                      <Link href={`/admin/tests/${test.id}/setup`} className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit Info</Link>
-                      <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit Qs</Link>
-                      <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Results</Link>
+                    <td className="py-3 px-3 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Link href={`/student/test/${test.id}?mode=preview`} className="bg-amber-50 text-amber-700 hover:bg-amber-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Preview</Link>
+                        <Link href={`/admin/tests/${test.id}/setup`} className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit Info</Link>
+                        <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit Qs</Link>
+                        <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Results</Link>
+                      </div>
                     </td>
                   </tr>
                 ))

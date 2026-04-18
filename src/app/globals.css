@@ -50,6 +50,11 @@
     50% { opacity: .7; filter: drop-shadow(0 0 15px rgba(20, 184, 166, 0.7)); }
   }
 
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) skewX(-12deg); }
+    100% { transform: translateX(100%) skewX(-12deg); }
+  }
+
   .bg-mesh {
     background-color: #f8fafc;
     background-image: 

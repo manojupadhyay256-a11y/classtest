@@ -21,6 +21,9 @@ import {
   Star,
   MessageCircle,
   Lightbulb,
+  Crown,
+  Flame,
+  Sparkles,
 } from "lucide-react"
 
 interface Test {
@@ -163,6 +166,12 @@ export default function StudentDashboardPage() {
   const hour = parseInt(new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false, hour: '2-digit' }))
   const greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening"
 
+  // Detect perfect scores (100%)
+  const perfectScoreResults = results.filter(
+    (r) => r.totalMarks > 0 && r.score === r.totalMarks
+  )
+  const hasPerfectScore = perfectScoreResults.length > 0
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0f1e]">
@@ -299,6 +308,49 @@ export default function StudentDashboardPage() {
             </div>
           </div>
         </header>
+
+        {/* ────────────────────────────────
+            CELEBRATION: Perfect Score Banner
+        ──────────────────────────────── */}
+        {hasPerfectScore && (
+          <div className="relative overflow-hidden rounded-3xl border border-amber-500/20 bg-gradient-to-r from-amber-500/10 via-yellow-500/5 to-amber-500/10 p-5 sm:p-6">
+            {/* Animated shimmer overlay */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute -inset-[100%] bg-gradient-to-r from-transparent via-amber-400/10 to-transparent animate-[shimmer_3s_infinite] skew-x-12" />
+            </div>
+            {/* Sparkle corner accents */}
+            <div className="absolute top-2 right-3 text-amber-400/30 animate-pulse"><Sparkles size={20} /></div>
+            <div className="absolute bottom-2 left-3 text-yellow-400/20 animate-pulse" style={{ animationDelay: '1s' }}><Star size={16} /></div>
+
+            <div className="relative z-10 flex items-center gap-4">
+              <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30 animate-[bounce_3s_ease-in-out_infinite]">
+                <Crown size={28} className="text-white drop-shadow-lg" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <h3 className="text-base sm:text-lg font-extrabold text-amber-300 tracking-tight">
+                    🏆 Outstanding Achievement!
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-amber-200/70 font-medium leading-relaxed">
+                  {perfectScoreResults.length === 1
+                    ? `You scored a perfect 100% in "${perfectScoreResults[0].test.title}"! You&apos;re a true champion — keep shining! ⭐`
+                    : `You&apos;ve achieved perfect 100% scores in ${perfectScoreResults.length} tests! Your dedication and hard work are truly exceptional. Keep up the brilliant work! 🌟`
+                  }
+                </p>
+              </div>
+              <div className="flex-shrink-0 hidden sm:flex flex-col items-center gap-1">
+                <div className="flex items-center gap-1">
+                  <Flame size={16} className="text-amber-400 animate-pulse" />
+                  <span className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-400">
+                    {perfectScoreResults.length}
+                  </span>
+                </div>
+                <span className="text-[9px] text-amber-400/60 font-bold uppercase tracking-widest">Perfect</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ────────────────────────────────
             SECTION 2: Quick Stats
@@ -466,35 +518,52 @@ export default function StudentDashboardPage() {
             <div className="space-y-2.5">
               {results.slice(0, 5).map((result) => {
                 const percentage = Math.round((result.score / result.totalMarks) * 100)
+                const isPerfect = percentage === 100
                 const accent = getSubjectAccent(result.test.subject)
                 return (
                   <Link
                     key={result.id}
                     href={`/student/results/${result.id}`}
-                    className="group flex items-center gap-4 bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-white/10 rounded-2xl p-4 transition-all"
+                    className={`group flex items-center gap-4 rounded-2xl p-4 transition-all ${
+                      isPerfect
+                        ? "bg-gradient-to-r from-amber-500/[0.07] via-white/[0.03] to-amber-500/[0.07] border border-amber-500/20 hover:border-amber-400/30 hover:shadow-lg hover:shadow-amber-500/10"
+                        : "bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] hover:border-white/10"
+                    }`}
                   >
                     {/* Score circle */}
-                    <div className="flex-shrink-0 relative w-12 h-12">
+                    <div className={`flex-shrink-0 relative w-12 h-12 ${isPerfect ? "animate-[pulse_3s_ease-in-out_infinite]" : ""}`}>
                       <svg className="w-12 h-12 -rotate-90" viewBox="0 0 48 48">
-                        <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="4" />
+                        <circle cx="24" cy="24" r="20" fill="none" stroke={isPerfect ? "rgba(245,158,11,0.15)" : "rgba(255,255,255,0.05)"} strokeWidth="4" />
                         <circle
                           cx="24" cy="24" r="20" fill="none"
-                          stroke={percentage >= 80 ? "#34d399" : percentage >= 60 ? "#fbbf24" : "#f87171"}
+                          stroke={isPerfect ? "#f59e0b" : percentage >= 80 ? "#34d399" : percentage >= 60 ? "#fbbf24" : "#f87171"}
                           strokeWidth="4"
                           strokeDasharray={`${(2 * Math.PI * 20 * percentage) / 100} ${2 * Math.PI * 20}`}
                           strokeLinecap="round"
                         />
                       </svg>
-                      <span className={`absolute inset-0 flex items-center justify-center text-xs font-extrabold ${getScoreColor(percentage)}`}>
-                        {percentage}%
+                      <span className={`absolute inset-0 flex items-center justify-center text-xs font-extrabold ${
+                        isPerfect ? "text-amber-400" : getScoreColor(percentage)
+                      }`}>
+                        {isPerfect ? <Crown size={18} /> : `${percentage}%`}
                       </span>
                     </div>
 
                     {/* Details */}
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-bold text-white truncate group-hover:text-indigo-300 transition-colors">
-                        {result.test.title}
-                      </h4>
+                      <div className="flex items-center gap-2">
+                        <h4 className={`text-sm font-bold truncate transition-colors ${
+                          isPerfect ? "text-amber-200 group-hover:text-amber-100" : "text-white group-hover:text-indigo-300"
+                        }`}>
+                          {result.test.title}
+                        </h4>
+                        {isPerfect && (
+                          <span className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-[9px] font-extrabold text-amber-300 uppercase tracking-wider">
+                            <Star size={8} className="fill-amber-400 text-amber-400" />
+                            Perfect
+                          </span>
+                        )}
+                      </div>
                       <div className="flex items-center gap-3 mt-1">
                         <span className={`text-[10px] font-bold uppercase tracking-wider ${accent.text}`}>
                           {result.test.subject}
@@ -514,12 +583,16 @@ export default function StudentDashboardPage() {
 
                     {/* Score label */}
                     <div className="flex-shrink-0 text-right hidden sm:block">
-                      <p className="text-xs font-bold text-slate-400">{result.score}/{result.totalMarks}</p>
-                      <p className={`text-[10px] font-bold ${getScoreColor(percentage)}`}>{getScoreLabel(percentage)}</p>
+                      <p className={`text-xs font-bold ${isPerfect ? "text-amber-400" : "text-slate-400"}`}>{result.score}/{result.totalMarks}</p>
+                      <p className={`text-[10px] font-bold ${isPerfect ? "text-amber-300" : getScoreColor(percentage)}`}>
+                        {isPerfect ? "★ Flawless" : getScoreLabel(percentage)}
+                      </p>
                     </div>
 
                     {/* Arrow */}
-                    <ChevronRight size={16} className="text-slate-600 group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                    <ChevronRight size={16} className={`flex-shrink-0 transition-all group-hover:translate-x-0.5 ${
+                      isPerfect ? "text-amber-500/60 group-hover:text-amber-400" : "text-slate-600 group-hover:text-indigo-400"
+                    }`} />
                   </Link>
                 )
               })}

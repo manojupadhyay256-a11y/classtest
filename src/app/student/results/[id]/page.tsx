@@ -15,7 +15,9 @@ import {
   Clock,
   Layout,
   ExternalLink,
-  Sparkles
+  Sparkles,
+  Crown,
+  Flame
 } from "lucide-react"
 
 interface Result {
@@ -71,6 +73,7 @@ export default function StudentResultsDetailPage() {
 
   const percentage = Number(((result.score / result.totalMarks) * 100).toFixed(1))
   const isHighScorer = percentage >= 80
+  const isPerfectScore = percentage === 100
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-200 selection:bg-teal-500/30">
@@ -130,6 +133,48 @@ export default function StudentResultsDetailPage() {
             </div>
           </div>
         </header>
+
+        {/* 🏆 Perfect Score Celebration */}
+        {isPerfectScore && (
+          <section className="relative overflow-hidden rounded-[2.5rem] border-2 border-amber-500/25 bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-amber-500/10 p-8 md:p-10 text-center">
+            {/* Animated shimmer */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute -inset-[100%] bg-gradient-to-r from-transparent via-amber-400/10 to-transparent animate-[shimmer_3s_infinite] skew-x-12" />
+            </div>
+            {/* Sparkle accents */}
+            <div className="absolute top-4 left-6 text-amber-400/20 animate-pulse"><Sparkles size={24} /></div>
+            <div className="absolute bottom-4 right-6 text-yellow-400/20 animate-pulse" style={{ animationDelay: '1.5s' }}><Star size={20} /></div>
+            <div className="absolute top-6 right-10 text-amber-300/15 animate-pulse" style={{ animationDelay: '0.7s' }}><Flame size={18} /></div>
+
+            <div className="relative z-10 space-y-4">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-amber-400 to-yellow-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-amber-500/30 animate-[bounce_3s_ease-in-out_infinite]">
+                <Crown size={40} className="text-white drop-shadow-lg" />
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-tight">
+                  🌟 Perfect Score! 🌟
+                </h2>
+                <p className="text-amber-200/70 font-medium text-sm md:text-base max-w-lg mx-auto leading-relaxed">
+                  Incredible! You answered every single question correctly. Your preparation, focus, and hard work have truly paid off. You&apos;re an inspiration — keep aiming for the stars!
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+                <div className="flex items-center gap-2 bg-amber-500/15 border border-amber-500/25 px-4 py-2 rounded-2xl">
+                  <Trophy size={16} className="text-amber-400" />
+                  <span className="text-xs font-extrabold text-amber-300 uppercase tracking-wider">100% Mastery</span>
+                </div>
+                <div className="flex items-center gap-2 bg-amber-500/15 border border-amber-500/25 px-4 py-2 rounded-2xl">
+                  <CheckCircle2 size={16} className="text-amber-400" />
+                  <span className="text-xs font-extrabold text-amber-300 uppercase tracking-wider">All Correct</span>
+                </div>
+                <div className="flex items-center gap-2 bg-amber-500/15 border border-amber-500/25 px-4 py-2 rounded-2xl">
+                  <Star size={16} className="text-amber-400 fill-amber-400" />
+                  <span className="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Champion</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Detailed Analysis Section */}
         <section className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">

@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from "react"
 import { useSession } from "next-auth/react"
 import { 
   Send, 
-  User, 
   MessageSquare,
   Loader2,
   CheckCheck,
@@ -12,7 +11,8 @@ import {
   Search,
   Megaphone,
   X,
-  ChevronDown
+  ChevronDown,
+  ArrowLeft
 } from "lucide-react"
 import { toast } from "react-hot-toast"
 
@@ -345,7 +345,7 @@ export default function AdminMessagesPage() {
                   onClick={() => setSelectedStudent(null)} 
                   className="lg:hidden p-2 hover:bg-slate-100 text-slate-600 rounded-lg transition-colors"
                 >
-                  <User size={16} /> {/* Placeholder for back button since ArrowLeft might need to be imported */}
+                  <ArrowLeft size={16} />
                 </button>
                 <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-teal-500/20">
                   <span className="font-black">{selectedStudent.name.charAt(0)}</span>

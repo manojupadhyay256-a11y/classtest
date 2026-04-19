@@ -36,7 +36,7 @@ export default function AdminSidebar() {
   }, [])
 
   return (
-    <div className="w-full md:w-52 bg-slate-900 md:h-screen sticky top-0 z-50 text-white flex flex-col p-3 md:p-4 shadow-md border-b md:border-b-0 md:border-r border-slate-800">
+    <div className="w-full md:w-52 bg-slate-900 md:h-screen sticky top-0 z-50 text-white flex flex-col p-3 md:p-4 shadow-md border-b md:border-b-0 md:border-r border-slate-800 no-print">
       <div className="flex justify-between items-center mb-3 md:mb-8 px-1">
         <div>
           <h2 className="text-sm font-black text-amber-400 uppercase tracking-tighter leading-none">DPSMRN</h2>

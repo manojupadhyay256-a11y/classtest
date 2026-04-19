@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Card from "@/components/ui/card"
+import { Printer } from "lucide-react"
+import PrintableResponse from "@/components/shared/PrintableResponse"
 
 interface Question {
   id: string
@@ -134,10 +136,17 @@ export default function AdminViewStudentResponsesPage() {
     !result.answers[q.id] || result.answers[q.id].toString().trim() === ""
   ).length
 
+  const handlePrint = () => {
+    window.print()
+  }
+
   return (
     <div className="space-y-6">
+      {/* Printable Component (Hidden on Screen) */}
+      <PrintableResponse result={result} />
+
       {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+      <header className="no-print flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
           <button
             onClick={() => router.push(`/admin/results/${testId}`)}
@@ -151,10 +160,18 @@ export default function AdminViewStudentResponsesPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Student Responses</h1>
           <p className="text-gray-500 mt-1">{result.test.title} • {result.test.subject}</p>
         </div>
+        <button
+          onClick={handlePrint}
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl transition-all font-black text-sm shadow-xl shadow-blue-500/20 active:scale-95"
+        >
+          <Printer size={18} strokeWidth={2.5} />
+          Print Response
+        </button>
       </header>
 
-      {/* Student Info Card */}
-      <Card title="Student Information">
+      <div className="no-print space-y-6">
+        {/* Student Info Card */}
+        <Card title="Student Information">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
           <div>
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Name</p>
@@ -345,5 +362,6 @@ export default function AdminViewStudentResponsesPage() {
         </div>
       </Card>
     </div>
+  </div>
   )
 }

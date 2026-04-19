@@ -13,7 +13,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       test: {
         include: { questions: { orderBy: { order: "asc" } } }
       },
-      student: { select: { name: true, admno: true } }
+      student: { select: { name: true, admno: true, class: true, section: true } }
     }
   })
 

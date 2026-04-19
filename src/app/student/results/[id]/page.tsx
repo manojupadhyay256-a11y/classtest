@@ -17,14 +17,24 @@ import {
   ExternalLink,
   Sparkles,
   Crown,
-  Flame
+  Flame,
+  Printer
 } from "lucide-react"
+import PrintableResponse from "@/components/shared/PrintableResponse"
 
 interface Result {
   id: string
   score: number
   totalMarks: number
+  timeTaken: number
+  submittedAt: string
   answers: Record<string, string>
+  student: {
+    name: string
+    admno: string
+    class: string
+    section: string
+  }
   test: {
     title: string
     subject: string
@@ -71,20 +81,27 @@ export default function StudentResultsDetailPage() {
     )
   }
 
+  const handlePrint = () => {
+    window.print()
+  }
+
   const percentage = Number(((result.score / result.totalMarks) * 100).toFixed(1))
   const isHighScorer = percentage >= 80
   const isPerfectScore = percentage === 100
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-200 selection:bg-teal-500/30">
+      {/* Printable Component (Hidden on Screen) */}
+      <PrintableResponse result={result} />
+
       {/* Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none no-print">
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-teal-600/10 rounded-full blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
         <div className="bg-mesh opacity-20 absolute inset-0"></div>
       </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-5 py-12 space-y-10">
+      <div className="relative z-10 max-w-5xl mx-auto px-5 py-12 space-y-10 no-print">
         {/* Header Section */}
         <header className="bg-slate-900/80 backdrop-blur-xl shadow-2xl p-8 md:p-12 rounded-[2.5rem] border-white/10 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
@@ -104,13 +121,22 @@ export default function StudentResultsDetailPage() {
                 <h1 className="text-3xl md:text-4xl font-black text-white leading-tight tracking-tight">
                   {result.test.title}
                 </h1>
-                <div className="flex items-center space-x-3">
-                  <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-teal-400 text-[10px] font-black uppercase tracking-widest">
-                    {result.test.subject}
-                  </span>
-                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
-                    <Star size={12} className="text-amber-500" /> Assessment Feedback
-                  </span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center space-x-3">
+                    <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-teal-400 text-[10px] font-black uppercase tracking-widest">
+                      {result.test.subject}
+                    </span>
+                    <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+                      <Star size={12} className="text-amber-500" /> Assessment Feedback
+                    </span>
+                  </div>
+                  <button
+                    onClick={handlePrint}
+                    className="inline-flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl border border-white/20 transition-all font-bold text-[10px] uppercase tracking-widest group/btn shadow-xl shadow-black/20"
+                  >
+                    <Printer size={14} className="text-teal-400 group-hover/btn:scale-110 transition-transform" />
+                    <span>Print Response</span>
+                  </button>
                 </div>
               </div>
             </div>

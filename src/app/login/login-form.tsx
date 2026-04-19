@@ -78,6 +78,11 @@ export default function LoginForm() {
         </div>
       </div>
 
+      <div className="bg-teal-50/50 border border-teal-100 rounded-xl p-3 text-center">
+        <p className="text-[10px] text-teal-700 font-bold uppercase tracking-wider mb-0.5">Quick Help</p>
+        <p className="text-xs text-teal-600 font-medium italic">Your ID and Password is your admission number</p>
+      </div>
+
       <button
         type="submit"
         disabled={isLoading}

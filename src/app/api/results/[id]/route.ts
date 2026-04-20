@@ -14,7 +14,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
   const test = await prisma.test.findUnique({
     where: { id },
-    select: { title: true, subject: true, createdBy: true }
+    select: { 
+      title: true, 
+      subject: true, 
+      createdBy: true,
+      class: true,
+      sections: true
+    }
   })
 
   if (!test) {
@@ -34,7 +40,20 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     orderBy: { score: "desc" }
   })
 
-  return NextResponse.json({ results, test })
+  // Fetch all students who were supposed to take this test
+  const allStudents = await prisma.student.findMany({
+    where: {
+      class: test.class,
+      section: { in: test.sections }
+    },
+    select: { name: true, admno: true, class: true, section: true },
+    orderBy: [
+      { section: "asc" },
+      { name: "asc" }
+    ]
+  })
+
+  return NextResponse.json({ results, test, allStudents })
 }
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {

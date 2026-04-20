@@ -102,12 +102,23 @@ export default function AdminResultsPage() {
           <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{testInfo?.title || "Test Results"}</h1>
           <p className="text-gray-500 text-sm">{testInfo?.subject} • Class {results[0]?.student.class || "-"}</p>
         </div>
-        <button 
-          onClick={exportCSV}
-          className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-bold transition-colors text-sm w-full sm:w-auto text-center"
-        >
-          📥 Export CSV
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button 
+            onClick={() => router.push(`/admin/results/${id}/report`)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold transition-colors text-sm w-full sm:w-auto text-center flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Printable Report
+          </button>
+          <button 
+            onClick={exportCSV}
+            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-bold transition-colors text-sm w-full sm:w-auto text-center"
+          >
+            📥 Export CSV
+          </button>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">

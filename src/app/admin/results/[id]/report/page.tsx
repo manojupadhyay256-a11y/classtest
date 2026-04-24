@@ -200,14 +200,10 @@ export default function PrintableReportPage() {
 
         {/* Footer for print */}
         <div className="hidden print:flex flex-col gap-8 mt-10">
-          <div className="flex justify-between items-end">
+          <div className="flex justify-end items-end">
             <div className="flex flex-col gap-1">
               <div className="w-48 border-b border-slate-300"></div>
-              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">Class Teacher&apos;s Signature</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="w-48 border-b border-slate-300"></div>
-              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">Principal&apos;s Signature</span>
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">Subject Teacher&apos;s Signature</span>
             </div>
           </div>
           <div className="text-[8px] font-bold text-slate-300 uppercase tracking-[0.2em] text-center border-t border-slate-100 pt-4">

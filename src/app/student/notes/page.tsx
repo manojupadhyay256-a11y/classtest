@@ -240,7 +240,7 @@ export default function StudentNotesPage() {
                           <a
                             href={note.fileUrl}
                             target="_blank"
-                            download={note.fileName}
+                            {...(note.fileName.match(/\.html?$/i) ? {} : { download: note.fileName })}
                             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black text-white rounded-xl bg-gradient-to-r ${getSubjectGradient(note.subject)} shadow-md hover:shadow-lg active:scale-95 transition-all`}
                           >
                             <Download size={13} />

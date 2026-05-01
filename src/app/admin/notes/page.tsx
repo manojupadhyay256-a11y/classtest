@@ -432,7 +432,7 @@ export default function NotesPage() {
                   <a
                     href={note.fileUrl}
                     target="_blank"
-                    download={note.fileName}
+                    {...(note.fileName.match(/\.html?$/i) ? {} : { download: note.fileName })}
                     className="flex items-center gap-1 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold rounded-lg transition-all active:scale-95"
                   >
                     <Download size={12} />

@@ -430,7 +430,7 @@ export default function NotesPage() {
                 </div>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <a
-                    href={note.fileUrl}
+                    href={note.fileName.match(/\.html?$/i) ? `/api/notes/${note.id}/view` : note.fileUrl}
                     target="_blank"
                     {...(note.fileName.match(/\.html?$/i) ? {} : { download: note.fileName })}
                     className="flex items-center gap-1 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold rounded-lg transition-all active:scale-95"

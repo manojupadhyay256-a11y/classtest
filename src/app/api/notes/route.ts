@@ -26,7 +26,7 @@ export async function GET() {
   return NextResponse.json(notes)
 }
 
-// POST /api/notes — upload a new PDF note
+// POST /api/notes — upload a new PDF or HTML note
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {
@@ -54,8 +54,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate file type
-    if (file.type !== "application/pdf") {
-      return NextResponse.json({ error: "Only PDF files are allowed" }, { status: 400 })
+    const allowedTypes = ["application/pdf", "text/html"]
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: "Only PDF and HTML files are allowed" }, { status: 400 })
     }
 
     // Upload to Vercel Blob

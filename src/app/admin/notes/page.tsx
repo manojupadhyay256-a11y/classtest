@@ -88,7 +88,7 @@ export default function NotesPage() {
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.file) { toast.error("Please select a PDF file"); return }
+    if (!form.file) { toast.error("Please select a PDF or HTML file"); return }
     if (form.sections.length === 0) { toast.error("Select at least one section"); return }
 
     setIsUploading(true)
@@ -165,7 +165,7 @@ export default function NotesPage() {
             Notes & Study Materials
           </h1>
           <p className="text-slate-400 text-sm font-medium mt-1">
-            Upload chapter PDFs — students will see and download them instantly.
+            Upload chapter PDFs or HTML files — students will see and download them instantly.
           </p>
         </div>
         <button
@@ -173,7 +173,7 @@ export default function NotesPage() {
           className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-amber-500/20 transition-all active:scale-95"
         >
           {showForm ? <X size={17} /> : <Plus size={17} />}
-          {showForm ? "Cancel" : "Upload PDF"}
+          {showForm ? "Cancel" : "Upload File"}
         </button>
       </header>
 
@@ -286,7 +286,7 @@ export default function NotesPage() {
 
             {/* File */}
             <div className="space-y-1.5 md:col-span-2">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-widest">PDF File * (max 10MB)</label>
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-widest">PDF / HTML File * (max 10MB)</label>
               <div
                 className="relative border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-amber-400 transition-colors cursor-pointer group"
                 onClick={() => fileRef.current?.click()}
@@ -296,14 +296,14 @@ export default function NotesPage() {
                   <p className="text-sm font-bold text-amber-600">{form.file.name}</p>
                 ) : (
                   <>
-                    <p className="text-sm font-bold text-slate-500">Click to select a PDF file</p>
-                    <p className="text-xs text-slate-400 mt-0.5">Only .pdf format is accepted</p>
+                    <p className="text-sm font-bold text-slate-500">Click to select a PDF or HTML file</p>
+                    <p className="text-xs text-slate-400 mt-0.5">.pdf and .html formats are accepted</p>
                   </>
                 )}
                 <input
                   ref={fileRef}
                   type="file"
-                  accept=".pdf,application/pdf"
+                  accept=".pdf,application/pdf,.html,.htm,text/html"
                   className="hidden"
                   onChange={e => setForm({ ...form, file: e.target.files?.[0] || null })}
                 />
@@ -436,7 +436,7 @@ export default function NotesPage() {
                     className="flex items-center gap-1 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold rounded-lg transition-all active:scale-95"
                   >
                     <Download size={12} />
-                    PDF
+                    {note.fileName.match(/\.html?$/i) ? 'HTML' : 'PDF'}
                   </a>
                   {(isAdmin || note.teacher.id === session?.user?.id) && (
                     <button

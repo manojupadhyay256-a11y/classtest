@@ -129,7 +129,7 @@ export default function StudentNotesPage() {
             </div>
             <h1 className="text-2xl md:text-3xl font-black text-white mb-1">Chapter Notes</h1>
             <p className="text-amber-50/70 text-sm font-medium">
-              Download PDF notes shared by your teachers for Class {session?.user?.name ? "" : ""}
+              Download notes shared by your teachers for Class {session?.user?.name ? "" : ""}
               {notes.length > 0 ? `${notes[0].class}` : "your class"}.
             </p>
           </div>
@@ -244,7 +244,7 @@ export default function StudentNotesPage() {
                             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black text-white rounded-xl bg-gradient-to-r ${getSubjectGradient(note.subject)} shadow-md hover:shadow-lg active:scale-95 transition-all`}
                           >
                             <Download size={13} />
-                            Download PDF
+                            {note.fileName.match(/\.html?$/i) ? 'View HTML' : 'Download PDF'}
                           </a>
                         </div>
                       </div>

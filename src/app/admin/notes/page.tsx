@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import {
   BookOpen, Upload, Trash2, Download, FileText,
-  ChevronDown, X, Plus, Loader2, Search, Shield, User
+  ChevronDown, X, Plus, Loader2, Search, Shield, User, Pencil
 } from "lucide-react"
 
 interface Note {
@@ -40,6 +40,7 @@ export default function NotesPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [editingNote, setEditingNote] = useState<Note | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
 
   const [form, setForm] = useState({
@@ -86,9 +87,32 @@ export default function NotesPage() {
     }))
   }
 
+  const startEdit = (note: Note) => {
+    setEditingNote(note)
+    setForm({
+      title: note.title,
+      subject: note.subject,
+      chapter: note.chapter,
+      class: note.class,
+      sections: [...note.sections],
+      instructions: note.instructions || "",
+      file: null,
+    })
+    if (fileRef.current) fileRef.current.value = ""
+    setShowForm(true)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const cancelEdit = () => {
+    setEditingNote(null)
+    setForm({ title: "", subject: "", chapter: "", class: "", sections: [], instructions: "", file: null })
+    if (fileRef.current) fileRef.current.value = ""
+    setShowForm(false)
+  }
+
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.file) { toast.error("Please select a PDF or HTML file"); return }
+    if (!editingNote && !form.file) { toast.error("Please select a PDF or HTML file"); return }
     if (form.sections.length === 0) { toast.error("Select at least one section"); return }
 
     setIsUploading(true)
@@ -99,19 +123,22 @@ export default function NotesPage() {
     fd.append("class", form.class)
     fd.append("sections", JSON.stringify(form.sections))
     if (form.instructions.trim()) fd.append("instructions", form.instructions.trim())
-    fd.append("file", form.file)
+    if (form.file) fd.append("file", form.file)
 
     try {
-      const res = await fetch("/api/notes", { method: "POST", body: fd })
+      const url = editingNote ? `/api/notes/${editingNote.id}` : "/api/notes"
+      const method = editingNote ? "PUT" : "POST"
+      const res = await fetch(url, { method, body: fd })
       if (res.ok) {
-        toast.success("Note uploaded successfully!")
+        toast.success(editingNote ? "Note updated successfully!" : "Note uploaded successfully!")
         setForm({ title: "", subject: "", chapter: "", class: "", sections: [], instructions: "", file: null })
         if (fileRef.current) fileRef.current.value = ""
         setShowForm(false)
+        setEditingNote(null)
         fetchNotes()
       } else {
         const err = await res.json()
-        toast.error(err.details || err.error || "Upload failed")
+        toast.error(err.details || err.error || (editingNote ? "Update failed" : "Upload failed"))
       }
     } finally {
       setIsUploading(false)
@@ -169,7 +196,9 @@ export default function NotesPage() {
           </p>
         </div>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => {
+            if (showForm) { cancelEdit() } else { setShowForm(true) }
+          }}
           className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-amber-500/20 transition-all active:scale-95"
         >
           {showForm ? <X size={17} /> : <Plus size={17} />}
@@ -182,8 +211,8 @@ export default function NotesPage() {
         <div className="bg-white rounded-2xl border-2 border-amber-100 shadow-xl shadow-amber-900/5 overflow-hidden">
           <div className="px-6 py-4 bg-amber-50 border-b border-amber-100">
             <h2 className="font-black text-slate-900 flex items-center gap-2">
-              <Upload size={16} className="text-amber-600" />
-              Upload New Note
+              {editingNote ? <Pencil size={16} className="text-amber-600" /> : <Upload size={16} className="text-amber-600" />}
+              {editingNote ? `Edit Note: ${editingNote.title}` : "Upload New Note"}
             </h2>
           </div>
           <form onSubmit={handleUpload} className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -286,7 +315,9 @@ export default function NotesPage() {
 
             {/* File */}
             <div className="space-y-1.5 md:col-span-2">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-widest">PDF / HTML File * (max 10MB)</label>
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-widest">
+                PDF / HTML File {editingNote ? "(optional — leave empty to keep current file)" : "* (max 10MB)"}
+              </label>
               <div
                 className="relative border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-amber-400 transition-colors cursor-pointer group"
                 onClick={() => fileRef.current?.click()}
@@ -294,6 +325,11 @@ export default function NotesPage() {
                 <FileText size={28} className="mx-auto mb-2 text-slate-300 group-hover:text-amber-400 transition-colors" />
                 {form.file ? (
                   <p className="text-sm font-bold text-amber-600">{form.file.name}</p>
+                ) : editingNote ? (
+                  <>
+                    <p className="text-sm font-bold text-slate-500">Current file: {editingNote.fileName}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Click to replace with a new file, or leave as-is</p>
+                  </>
                 ) : (
                   <>
                     <p className="text-sm font-bold text-slate-500">Click to select a PDF or HTML file</p>
@@ -317,9 +353,11 @@ export default function NotesPage() {
                 className="w-full bg-slate-900 hover:bg-slate-800 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2"
               >
                 {isUploading ? (
-                  <><Loader2 size={17} className="animate-spin" /> Uploading...</>
+                  <><Loader2 size={17} className="animate-spin" /> {editingNote ? "Saving..." : "Uploading..."}</>
                 ) : (
-                  <><Upload size={17} /> Upload Note</>
+                  editingNote
+                    ? <><Pencil size={17} /> Save Changes</>
+                    : <><Upload size={17} /> Upload Note</>
                 )}
               </button>
             </div>
@@ -439,13 +477,22 @@ export default function NotesPage() {
                     {note.fileName.match(/\.html?$/i) ? 'HTML' : 'PDF'}
                   </a>
                   {(isAdmin || note.teacher.id === session?.user?.id) && (
-                    <button
-                      onClick={() => handleDelete(note)}
-                      className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                      title="Delete note"
-                    >
-                      <Trash2 size={14} />
-                    </button>
+                    <>
+                      <button
+                        onClick={() => startEdit(note)}
+                        className="p-1.5 rounded-lg text-slate-300 hover:text-amber-500 hover:bg-amber-50 transition-all"
+                        title="Edit note"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(note)}
+                        className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                        title="Delete note"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

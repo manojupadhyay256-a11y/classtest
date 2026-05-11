@@ -133,6 +133,42 @@ export async function POST(req: Request) {
   }
 }
 
+export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Only Admins can edit student records" }, { status: 403 })
+  }
+
+  try {
+    const { admno, name, class: className, section } = await req.json()
+
+    if (!admno) {
+      return NextResponse.json({ error: "Admission number is required" }, { status: 400 })
+    }
+
+    const existing = await prisma.student.findUnique({ where: { admno } })
+    if (!existing) {
+      return NextResponse.json({ error: "Student not found" }, { status: 404 })
+    }
+
+    const updated = await prisma.student.update({
+      where: { admno },
+      data: {
+        ...(name && { name: name.trim() }),
+        ...(className && { class: className.trim() }),
+        ...(section && { section: section.trim() }),
+      },
+      select: { admno: true, name: true, class: true, section: true }
+    })
+
+    return NextResponse.json(updated)
+  } catch (error: unknown) {
+    const err = error as Error
+    console.error("Student Update Error:", err)
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
 export async function DELETE(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== "ADMIN") {

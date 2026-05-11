@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@prisma/adapter-pg": "^6.1.0",
     "@prisma/client": "^6.1.0",
     "@vercel/blob": "^2.3.3",

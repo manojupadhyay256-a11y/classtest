@@ -1,0 +1,78 @@
+Class Test: Database Management System (LibreOffice Base)Subject: Information Technology (Code 402)Maximum Marks: 40Time Allowed: 90 MinutesSection A: Multiple Choice Questions (1 Mark Each)Question: Which of the following describes a structured set of data held in a computer, especially one that is accessible in various ways?
+Type: mcq
+A) Spreadsheet
+B) Database
+C) Text File
+D) Directory
+Answer: BQuestion: An administrator wants to store a standard 2-letter state code (e.g., 'NY', 'CA'). Which data type is most efficient as it does not require length calculation during storage?
+Type: mcq
+A) VARCHAR
+B) CHAR
+C) MEMO
+D) TEXTAnswer: BQuestion: In a tracking system for a residential building, which attribute would best serve as the unique identifier for each occupant?
+Type: mcq
+A) Room Number
+B) Occupant ID
+C) Floor Level
+D) Phone Number
+Answer: BQuestion: If an existing record has the Primary Key 'EMP-05', what is the result of attempting to save a new record with the same 'EMP-05' identifier?
+Type: mcq
+A) The system creates a duplicate entry.
+B) The system rejects the entry to maintain data uniqueness.
+C) The old record is automatically deleted.
+D) The new record is saved with a suffix like 'EMP-05-1'.
+Answer: BQuestion: Which database component provides a structured window for users to interact with table data without seeing the backend?
+Type: mcq
+A) Report
+B) Query
+C) Form
+D) Relationship
+Answer: CQuestion: Which SQL keyword is used to remove specific rows from a table based on a defined criteria?Type: mcqA) DROPB) REMOVEC) DELETED) TRUNCATEAnswer: CQuestion: What does the 'R' in RDBMS specifically refer to in the context of linked tables?
+Type: mcq
+A) Record
+B) Regional
+C) Relational
+D) Retrieval
+Answer: CQuestion: To prevent a 'Student_Name' field from being saved as a blank entry, which property must be activated?
+Type: mcq
+A) AutoValue
+B) Format Example
+C) Entry Required
+D) Default Value
+Answer: CQuestion: If you need to see a list of all employees who joined after January 2024, you should create a:Type: mcqA) FormB) QueryC) ReportD) TableAnswer: BQuestion: When storing the exact time and day a transaction occurred, which data type is most appropriate?
+Type: mcq
+A) Numeric
+B) Text
+C) Date/TimeD) BooleanAnswer: CQuestion: Which SQL clause is used to specify which table the data should be retrieved from?
+Type: mcq
+A) WHERE
+B) SELECT
+C) FROM
+D) GROUP BY
+Answer: CQuestion: To store a digital signature or a scanned document within a table row, which data type is required?
+Type: mcq
+A) LONGVARCHAR
+B) INTEGER
+C) BINARY [VARBINARY]
+D) BOOLEAN
+Answer: CQuestion: When using the Query Design view, which section is used to hide a column from the final results without removing it from the query logic?
+Type: mcq
+A) Visible
+B) Criterion
+C) Sort
+D) Alias
+Answer: AQuestion: A field in a 'Sales' table that refers back to a Primary Key in the 'Products' table is known as a:Type: mcqA) Candidate KeyB) Super Key
+C) Foreign Key
+D) Primary KeyAnswer: CQuestion: Which tool is used to generate a summarized, printable overview of data intended for management review?Type: mcqA) FormB) QueryC) ReportD) TableAnswer: CSection B: State True or False (1 Mark Each)Question: A single table in LibreOffice Base can support multiple fields as a single Primary Key.
+Type: truefalse
+Answer: trueQuestion: Data Redundancy is a desirable feature because it provides multiple backups of the same information within the same table.
+Type: truefalse
+Answer: falseQuestion: Referential Integrity rules prevent the creation of "orphan" records in a child table.Type: truefalseAnswer: trueQuestion: VARCHAR data types occupy the same amount of storage space regardless of the length of the string entered.
+Type: truefalse
+Answer: falseQuestion: In SQL, the command "select * from student" will execute the same way as "SELECT * FROM STUDENT".
+Type: truefalse
+Answer: trueQuestion: A Foreign Key relationship requires that the data types of the linked fields must match.Type: truefalseAnswer: trueQuestion: Applying a 'Sort' in a query result permanently reorders the rows inside the source table.Type: truefalseAnswer: falseQuestion: The standard file format for a LibreOffice Base database is .odb.Type: truefalseAnswer: trueQuestion: A relationship where one customer can place many orders is defined as a one-to-many relationship.Type: truefalseAnswer: trueQuestion: Table relationships are managed through the 'Tools' menu in the Base application window.Type: truefalseAnswer: trueQuestion: A field with a 'Boolean' data type can store numbers ranging from 0 to 100.
+Type: truefalse
+Answer: falseQuestion: The 'Table Wizard' is a tool that helps beginners create tables by choosing from predefined templates.Type: truefalseAnswer: trueQuestion: Data Integrity ensures that data remains accurate and consistent over its entire life-cycle.Type: truefalseAnswer: trueQuestion: Forms are primarily designed for printing data for physical filing.Type: truefalseAnswer: falseQuestion: The term 'Tuple' is another name for a vertical column in a relational database.Type: truefalseAnswer: falseSection C: Fill in the Blanks (1 Mark Each)Question: ______ refers to the inconsistency that occurs when the same data is stored in multiple formats across a database.Type: fillAnswer: Data RedundancyQuestion: To add a completely new row of data into a table via SQL, the ______ statement is used.Type: fillAnswer: INSERT INTOQuestion: When two or more fields are combined to uniquely identify a record, it is called a ______ key.Type: fillAnswer: CompositeQuestion: The ______ data type is used when the text to be stored exceeds the 255-character limit of a standard text field.Type: fillAnswer: Memo / LongVarcharQuestion: RDBMS stores data in ______ structures consisting of rows and columns.Type: fillAnswer: Tabular / TableQuestion: A ______ key is a candidate key that was not chosen to be the primary key.Type: fillAnswer: AlternateQuestion: The ______ command is used to delete an entire table and its definition from the database.Type: fillAnswer: DROP TABLEQuestion: A ______ database is a simple database where all information is stored in a single file or table without links.Type: fillAnswer: Flat FileQuestion: In the Query Design grid, the ______ row allows you to specify if you want to see the results in Ascending or Descending order.Type: fillAnswer: SortQuestion: The property that ensures a record in a related table must point to a valid record in the primary table is called ______ Integrity.
+Type: fill
+Answer: ReferentialEnd of Test

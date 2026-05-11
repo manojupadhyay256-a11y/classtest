@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Card from "@/components/ui/card"
 import toast from "react-hot-toast"
+import { useSession } from "next-auth/react"
 
 interface Result {
   id: string
@@ -24,26 +25,56 @@ interface TestInfo {
   subject: string
   class: string
   section: string
+  sections: string[]
+}
+
+interface RegradeDetail {
+  admno: string
+  studentName: string
+  oldScore: number
+  newScore: number
+  totalMarks: number
+  changes: {
+    questionOrder: number
+    questionText: string
+    studentAnswer: string
+    correctAnswer: string
+    aiVerdict: string
+    marksAwarded: number
+  }[]
+}
+
+interface RegradeResponse {
+  message: string
+  checked: number
+  updated: number
+  details: RegradeDetail[]
 }
 
 export default function AdminResultsPage() {
   const params = useParams()
   const router = useRouter()
+  const { data: session } = useSession()
+  const isAdmin = session?.user?.role === "ADMIN"
   const id = params.id as string
   const [results, setResults] = useState<Result[]>([])
   const [testInfo, setTestInfo] = useState<TestInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isRegrading, setIsRegrading] = useState(false)
+  const [regradeResult, setRegradeResult] = useState<RegradeResponse | null>(null)
+  const [showRegradeDetails, setShowRegradeDetails] = useState(false)
+
+  const fetchResults = useCallback(async () => {
+    const res = await fetch(`/api/results/${id}`)
+    const data = await res.json()
+    setResults(data.results || [])
+    setTestInfo(data.test)
+    setIsLoading(false)
+  }, [id])
 
   useEffect(() => {
-    const fetchResults = async () => {
-      const res = await fetch(`/api/results/${id}`)
-      const data = await res.json()
-      setResults(data.results || [])
-      setTestInfo(data.test)
-      setIsLoading(false)
-    }
     fetchResults()
-  }, [id])
+  }, [fetchResults])
 
   const exportCSV = () => {
     if (results.length === 0) return
@@ -91,6 +122,41 @@ export default function AdminResultsPage() {
     }
   }
 
+  const handleRegrade = async () => {
+    if (!confirm("This will use AI to re-evaluate fill-in-the-blank and short answer questions. Scores can only increase, never decrease. Continue?")) return;
+
+    setIsRegrading(true)
+    setRegradeResult(null)
+    const loadingToast = toast.loading("🤖 AI is regrading answers... This may take a moment.")
+
+    try {
+      const res = await fetch(`/api/results/${id}/regrade`, {
+        method: "POST",
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.error || "Regrade failed")
+      }
+
+      const data: RegradeResponse = await res.json()
+      setRegradeResult(data)
+      
+      if (data.updated > 0) {
+        toast.success(`${data.message}`, { id: loadingToast, duration: 5000 })
+        // Refresh results to show updated scores
+        fetchResults()
+      } else {
+        toast.success("All scores are already correct — no changes needed.", { id: loadingToast, duration: 5000 })
+      }
+    } catch (error) {
+      console.error("Regrade error:", error)
+      toast.error(error instanceof Error ? error.message : "Regrade failed", { id: loadingToast })
+    } finally {
+      setIsRegrading(false)
+    }
+  }
+
   const avgScore = results.length > 0 
     ? (results.reduce((acc, r) => acc + r.score, 0) / results.length).toFixed(1) 
     : 0
@@ -103,6 +169,25 @@ export default function AdminResultsPage() {
           <p className="text-gray-500 text-sm">{testInfo?.subject} • Class {results[0]?.student.class || "-"}</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          {isAdmin && (
+            <button 
+              onClick={handleRegrade}
+              disabled={isRegrading || results.length === 0}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg font-bold transition-colors text-sm w-full sm:w-auto text-center flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isRegrading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Regrading...
+                </>
+              ) : (
+                <>🤖 AI Regrade</>
+              )}
+            </button>
+          )}
           <button 
             onClick={() => router.push(`/admin/results/${id}/report`)}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold transition-colors text-sm w-full sm:w-auto text-center flex items-center justify-center gap-2"
@@ -120,6 +205,62 @@ export default function AdminResultsPage() {
           </button>
         </div>
       </header>
+
+      {/* Regrade Results Summary */}
+      {regradeResult && regradeResult.updated > 0 && (
+        <Card title="🤖 AI Regrade Results">
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <div>
+                <p className="text-sm font-bold text-gray-900">{regradeResult.message}</p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Checked {regradeResult.checked} submissions · {regradeResult.updated} scores updated
+                </p>
+              </div>
+              <button
+                onClick={() => setShowRegradeDetails(!showRegradeDetails)}
+                className="text-purple-600 hover:text-purple-700 text-xs font-bold transition-colors"
+              >
+                {showRegradeDetails ? "Hide Details" : "Show Details"}
+              </button>
+            </div>
+
+            {showRegradeDetails && (
+              <div className="space-y-3 mt-3 pt-3 border-t border-slate-100">
+                {regradeResult.details.map((detail, idx) => (
+                  <div key={idx} className="bg-purple-50/50 rounded-xl p-3 border border-purple-100">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <span className="font-bold text-gray-900 text-sm">{detail.studentName}</span>
+                        <span className="text-xs text-gray-400 ml-2">({detail.admno})</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs text-red-400 line-through mr-2">{detail.oldScore}/{detail.totalMarks}</span>
+                        <span className="text-sm font-black text-green-600">{detail.newScore}/{detail.totalMarks}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      {detail.changes.map((change, cIdx) => (
+                        <div key={cIdx} className="text-xs bg-white rounded-lg p-2 border border-purple-50">
+                          <p className="font-bold text-gray-700">Q{change.questionOrder}: {change.questionText}</p>
+                          <p className="text-gray-500 mt-0.5">
+                            Student: <span className="font-medium text-gray-700">&quot;{change.studentAnswer}&quot;</span>
+                            {" · "}
+                            Expected: <span className="font-medium text-gray-700">&quot;{change.correctAnswer}&quot;</span>
+                          </p>
+                          <p className="text-green-600 font-medium mt-0.5">
+                            ✓ AI: {change.aiVerdict} (+{change.marksAwarded} mark{change.marksAwarded > 1 ? "s" : ""})
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <Card title="Avg Score">

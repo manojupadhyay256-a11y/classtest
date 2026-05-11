@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, Suspense } from "react"
 import toast from "react-hot-toast"
 import * as XLSX from "xlsx"
 import Card from "@/components/ui/card"
-import { Search, Plus, X } from "lucide-react"
+import { Search, Plus, X, Pencil, Check } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 
@@ -30,6 +30,9 @@ function StudentsContent() {
   const [isAdding, setIsAdding] = useState(false)
   const [filterClass, setFilterClass] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState(initialQuery)
+  const [editingAdmno, setEditingAdmno] = useState<string | null>(null)
+  const [editData, setEditData] = useState({ name: '', class: '', section: '' })
+  const [isSaving, setIsSaving] = useState(false)
 
   const fetchStudents = async () => {
     try {
@@ -70,6 +73,53 @@ function StudentsContent() {
       fetchStudents()
     } else {
       toast.error("Failed to delete")
+    }
+  }
+
+  const handleStartEdit = (student: Student) => {
+    setEditingAdmno(student.admno)
+    setEditData({ name: student.name, class: student.class, section: student.section })
+  }
+
+  const handleCancelEdit = () => {
+    setEditingAdmno(null)
+    setEditData({ name: '', class: '', section: '' })
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editingAdmno) return
+    if (!editData.name.trim() || !editData.class.trim() || !editData.section.trim()) {
+      toast.error("All fields are required")
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const res = await fetch("/api/students", {
+        method: "PUT",
+        body: JSON.stringify({
+          admno: editingAdmno,
+          name: editData.name,
+          class: editData.class,
+          section: editData.section
+        }),
+        headers: { "Content-Type": "application/json" }
+      })
+
+      if (res.ok) {
+        toast.success("Student updated successfully!")
+        setEditingAdmno(null)
+        setEditData({ name: '', class: '', section: '' })
+        fetchStudents()
+      } else {
+        const errorData = await res.json()
+        toast.error(errorData.error || "Failed to update student")
+      }
+    } catch (err) {
+      toast.error("Error updating student")
+      console.error(err)
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -151,7 +201,7 @@ function StudentsContent() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
           <div>
             <h1 className="text-xl font-black text-slate-900 tracking-tight">Manage Students</h1>
-            <p className="text-slate-400 text-sm">Add, delete or bulk upload students via Excel</p>
+            <p className="text-slate-400 text-sm">Add, edit, delete or bulk upload students via Excel</p>
           </div>
           {isAdmin && (
             <div className="flex gap-2 w-full sm:w-auto">
@@ -279,27 +329,94 @@ function StudentsContent() {
             <div className="py-10 text-center text-slate-400 text-sm">No students found. Upload Excel to begin.</div>
           ) : (
             filteredStudents.map((student) => (
-              <div key={student.admno} className="flex items-center justify-between p-3 bg-slate-50/60 rounded-xl border border-slate-100">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-black text-sm flex-shrink-0 border border-indigo-100">
-                    {student.name.charAt(0)}
+              <div key={student.admno} className="p-3 bg-slate-50/60 rounded-xl border border-slate-100">
+                {editingAdmno === student.admno ? (
+                  /* Mobile Edit Mode */
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 font-black text-sm flex-shrink-0 border border-amber-200">
+                        <Pencil className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">Editing</p>
+                        <p className="text-[10px] font-bold text-slate-400">Adm No: {student.admno}</p>
+                      </div>
+                    </div>
+                    <input
+                      type="text"
+                      value={editData.name}
+                      onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                      className="w-full bg-white border-2 border-amber-200 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-amber-500 transition-all"
+                      placeholder="Name"
+                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        value={editData.class}
+                        onChange={(e) => setEditData({ ...editData, class: e.target.value })}
+                        className="w-full bg-white border-2 border-amber-200 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-amber-500 transition-all"
+                        placeholder="Class"
+                      />
+                      <input
+                        type="text"
+                        value={editData.section}
+                        onChange={(e) => setEditData({ ...editData, section: e.target.value })}
+                        className="w-full bg-white border-2 border-amber-200 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:border-amber-500 transition-all"
+                        placeholder="Section"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleSaveEdit}
+                        disabled={isSaving}
+                        className="flex-1 bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 disabled:opacity-50"
+                      >
+                        <Check className="w-3 h-3" />
+                        {isSaving ? "Saving..." : "Save"}
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1"
+                      >
+                        <X className="w-3 h-3" />
+                        Cancel
+                      </button>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-bold text-slate-900 text-sm truncate">{student.name}</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                      {student.admno} · {student.class}-{student.section}
-                    </p>
-                  </div>
-                </div>
-                {isAdmin ? (
-                  <button
-                    onClick={() => handleDelete(student.admno)}
-                    className="text-red-400 hover:text-red-600 text-xs font-semibold transition-colors flex-shrink-0 ml-2 p-2"
-                  >
-                    Delete
-                  </button>
                 ) : (
-                  <span className="text-[10px] text-slate-300 font-bold italic flex-shrink-0 ml-2">Read Only</span>
+                  /* Mobile Normal View */
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-black text-sm flex-shrink-0 border border-indigo-100">
+                        {student.name.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-900 text-sm truncate">{student.name}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          {student.admno} · {student.class}-{student.section}
+                        </p>
+                      </div>
+                    </div>
+                    {isAdmin ? (
+                      <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                        <button
+                          onClick={() => handleStartEdit(student)}
+                          className="text-amber-500 hover:text-amber-600 p-2 transition-colors"
+                          title="Edit student"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(student.admno)}
+                          className="text-red-400 hover:text-red-600 text-xs font-semibold transition-colors p-2"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-[10px] text-slate-300 font-bold italic flex-shrink-0 ml-2">Read Only</span>
+                    )}
+                  </div>
                 )}
               </div>
             ))
@@ -325,19 +442,73 @@ function StudentsContent() {
                 <tr><td colSpan={5} className="py-10 text-center text-slate-400 text-sm">No students found. Upload Excel to begin.</td></tr>
               ) : (
                 filteredStudents.map((student) => (
-                  <tr key={student.admno} className="hover:bg-slate-50/60 transition-colors">
+                  <tr key={student.admno} className={`hover:bg-slate-50/60 transition-colors ${editingAdmno === student.admno ? 'bg-amber-50/40' : ''}`}>
                     <td className="py-2.5 px-3 font-medium text-slate-700 text-sm">{student.admno}</td>
-                    <td className="py-2.5 px-3 text-slate-900 font-semibold text-sm">{student.name}</td>
-                    <td className="py-2.5 px-3 text-slate-600 text-sm">{student.class}</td>
-                    <td className="py-2.5 px-3 text-slate-600 text-sm">{student.section}</td>
+                    <td className="py-2.5 px-3 text-slate-900 font-semibold text-sm">
+                      {editingAdmno === student.admno ? (
+                        <input
+                          type="text"
+                          value={editData.name}
+                          onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                          className="bg-white border-2 border-amber-300 text-slate-900 font-bold px-2 py-1 rounded-md text-sm focus:outline-none focus:border-amber-500 transition-all w-full max-w-[200px]"
+                        />
+                      ) : student.name}
+                    </td>
+                    <td className="py-2.5 px-3 text-slate-600 text-sm">
+                      {editingAdmno === student.admno ? (
+                        <input
+                          type="text"
+                          value={editData.class}
+                          onChange={(e) => setEditData({ ...editData, class: e.target.value })}
+                          className="bg-white border-2 border-amber-300 text-slate-900 font-bold px-2 py-1 rounded-md text-sm focus:outline-none focus:border-amber-500 transition-all w-full max-w-[80px]"
+                        />
+                      ) : student.class}
+                    </td>
+                    <td className="py-2.5 px-3 text-slate-600 text-sm">
+                      {editingAdmno === student.admno ? (
+                        <input
+                          type="text"
+                          value={editData.section}
+                          onChange={(e) => setEditData({ ...editData, section: e.target.value })}
+                          className="bg-white border-2 border-amber-300 text-slate-900 font-bold px-2 py-1 rounded-md text-sm focus:outline-none focus:border-amber-500 transition-all w-full max-w-[80px]"
+                        />
+                      ) : student.section}
+                    </td>
                     <td className="py-2.5 px-3 text-right">
-                      {isAdmin ? (
-                        <button
-                          onClick={() => handleDelete(student.admno)}
-                          className="text-red-400 hover:text-red-600 text-xs font-semibold transition-colors"
-                        >
-                          Delete
-                        </button>
+                      {editingAdmno === student.admno ? (
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={handleSaveEdit}
+                            disabled={isSaving}
+                            className="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 disabled:opacity-50"
+                          >
+                            <Check className="w-3 h-3" />
+                            {isSaving ? "..." : "Save"}
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1"
+                          >
+                            <X className="w-3 h-3" />
+                            Cancel
+                          </button>
+                        </div>
+                      ) : isAdmin ? (
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => handleStartEdit(student)}
+                            className="text-amber-500 hover:text-amber-600 hover:bg-amber-50 p-1.5 rounded-md transition-colors"
+                            title="Edit student"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(student.admno)}
+                            className="text-red-400 hover:text-red-600 text-xs font-semibold transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       ) : (
                         <span className="text-[10px] text-slate-300 font-bold italic">Read Only</span>
                       )}

@@ -33,6 +33,17 @@ export async function GET(
 
   // Fetch the file from Vercel Blob
   try {
+    // Log access for students
+    if (session.user.role === "STUDENT") {
+      await prisma.noteAccess.create({
+        data: {
+          noteId: params.id,
+          studentId: session.user.id!,
+          studentName: session.user.name || "Unknown Student",
+        }
+      }).catch(err => console.error("Failed to log note access:", err))
+    }
+
     const response = await fetch(note.fileUrl)
     if (!response.ok) {
       return NextResponse.json({ error: "Failed to fetch file" }, { status: 502 })

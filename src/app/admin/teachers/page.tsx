@@ -168,7 +168,7 @@ export default function TeachersPage() {
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all appearance-none"
                 >
                   <option value="TEACHER">Standard Teacher (Tests Only)</option>
-                  <option value="ADMIN">Administrator (Full Access)</option>
+                  <option value="ADMIN">Admin(Manoj Upadhyay) (Full Access)</option>
                 </select>
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function TeachersPage() {
               <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${
                 teacher.role === 'ADMIN' ? 'bg-amber-500 text-white' : 'bg-slate-200 text-slate-600'
               }`}>
-                {teacher.role}
+                {teacher.role === 'ADMIN' ? 'Admin(Manoj Upadhyay)' : teacher.role}
               </span>
             </div>
             

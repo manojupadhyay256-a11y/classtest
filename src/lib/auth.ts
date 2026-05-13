@@ -25,7 +25,9 @@ export const authOptions: NextAuthOptions = {
           })
           if (teacher && bcrypt.compareSync(credentials.password, teacher.password)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return { id: teacher.id, email: teacher.email, name: teacher.name, role: (teacher as any).role || "TEACHER" }
+            const role = (teacher as any).role || "TEACHER"
+            const displayName = role === "ADMIN" ? "Admin(Manoj Upadhyay)" : teacher.name
+            return { id: teacher.id, email: teacher.email, name: displayName, role }
           }
         } 
         // Otherwise, Check if Student (AdmNo)

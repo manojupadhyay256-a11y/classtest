@@ -238,7 +238,7 @@ export default function StudentNotesPage() {
                             })}
                           </span>
                           <a
-                            href={note.fileName.match(/\.html?$/i) ? `/api/notes/${note.id}/view` : note.fileUrl}
+                            href={`/api/notes/${note.id}/view`}
                             target="_blank"
                             {...(note.fileName.match(/\.html?$/i) ? {} : { download: note.fileName })}
                             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black text-white rounded-xl bg-gradient-to-r ${getSubjectGradient(note.subject)} shadow-md hover:shadow-lg active:scale-95 transition-all`}

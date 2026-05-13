@@ -70,12 +70,12 @@ export default function AdminSettingsPage() {
           <div className="bg-white rounded-3xl p-4 sm:p-8 border border-gray-100 shadow-sm">
             <h3 className="text-lg font-bold text-gray-900 mb-8 border-b border-gray-50 pb-4 flex items-center">
               <KeyRound size={20} className="mr-3 text-amber-500" />
-              Update Administrator Password
+              Update Admin(Manoj Upadhyay) Password
             </h3>
 
             <form onSubmit={handlePasswordChange} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700 ml-1">Current Administrator Password</label>
+                <label className="text-sm font-semibold text-gray-700 ml-1">Current Admin(Manoj Upadhyay) Password</label>
                 <div className="relative">
                   <input
                     type={showCurrent ? "text" : "password"}

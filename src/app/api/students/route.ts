@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
   // Only Admin can create or upload students
   if (session.user.role !== "ADMIN") {
-    return NextResponse.json({ error: "Forbidden: Only Admins can manage student records" }, { status: 403 })
+    return NextResponse.json({ error: "Forbidden: Only Admin(Manoj Upadhyay) can manage student records" }, { status: 403 })
   }
 
   try {
@@ -136,7 +136,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== "ADMIN") {
-    return NextResponse.json({ error: "Only Admins can edit student records" }, { status: 403 })
+    return NextResponse.json({ error: "Only Admin(Manoj Upadhyay) can edit student records" }, { status: 403 })
   }
 
   try {
@@ -172,7 +172,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== "ADMIN") {
-    return NextResponse.json({ error: "Only Admins can delete student records" }, { status: 403 })
+    return NextResponse.json({ error: "Only Admin(Manoj Upadhyay) can delete student records" }, { status: 403 })
   }
 
   const { searchParams } = new URL(req.url)

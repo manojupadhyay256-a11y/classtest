@@ -74,18 +74,30 @@ model Result {
 }
 
 model Note {
-  id           String   @id @default(cuid())
+  id           String       @id @default(cuid())
   title        String
   subject      String
   chapter      String
   class        String
-  sections     String[] // which sections can see this note
-  fileName     String   // original file name
-  fileUrl      String   // Vercel Blob URL
-  instructions String?  // optional teacher instructions for students
-  uploadedBy   String   // Teacher.id
-  teacher      Teacher  @relation(fields: [uploadedBy], references: [id])
-  createdAt    DateTime @default(now())
+  sections     String[]     // which sections can see this note
+  fileName     String       // original file name
+  fileUrl      String       // Vercel Blob URL
+  instructions String?      // optional teacher instructions for students
+  uploadedBy   String       // Teacher.id
+  teacher      Teacher      @relation(fields: [uploadedBy], references: [id])
+  createdAt    DateTime     @default(now())
+  accessLogs   NoteAccess[]
+}
+
+model NoteAccess {
+  id          String   @id @default(cuid())
+  noteId      String
+  note        Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  studentId   String   // Student.admno
+  studentName String
+  accessedAt  DateTime @default(now())
+
+  @@index([noteId])
 }
 
 model LoginLog {

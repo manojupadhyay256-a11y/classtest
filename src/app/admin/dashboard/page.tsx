@@ -59,10 +59,10 @@ export default async function AdminDashboardPage() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            {isAdmin ? "Admin Overview" : "Teacher Overview"}
+            {isAdmin ? "Admin(Manoj Upadhyay) Overview" : "Teacher Overview"}
           </h1>
           <p className="text-slate-400 text-sm font-medium">
-            {isAdmin ? "Control center for your class test ecosystem" : "Your personal test management portal"}
+            {isAdmin ? "Control center for Admin(Manoj Upadhyay) class test ecosystem" : "Your personal test management portal"}
           </p>
         </div>
         <div className="flex space-x-3">

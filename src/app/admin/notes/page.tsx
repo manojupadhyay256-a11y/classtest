@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 import {
   BookOpen, Upload, Trash2, Download, FileText,
-  ChevronDown, X, Plus, Loader2, Search, Shield, User, Pencil
+  ChevronDown, X, Plus, Loader2, Search, Shield, User, Pencil, Eye, Clock
 } from "lucide-react"
 
 interface Note {
@@ -28,6 +28,13 @@ interface Note {
   }
 }
 
+interface NoteAccess {
+  id: string
+  studentId: string
+  studentName: string
+  accessedAt: string
+}
+
 const CLASS_OPTIONS = ["VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 const SECTION_OPTIONS = ["A", "B", "C", "D", "E"]
 
@@ -42,6 +49,9 @@ export default function NotesPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
+  const [accessLogNote, setAccessLogNote] = useState<Note | null>(null)
+  const [accessLog, setAccessLog] = useState<NoteAccess[]>([])
+  const [accessLogLoading, setAccessLogLoading] = useState(false)
 
   const [form, setForm] = useState({
     title: "",
@@ -158,6 +168,18 @@ export default function NotesPage() {
       }
     } catch {
       toast.error("Failed to delete note")
+    }
+  }
+
+  const fetchAccessLog = async (note: Note) => {
+    setAccessLogNote(note)
+    setAccessLog([])
+    setAccessLogLoading(true)
+    try {
+      const res = await fetch(`/api/notes/${note.id}/access-log`)
+      if (res.ok) setAccessLog(await res.json())
+    } finally {
+      setAccessLogLoading(false)
     }
   }
 
@@ -479,6 +501,14 @@ export default function NotesPage() {
                   {(isAdmin || note.teacher.id === session?.user?.id) && (
                     <>
                       <button
+                        onClick={() => fetchAccessLog(note)}
+                        className="flex items-center gap-1 px-3 py-1.5 bg-violet-500 hover:bg-violet-600 text-white text-xs font-bold rounded-lg transition-all active:scale-95 shadow-sm"
+                        title="Who viewed this note"
+                      >
+                        <Eye size={12} />
+                        Logs
+                      </button>
+                      <button
                         onClick={() => startEdit(note)}
                         className="p-1.5 rounded-lg text-slate-300 hover:text-amber-500 hover:bg-amber-50 transition-all"
                         title="Edit note"
@@ -498,6 +528,92 @@ export default function NotesPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Access Log Modal */}
+      {accessLogNote && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={() => setAccessLogNote(null)}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" />
+
+          {/* Panel */}
+          <div
+            className="relative z-10 w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-violet-50 to-purple-50 border-b border-violet-100">
+              <div>
+                <h3 className="font-black text-slate-900 flex items-center gap-2">
+                  <Eye size={16} className="text-violet-500" />
+                  Access Log
+                </h3>
+                <p className="text-xs text-slate-500 font-medium mt-0.5 line-clamp-1">
+                  {accessLogNote.title}
+                </p>
+              </div>
+              <button
+                onClick={() => setAccessLogNote(null)}
+                className="p-1.5 rounded-lg hover:bg-violet-100 text-slate-400 hover:text-slate-700 transition-all"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="max-h-[60vh] overflow-y-auto">
+              {accessLogLoading ? (
+                <div className="flex items-center justify-center py-16 gap-3 text-slate-400">
+                  <Loader2 size={20} className="animate-spin text-violet-400" />
+                  <span className="text-sm font-medium">Loading access log...</span>
+                </div>
+              ) : accessLog.length === 0 ? (
+                <div className="py-16 text-center">
+                  <Eye size={32} className="mx-auto mb-3 text-slate-200" />
+                  <p className="text-slate-500 font-bold text-sm">No views yet</p>
+                  <p className="text-slate-400 text-xs mt-1">No student has accessed this note yet.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-50">
+                  {accessLog.map((entry) => (
+                    <div key={entry.id} className="flex items-center gap-4 px-6 py-3.5 hover:bg-slate-50 transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center flex-shrink-0 text-xs font-black text-violet-600">
+                        {entry.studentName.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-slate-800 truncate">{entry.studentName}</p>
+                        <p className="text-[10px] text-slate-400 font-medium">ID: {entry.studentId}</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-medium flex-shrink-0">
+                        <Clock size={10} />
+                        <span>
+                          {new Date(entry.accessedAt).toLocaleString("en-IN", {
+                            day: "2-digit", month: "short", year: "numeric",
+                            hour: "2-digit", minute: "2-digit", hour12: true,
+                            timeZone: "Asia/Kolkata"
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            {!accessLogLoading && accessLog.length > 0 && (
+              <div className="px-6 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                <p className="text-xs text-slate-500 font-medium">
+                  <span className="font-black text-violet-600">{accessLog.length}</span> access {accessLog.length === 1 ? "event" : "events"} recorded
+                </p>
+                <p className="text-[10px] text-slate-400">Most recent first</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

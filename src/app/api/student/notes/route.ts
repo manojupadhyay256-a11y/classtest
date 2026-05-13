@@ -31,5 +31,17 @@ export async function GET() {
     orderBy: { createdAt: "desc" }
   })
 
+  // Log that the student viewed the notes list (record access for each note)
+  if (notes.length > 0) {
+    await prisma.noteAccess.createMany({
+      data: notes.map(note => ({
+        noteId: note.id,
+        studentId: student.admno,
+        studentName: student.name,
+      })),
+    })
+  }
+
   return NextResponse.json(notes)
 }
+

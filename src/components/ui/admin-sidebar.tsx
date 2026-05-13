@@ -40,7 +40,7 @@ export default function AdminSidebar() {
       <div className="flex justify-between items-center mb-3 md:mb-8 px-1">
         <div>
           <h2 className="text-sm font-black text-amber-400 uppercase tracking-tighter leading-none">DPSMRN</h2>
-          <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Admin Panel</p>
+          <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Admin(Manoj Upadhyay) Panel</p>
         </div>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}

@@ -5,6 +5,7 @@ import Card from "@/components/ui/card"
 import prisma from "@/lib/prisma"
 import Link from "next/link"
 import TestStatusToggle from "@/components/admin/test-status-toggle"
+import TestDeleteButton from "@/components/admin/test-delete-button"
 
 export const dynamic = "force-dynamic"
 
@@ -66,6 +67,7 @@ export default async function TestsListPage() {
                   <Link href={`/admin/tests/${test.id}/setup`} className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase transition-colors">Edit Info</Link>
                   <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase transition-colors">Edit Qs</Link>
                   <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase transition-colors">Results</Link>
+                  <TestDeleteButton id={test.id} title={test.title} questionsCount={test._count.questions} resultsCount={test._count.results} />
                 </div>
               </div>
             ))
@@ -106,6 +108,7 @@ export default async function TestsListPage() {
                         <Link href={`/admin/tests/${test.id}/setup`} className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit Info</Link>
                         <Link href={`/admin/tests/${test.id}/edit`} className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Edit Qs</Link>
                         <Link href={`/admin/results/${test.id}`} className="bg-teal-50 text-teal-700 hover:bg-teal-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase transition-colors">Results</Link>
+                        <TestDeleteButton id={test.id} title={test.title} questionsCount={test._count.questions} resultsCount={test._count.results} />
                       </div>
                     </td>
                   </tr>

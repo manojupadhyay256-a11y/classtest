@@ -112,7 +112,12 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       }
     }
 
-    await prisma.test.delete({ where: { id: params.id } })
+    // Delete all related resources in order (Results → Questions → Test)
+    await prisma.$transaction([
+      prisma.result.deleteMany({ where: { testId: params.id } }),
+      prisma.question.deleteMany({ where: { testId: params.id } }),
+      prisma.test.delete({ where: { id: params.id } }),
+    ])
     
     revalidatePath("/admin/tests")
     revalidatePath("/admin/dashboard")

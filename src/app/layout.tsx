@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     startupImage: ["/icons/icon-512x512.png"],
   },
   icons: {
+    icon: "/favicon.ico",
     apple: "/icons/icon-192x192.png",
   },
 }

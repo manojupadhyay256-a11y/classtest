@@ -201,7 +201,9 @@ export default function PrintableReportPage() {
         {/* Footer for print */}
         <div className="hidden print:flex flex-col gap-8 mt-10">
           <div className="flex justify-end items-end">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col items-center gap-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/sign.jpg" alt="Subject Teacher Signature" className="h-16 w-auto object-contain" />
               <div className="w-48 border-b border-slate-300"></div>
               <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">Subject Teacher&apos;s Signature</span>
             </div>

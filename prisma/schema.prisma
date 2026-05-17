@@ -67,7 +67,7 @@ model Result {
   student      Student  @relation(fields: [admno], references: [admno])
   test         Test     @relation(fields: [testId], references: [id])
   answers      Json     // { questionId: studentAnswer }
-  score        Int
+  score        Float
   totalMarks   Int
   timeTaken    Int      // in seconds
   submittedAt  DateTime @default(now())

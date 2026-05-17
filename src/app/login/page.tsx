@@ -23,10 +23,8 @@ export default async function LoginPage() {
 
       <div className="max-w-sm w-full glass p-8 rounded-2xl relative z-10 border border-white/40 shadow-2xl">
         <div className="text-center mb-7">
-          <div className="inline-block p-3 rounded-xl bg-gradient-to-br from-teal-500 to-indigo-600 mb-4 shadow-lg shadow-indigo-200">
-             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-             </svg>
+          <div className="inline-block mb-4 bg-white p-2 rounded-xl shadow-lg shadow-indigo-200">
+            <img src="/favicon.ico" alt="School Logo" className="w-12 h-12 object-contain" />
           </div>
           <h1 className="text-xl font-black text-slate-900 tracking-tight mb-1">DPSMRN Mathura</h1>
           <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[9px]">Class Test Portal</p>

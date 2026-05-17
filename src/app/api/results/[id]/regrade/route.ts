@@ -22,47 +22,65 @@ interface RegradeDetail {
   }[]
 }
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 async function evaluateWithAI(
   questionText: string,
-  correctAnswer: string,
   studentAnswer: string,
-  questionType: string
-): Promise<{ accepted: boolean; reason: string }> {
+  questionType: string,
+  maxMarks: number,
+  retries = 3
+): Promise<{ marksAwarded: number; reason: string }> {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
+    // Replaced gemini-2.0-flash with gemini-1.5-flash to bypass API quota issues as requested
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
-    const prompt = `You are a strict but fair school exam evaluator. Evaluate whether a student's answer is acceptable.
+    const prompt = `You are a strict but fair school exam evaluator. You must evaluate a student's answer using YOUR OWN KNOWLEDGE of the subject.
 
 Question Type: ${questionType === "fill" ? "Fill in the Blank" : "Short Answer"}
 Question: ${questionText}
-Expected Correct Answer: ${correctAnswer}
 Student's Answer: ${studentAnswer}
+Maximum Marks: ${maxMarks}
 
-Rules:
-1. For fill-in-the-blank: You MUST ACCEPT the answer if it contains the correct concept, even if the student redundantly included words from the question text. For example, if the question is "called a ______ key." and expected answer is "composite", you MUST ACCEPT "composite key" or "Composite key". Do NOT penalize for repeating context words.
-2. For short answers: Accept if the core meaning matches the correct answer. Minor phrasing differences are OK.
-3. Be lenient with capitalization, punctuation, extra spaces, and minor typos.
-4. If the student's answer is blank or clearly irrelevant, reject it.
-5. If the student has given an answer like "memo" and "memo/longvarchar" is the correct answer, then accept it as correct.
-6. Accept conceptually similar terminology. For example, if the expected answer is "data redundancy" and the student answers "data inconsistency", you MUST ACCEPT IT. Similarly, accept "file database" for "flat file", "table" for "tabular", and "insert" for "insert into".
+GRADING RULES:
+1. Use YOUR OWN knowledge to determine if the student's answer is factually correct.
+2. Award marks based on how accurate and complete the answer is:
+   - Full marks (${maxMarks}/${maxMarks}): Answer is correct, complete, and demonstrates understanding.
+   - Partial marks: Answer is partially correct or incomplete but shows some understanding.
+   - Zero marks (0/${maxMarks}): Answer is wrong, blank, or completely irrelevant.
+3. For "Fill in the Blank" questions: Award full marks if the answer is factually correct. Be lenient with minor typos, capitalization, and extra words.
+4. For "Short Answer" questions: Evaluate based on conceptual accuracy. The student doesn't need to match any specific phrasing — if the concept is right, award marks.
+5. If the student wrote something partially correct, award proportional marks.
 
 Reply in EXACTLY this format (no extra text):
-VERDICT: YES or NO
-REASON: One brief sentence explaining why`
+MARKS: <number between 0 and ${maxMarks}>
+REASON: <One brief sentence explaining why>`
+
+    // Added a short delay to respect basic rate limits, plus retries for 429s
+    await sleep(2000); 
 
     const result = await model.generateContent(prompt)
     const response = result.response.text().trim()
 
-    const verdictMatch = response.match(/VERDICT:\s*(YES|NO)/i)
+    const marksMatch = response.match(/MARKS:\s*(\d+(?:\.\d+)?)/i)
     const reasonMatch = response.match(/REASON:\s*(.+)/i)
 
+    let marks = marksMatch ? parseFloat(marksMatch[1]) : 0
+    // Ensure marks are within bounds
+    marks = Math.max(0, Math.min(maxMarks, marks))
+
     return {
-      accepted: verdictMatch ? verdictMatch[1].toUpperCase() === "YES" : false,
+      marksAwarded: marks,
       reason: reasonMatch ? reasonMatch[1].trim() : response
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.status === 429 && retries > 0) {
+      console.warn(`[AI Regrade] Rate limited (429). Retrying in 5s... (${retries} retries left)`);
+      await sleep(5000);
+      return evaluateWithAI(questionText, studentAnswer, questionType, maxMarks, retries - 1);
+    }
     console.error("AI evaluation error:", error)
-    return { accepted: false, reason: "AI evaluation failed" }
+    return { marksAwarded: 0, reason: "AI evaluation failed" }
   }
 }
 
@@ -126,56 +144,66 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const regradeDetails: RegradeDetail[] = []
     let totalUpdated = 0
 
+    console.log(`[REGRADE] Found ${fillShortQuestions.length} fill/short questions:`, fillShortQuestions.map(q => ({ id: q.id, type: q.questionType, text: q.questionText.substring(0, 50) })))
+    console.log(`[REGRADE] Processing ${results.length} results`)
+
     // Process each result
     for (const result of results) {
       const answers = result.answers as Record<string, string>
-      let additionalMarks = 0
+      let aiTotalMarks = 0
       const changes: RegradeDetail["changes"] = []
+
+      console.log(`[REGRADE] Student: ${result.student.name}, Current Score: ${result.score}, Answers:`, JSON.stringify(answers))
 
       for (const q of fillShortQuestions) {
         const studentAnswer = answers[q.id]?.toString().trim() || ""
-        const correctAnswer = q.correctAnswer.trim()
 
-        // Skip if student didn't answer
-        if (!studentAnswer) continue
+        console.log(`[REGRADE] Q: "${q.questionText.substring(0, 40)}" | Student Answer: "${studentAnswer}" | Type: ${q.questionType}`)
 
-        // Check if student already got it right with deterministic grading
-        const validAnswers = correctAnswer.split(",").map(a => a.trim().toLowerCase())
-        const alreadyCorrect = validAnswers.includes(studentAnswer.toLowerCase())
+        // Skip if student didn't answer at all
+        if (!studentAnswer) {
+          console.log(`[REGRADE] -> Skipped (empty answer)`)
+          continue
+        }
 
-        if (alreadyCorrect) continue // Already correct, skip
-
-        // Send to AI for evaluation
+        // Send EVERY fill/short answer to AI for evaluation using AI's own knowledge
         const aiResult = await evaluateWithAI(
           q.questionText,
-          correctAnswer,
           studentAnswer,
-          q.questionType
+          q.questionType,
+          q.marks
         )
 
-        if (aiResult.accepted) {
-          additionalMarks += q.marks
-          changes.push({
-            questionOrder: q.order,
-            questionText: q.questionText,
-            studentAnswer,
-            correctAnswer,
-            aiVerdict: aiResult.reason,
-            marksAwarded: q.marks
-          })
-        }
+        console.log(`[REGRADE] -> AI Result: ${aiResult.marksAwarded}/${q.marks} - ${aiResult.reason}`)
+
+        aiTotalMarks += aiResult.marksAwarded
+        changes.push({
+          questionOrder: q.order,
+          questionText: q.questionText,
+          studentAnswer,
+          correctAnswer: q.correctAnswer || "(AI self-evaluated)",
+          aiVerdict: aiResult.reason,
+          marksAwarded: aiResult.marksAwarded
+        })
       }
 
-      // Update score if AI found additional correct answers
-      if (additionalMarks > 0) {
-        const newScore = result.score + additionalMarks
+      // Calculate the new score:
+      // Start with the current score (which has 0 for fill/short from initial submission)
+      // Then add the AI-awarded marks for fill/short questions
+      // Since fill/short are always 0 in initial submission, new score = current score + aiTotalMarks
+      const newScore = result.score + aiTotalMarks
+      console.log(`[REGRADE] Total AI marks: ${aiTotalMarks}, Old Score: ${result.score}, New Score: ${newScore}`)
 
+      if (newScore !== result.score) {
         await prisma.result.update({
           where: { id: result.id },
           data: { score: newScore }
         })
 
         totalUpdated++
+      }
+
+      if (changes.length > 0) {
         regradeDetails.push({
           admno: result.admno,
           studentName: result.student.name,

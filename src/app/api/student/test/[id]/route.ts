@@ -90,9 +90,9 @@ export async function POST(req: Request, { params }: { params: { id: string } })
         // For jumbled questions, remove all whitespace to handle tokens joined by spaces
         isCorrect = studentAnswer.toLowerCase().replace(/\s+/g, "") === correctAnswer.toLowerCase().replace(/\s+/g, "")
       } else if (q.questionType === "fill" || q.questionType === "short") {
-        // Allow multiple correct answers separated by commas
-        const validAnswers = correctAnswer.split(",").map(a => a.trim().toLowerCase())
-        isCorrect = validAnswers.includes(studentAnswer.toLowerCase())
+        // Fill and Short Answer questions are graded by AI during regrade.
+        // Initial score is 0 for these; the admin runs "Regrade" to let AI evaluate.
+        isCorrect = false
       } else {
         // For other types like mcq and truefalse, case-insensitive comparison
         isCorrect = studentAnswer.toLowerCase() === correctAnswer.toLowerCase()

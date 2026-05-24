@@ -169,6 +169,42 @@ export async function PUT(req: Request) {
   }
 }
 
+export async function PATCH(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Only Admin can change student passwords" }, { status: 403 })
+  }
+
+  try {
+    const { admno, newPassword } = await req.json()
+
+    if (!admno || !newPassword) {
+      return NextResponse.json({ error: "Admission number and new password are required" }, { status: 400 })
+    }
+
+    if (newPassword.length < 4) {
+      return NextResponse.json({ error: "Password must be at least 4 characters" }, { status: 400 })
+    }
+
+    const existing = await prisma.student.findUnique({ where: { admno } })
+    if (!existing) {
+      return NextResponse.json({ error: "Student not found" }, { status: 404 })
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    await prisma.student.update({
+      where: { admno },
+      data: { password: hashedPassword }
+    })
+
+    return NextResponse.json({ success: true, message: "Password updated successfully" })
+  } catch (error: unknown) {
+    const err = error as Error
+    console.error("Student Password Update Error:", err)
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
 export async function DELETE(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== "ADMIN") {

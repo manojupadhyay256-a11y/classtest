@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, Suspense } from "react"
 import toast from "react-hot-toast"
 import * as XLSX from "xlsx"
 import Card from "@/components/ui/card"
-import { Search, Plus, X, Pencil, Check } from "lucide-react"
+import { Search, Plus, X, Pencil, Check, KeyRound, Eye, EyeOff } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 
@@ -33,6 +33,12 @@ function StudentsContent() {
   const [editingAdmno, setEditingAdmno] = useState<string | null>(null)
   const [editData, setEditData] = useState({ name: '', class: '', section: '' })
   const [isSaving, setIsSaving] = useState(false)
+
+  // Password reset state
+  const [passwordModal, setPasswordModal] = useState<{ admno: string; name: string } | null>(null)
+  const [newPassword, setNewPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [isResettingPassword, setIsResettingPassword] = useState(false)
 
   const fetchStudents = async () => {
     try {
@@ -123,6 +129,42 @@ function StudentsContent() {
     }
   }
 
+  const handleResetPassword = async () => {
+    if (!passwordModal) return
+    if (!newPassword.trim()) {
+      toast.error("Please enter a new password")
+      return
+    }
+    if (newPassword.length < 4) {
+      toast.error("Password must be at least 4 characters")
+      return
+    }
+
+    setIsResettingPassword(true)
+    try {
+      const res = await fetch("/api/students", {
+        method: "PATCH",
+        body: JSON.stringify({ admno: passwordModal.admno, newPassword }),
+        headers: { "Content-Type": "application/json" }
+      })
+
+      if (res.ok) {
+        toast.success(`Password updated for ${passwordModal.name}`)
+        setPasswordModal(null)
+        setNewPassword('')
+        setShowPassword(false)
+      } else {
+        const errorData = await res.json()
+        toast.error(errorData.error || "Failed to update password")
+      }
+    } catch (err) {
+      toast.error("Error updating password")
+      console.error(err)
+    } finally {
+      setIsResettingPassword(false)
+    }
+  }
+
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newStudent.admno || !newStudent.name || !newStudent.class || !newStudent.section) {
@@ -197,6 +239,70 @@ function StudentsContent() {
 
   return (
     <div className="space-y-5">
+      {/* Password Reset Modal */}
+      {passwordModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => { setPasswordModal(null); setNewPassword(''); setShowPassword(false) }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5 animate-in fade-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center border border-indigo-100">
+                <KeyRound className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-slate-900">Reset Password</h3>
+                <p className="text-xs text-slate-400 font-medium">{passwordModal.name} · {passwordModal.admno}</p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">New Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  className="w-full bg-slate-50 border-2 border-slate-100 text-slate-900 font-bold px-3 py-2.5 rounded-lg text-sm focus:outline-none focus:border-indigo-500 transition-all focus:bg-white pr-10"
+                  autoFocus
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleResetPassword() }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              <p className="text-[10px] text-slate-400 font-medium">Minimum 4 characters</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setNewPassword(passwordModal.admno)}
+              className="w-full text-left text-xs text-indigo-500 hover:text-indigo-700 font-bold transition-colors px-1"
+            >
+              ↻ Reset to Admission Number ({passwordModal.admno})
+            </button>
+
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => { setPasswordModal(null); setNewPassword(''); setShowPassword(false) }}
+                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-lg font-bold transition-all text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleResetPassword}
+                disabled={isResettingPassword || !newPassword.trim()}
+                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg font-bold transition-all text-sm shadow-md shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                {isResettingPassword ? "Updating..." : "Update Password"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <header className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
           <div>
@@ -400,6 +506,13 @@ function StudentsContent() {
                     {isAdmin ? (
                       <div className="flex items-center gap-1 flex-shrink-0 ml-2">
                         <button
+                          onClick={() => setPasswordModal({ admno: student.admno, name: student.name })}
+                          className="text-indigo-400 hover:text-indigo-600 p-2 transition-colors"
+                          title="Reset password"
+                        >
+                          <KeyRound className="w-3.5 h-3.5" />
+                        </button>
+                        <button
                           onClick={() => handleStartEdit(student)}
                           className="text-amber-500 hover:text-amber-600 p-2 transition-colors"
                           title="Edit student"
@@ -495,6 +608,13 @@ function StudentsContent() {
                         </div>
                       ) : isAdmin ? (
                         <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => setPasswordModal({ admno: student.admno, name: student.name })}
+                            className="text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-md transition-colors"
+                            title="Reset password"
+                          >
+                            <KeyRound className="w-3.5 h-3.5" />
+                          </button>
                           <button
                             onClick={() => handleStartEdit(student)}
                             className="text-amber-500 hover:text-amber-600 hover:bg-amber-50 p-1.5 rounded-md transition-colors"

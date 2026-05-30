@@ -1,15 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
-import Link from "next/link"
+import { useParams, useRouter } from "next/navigation"
 import { 
   Trophy, 
   ChevronLeft, 
   CheckCircle2, 
   XCircle, 
   Lock, 
-  BookOpen, 
   Star,
   Target,
   Clock,
@@ -52,6 +50,7 @@ interface Result {
 
 export default function StudentResultsDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const resultId = params.id as string
   const [result, setResult] = useState<Result | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -110,13 +109,13 @@ export default function StudentResultsDetailPage() {
           
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
             <div className="space-y-4">
-              <Link 
-                href="/student/dashboard" 
-                className="inline-flex items-center space-x-2 text-teal-400 font-bold text-xs uppercase tracking-widest transition-colors mb-2"
+              <button 
+                onClick={() => router.back()}
+                className="inline-flex items-center space-x-2 text-teal-400 font-bold text-xs uppercase tracking-widest transition-colors mb-2 hover:text-teal-300"
               >
                 <ChevronLeft size={16} />
-                <span>Dashboard</span>
-              </Link>
+                <span>Back</span>
+              </button>
               <div className="space-y-1">
                 <h1 className="text-3xl md:text-4xl font-black text-white leading-tight tracking-tight">
                   {result.test.title}
@@ -348,16 +347,16 @@ export default function StudentResultsDetailPage() {
         {/* Footer Navigation */}
         <footer className="pt-8 flex flex-col items-center space-y-6">
           <div className="w-16 h-1 bg-white/5 rounded-full"></div>
-          <Link 
-            href="/student/dashboard" 
+          <button 
+            onClick={() => router.back()}
             className="group flex items-center space-x-3 bg-white/5 hover:bg-teal-500 border border-white/10 hover:border-teal-400/50 px-8 py-4 rounded-2xl transition-all duration-500 shadow-lg hover:shadow-teal-500/20"
           >
             <div className="w-8 h-8 bg-white/10 rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-               <BookOpen size={16} />
+               <ChevronLeft size={16} />
             </div>
-            <span className="font-black text-sm uppercase tracking-widest text-slate-300 group-hover:text-white">Return to Control Center</span>
+            <span className="font-black text-sm uppercase tracking-widest text-slate-300 group-hover:text-white">Go Back</span>
             <ExternalLink size={14} className="text-slate-500 group-hover:text-white" />
-          </Link>
+          </button>
           
           <div className="text-center space-y-1">
             <p className="text-[9px] text-slate-500 font-black uppercase tracking-[0.3em]">Evaluation Integrity Verified</p>

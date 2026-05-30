@@ -73,8 +73,9 @@ REASON: <One brief sentence explaining why>`
       marksAwarded: marks,
       reason: reasonMatch ? reasonMatch[1].trim() : response
     }
-  } catch (error: any) {
-    if (error?.status === 429 && retries > 0) {
+  } catch (error: unknown) {
+    const err = error as { status?: number }
+    if (err?.status === 429 && retries > 0) {
       console.warn(`[AI Regrade] Rate limited (429). Retrying in 5s... (${retries} retries left)`);
       await sleep(5000);
       return evaluateWithAI(questionText, studentAnswer, questionType, maxMarks, retries - 1);

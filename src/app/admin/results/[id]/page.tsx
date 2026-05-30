@@ -165,6 +165,15 @@ export default function AdminResultsPage() {
     <div className="space-y-6">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-10">
         <div>
+          <button
+            onClick={() => router.back()}
+            className="text-blue-600 hover:text-blue-800 font-bold text-sm mb-2 flex items-center gap-1 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
           <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{testInfo?.title || "Test Results"}</h1>
           <p className="text-gray-500 text-sm">{testInfo?.subject} • Class {results[0]?.student.class || "-"}</p>
         </div>

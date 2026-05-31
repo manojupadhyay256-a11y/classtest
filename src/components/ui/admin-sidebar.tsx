@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
-import { LayoutDashboard, Users, FileText, Settings, LogOut, UserCog, BookOpen, MessageSquare, Mail } from "lucide-react"
+import { LayoutDashboard, Users, FileText, Settings, LogOut, UserCog, BookOpen, MessageSquare, Mail, FileBarChart } from "lucide-react"
 import { useSession } from "next-auth/react"
 
 const navItems = [
@@ -12,6 +12,7 @@ const navItems = [
   { label: "Students", href: "/admin/students", icon: Users },
   { label: "Teachers", href: "/admin/teachers", icon: UserCog, adminOnly: true },
   { label: "Tests", href: "/admin/tests", icon: FileText },
+  { label: "Overall Report", href: "/admin/overall-report", icon: FileBarChart },
   { label: "Notes", href: "/admin/notes", icon: BookOpen },
   { label: "Messages", href: "/admin/messages", icon: Mail },
   { label: "Feedback", href: "/admin/feedback", icon: MessageSquare, adminOnly: true },

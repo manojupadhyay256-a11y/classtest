@@ -17,13 +17,13 @@ import {
   BarChart3,
   ChevronRight,
   Play,
-  AlertCircle,
   Star,
   MessageCircle,
   Lightbulb,
   Crown,
   Flame,
   Sparkles,
+  Medal,
 } from "lucide-react"
 
 interface Test {
@@ -47,6 +47,10 @@ interface Stats {
   totalTests: number
   avgPercentage: number
   lastAttemptDate: string | null
+  sectionRank: number
+  classRank: number
+  totalInSection: number
+  totalInClass: number
 }
 
 // "Did you know?" tips for the dashboard
@@ -100,7 +104,7 @@ export default function StudentDashboardPage() {
   const { data: session } = useSession()
   const [availableTests, setAvailableTests] = useState<Test[]>([])
   const [results, setResults] = useState<Result[]>([])
-  const [stats, setStats] = useState<Stats>({ totalTests: 0, avgPercentage: 0, lastAttemptDate: null })
+  const [stats, setStats] = useState<Stats>({ totalTests: 0, avgPercentage: 0, lastAttemptDate: null, sectionRank: 0, classRank: 0, totalInSection: 0, totalInClass: 0 })
   const [unreadCount, setUnreadCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -378,29 +382,35 @@ export default function StudentDashboardPage() {
             </div>
           </div>
 
-          {/* Pending Tests */}
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex items-center gap-3 group hover:bg-white/[0.05] transition-all">
+          {/* Section Rank */}
+          <Link href="/student/rank-analysis" className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex items-center gap-3 group hover:bg-amber-500/5 hover:border-amber-500/15 transition-all">
             <div className="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-400 flex-shrink-0">
-              <AlertCircle size={20} />
+              <Medal size={20} />
             </div>
             <div className="min-w-0">
-              <p className="text-2xl font-extrabold text-white leading-none">{availableTests.length}</p>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Pending</p>
-            </div>
-          </div>
-
-          {/* Last Activity */}
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex items-center gap-3 group hover:bg-white/[0.05] transition-all">
-            <div className="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center text-violet-400 flex-shrink-0">
-              <Calendar size={20} />
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-extrabold text-white leading-none truncate">
-                {stats.lastAttemptDate ? formatDate(stats.lastAttemptDate) : "No activity"}
+              <p className="text-2xl font-extrabold text-amber-400 leading-none">
+                {stats.sectionRank > 0 ? `#${stats.sectionRank}` : "—"}
               </p>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Last Test</p>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">
+                {stats.totalInSection > 0 ? `Sec Rank / ${stats.totalInSection}` : "Sec Rank"}
+              </p>
             </div>
-          </div>
+          </Link>
+
+          {/* Class Rank */}
+          <Link href="/student/rank-analysis" className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex items-center gap-3 group hover:bg-indigo-500/5 hover:border-indigo-500/15 transition-all">
+            <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-400 flex-shrink-0">
+              <Trophy size={20} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-2xl font-extrabold text-indigo-400 leading-none">
+                {stats.classRank > 0 ? `#${stats.classRank}` : "—"}
+              </p>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">
+                {stats.totalInClass > 0 ? `Class Rank / ${stats.totalInClass}` : "Class Rank"}
+              </p>
+            </div>
+          </Link>
         </div>
 
         {/* ────────────────────────────────
@@ -612,7 +622,22 @@ export default function StudentDashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            {/* Rank Analysis */}
+            <Link
+              href="/student/rank-analysis"
+              className="group flex items-center gap-4 bg-white/[0.03] border border-white/[0.06] hover:bg-amber-500/5 hover:border-amber-500/20 rounded-2xl p-4 transition-all"
+            >
+              <div className="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-all flex-shrink-0">
+                <Medal size={20} />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">Rank Analysis</h3>
+                <p className="text-[10px] text-slate-500 font-medium">Chapter-wise ranking</p>
+              </div>
+              <ChevronRight size={14} className="text-slate-600 ml-auto flex-shrink-0 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+            </Link>
+
             {/* Performance Analytics */}
             <Link
               href="/student/performance"
@@ -631,16 +656,16 @@ export default function StudentDashboardPage() {
             {/* Study Materials */}
             <Link
               href="/student/notes"
-              className="group flex items-center gap-4 bg-white/[0.03] border border-white/[0.06] hover:bg-amber-500/5 hover:border-amber-500/20 rounded-2xl p-4 transition-all"
+              className="group flex items-center gap-4 bg-white/[0.03] border border-white/[0.06] hover:bg-emerald-500/5 hover:border-emerald-500/20 rounded-2xl p-4 transition-all"
             >
-              <div className="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-400 group-hover:bg-amber-500 group-hover:text-white transition-all flex-shrink-0">
+              <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all flex-shrink-0">
                 <Download size={20} />
               </div>
               <div className="min-w-0">
-                <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">Study Notes</h3>
+                <h3 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Study Notes</h3>
                 <p className="text-[10px] text-slate-500 font-medium">PDFs & materials</p>
               </div>
-              <ChevronRight size={14} className="text-slate-600 ml-auto flex-shrink-0 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+              <ChevronRight size={14} className="text-slate-600 ml-auto flex-shrink-0 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
             </Link>
 
             {/* Messages */}

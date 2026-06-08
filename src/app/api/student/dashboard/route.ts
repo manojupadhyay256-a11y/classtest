@@ -40,13 +40,61 @@ export async function GET() {
   const avgPercentage = totalTests > 0 ? (totalScore / totalTests) * 100 : 0
   const lastAttemptDate = results.length > 0 ? results[0].submittedAt : null
 
+  // ── Rank Computation ──
+  let sectionRank = 0
+  let classRank = 0
+  let totalInSection = 0
+  let totalInClass = 0
+
+  if (totalTests > 0) {
+    const testIds = results.map(r => r.testId)
+
+    // Fetch all results for the same tests
+    const allResults = await prisma.result.findMany({
+      where: { testId: { in: testIds } },
+      include: { student: { select: { admno: true, section: true } } },
+    })
+
+    // Compute avg percentage per student
+    const studentMap: Record<string, { section: string; totalPct: number; count: number }> = {}
+    for (const r of allResults) {
+      if (!studentMap[r.admno]) {
+        studentMap[r.admno] = { section: r.student.section, totalPct: 0, count: 0 }
+      }
+      studentMap[r.admno].totalPct += r.totalMarks > 0 ? (r.score / r.totalMarks) * 100 : 0
+      studentMap[r.admno].count++
+    }
+
+    const avgList = Object.entries(studentMap).map(([admno, data]) => ({
+      admno,
+      section: data.section,
+      avg: data.totalPct / data.count,
+    }))
+
+    // Sort descending by avg
+    avgList.sort((a, b) => b.avg - a.avg)
+
+    // Class rank
+    classRank = avgList.findIndex(s => s.admno === student.admno) + 1
+    totalInClass = avgList.length
+
+    // Section rank
+    const sectionList = avgList.filter(s => s.section === student.section)
+    sectionRank = sectionList.findIndex(s => s.admno === student.admno) + 1
+    totalInSection = sectionList.length
+  }
+
   return NextResponse.json({ 
     availableTests, 
     results,
     stats: {
       totalTests,
       avgPercentage: Math.round(avgPercentage),
-      lastAttemptDate
+      lastAttemptDate,
+      sectionRank,
+      classRank,
+      totalInSection,
+      totalInClass,
     }
   })
 }

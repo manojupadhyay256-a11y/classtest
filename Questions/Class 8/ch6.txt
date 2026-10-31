@@ -1,0 +1,165 @@
+Question: Which of the following is not a type of construct or statement that governs the flow of control in Python?
+Type: mcq
+A) Sequential Statements
+B) Conditional Statements
+C) Arithmetic Statements
+D) Iterative Statements
+Answer: C
+
+Question: In this construct, the statements in the program are executed in a sequential manner where one statement is followed by the other with no possibility of branching off.
+Type: fill
+Answer: Sequential Statements
+
+Question: Unscramble the letters to form a Python control flow statement type: VTIAEITER
+Type: jumbled
+Answer: iterative
+
+Question: Match the control statement types with their descriptions.
+Type: match
+Answer:
+Sequential Statements : Executed in a sequential manner with no branching
+Conditional Statements : Transfer control based on the output of a conditional expression
+Iterative Statements : Perform tasks repeatedly for a specific number of times or while a condition is true
+
+Question: The statements in a sequential construct are always executed one after another[cite: 14].
+Type: truefalse
+Answer: true
+
+Question: Which statement is used to evaluate only one condition in Python?
+Type: mcq
+A) if statement
+B) if...else statement
+C) if...elif...else statement
+D) sequential statement
+Answer: A
+
+Question: The ______ statement is used when either of the two actions is to be performed depending upon the result of the conditional expression.
+Type: fill
+Answer: if...else
+
+Question: Unscramble the letters to form a Python conditional keyword: LIfe
+Type: jumbled
+Answer: elif
+
+Question: Match the Python conditional structures with their primary uses.
+Type: match
+Answer:
+if statement : Evaluates only one condition and performs an action if True
+if...else statement : Chooses between two alternative blocks of statements based on True or False
+if...elif...else statement : Provides a compact way to perform multiple tests on a condition
+
+Question: It is compulsory in Python to indent the statements in the condition body using a tab space[cite: 15].
+Type: truefalse
+Answer: true
+
+Question: Which symbol is required immediately after the condition in an if statement?
+Type: mcq
+A) Semicolon (;)
+B) Colon (:)
+C) Comma (,)
+D) Hash (#)
+Answer: B
+
+Question: Statements that allow you to give conditions, or to iterate, are collectively called ______ statements.
+Type: fill
+Answer: control
+
+Question: Unscramble the letters to form a syntax error prevention requirement: NATIONDENTI
+Type: jumbled
+Answer: indentation
+
+Question: Match the Python terms with their correct definitions or characters.
+Type: match
+Answer:
+Colon (:) : Required at the end of an if condition statement
+Tab space : Compulsory indentation for the condition body in Python
+False condition : Causes the else block or subsequent elif blocks to execute
+True condition : Causes the main if block statements to execute
+
+Question: The if...elif statement can be seen as a nested-if statement within an else statement[cite: 16].
+Type: truefalse
+Answer: true
+
+Question: Which of the following statements causes the program control to transfer to a specific location depending on a condition?
+Type: mcq
+A) Sequential
+B) Conditional
+C) Variable
+D) Assignment
+Answer: B
+
+Question: The ______ statement is used when you need to work with multiple conditions in a compact way.
+Type: fill
+Answer: if...elif...else
+
+Question: Unscramble the letters to form a programming loop term: NOITARETI
+Type: jumbled
+Answer: iteration
+
+Question: Match the code elements with their roles in Python decision-making.
+Type: match
+Answer:
+input() : Takes input from the user in a program
+print() : Displays the output result on the screen
+if : Evaluates an initial condition expression
+else : Handles the alternative when all preceding conditions are false
+
+Question: Control statements determine the flow of execution in a program[cite: 17].
+Type: truefalse
+Answer: true
+
+Question: Which of the following is required to start the condition body in Python?
+Type: mcq
+A) Character space
+B) Tab space
+C) Parentheses
+D) Curly braces
+Answer: B
+
+Question: The ______ construct involves a choice between two alternatives referred to as True and False[cite: 14].
+Type: fill
+Answer: conditional
+
+Question: Unscramble the letters to form a conditional outcome word: EUTR
+Type: jumbled
+Answer: true
+
+Question: Match the example scenarios with the appropriate Python statement type.
+Type: match
+Answer:
+Calculating the area of a square : Sequential Statements
+Checking eligibility for driving a car : if...else Statement
+Printing student grades based on average marks : if...elif...else Statement
+Repeating a task 100 times : Iterative Statements
+
+Question: In Python, you do not need to indent statements inside the condition body[cite: 15].
+Type: truefalse
+Answer: false
+
+Question: Which of the following is not a type of control statement construct?
+Type: mcq
+A) Sequential
+B) Conditional
+C) Iterative
+D) Logical
+Answer: D
+
+Question: A ______ is a list inside another list, or a condition inside another condition in programming terminology.
+Type: fill
+Answer: nested
+
+Question: Unscramble the letters to form a Python function used to get text values: TUPNI
+Type: jumbled
+Answer: input
+
+Question: Match the comparison or logical contexts with their Python handling characteristics.
+Type: match
+Answer:
+Single alternative condition : Handled using a simple if statement
+Two alternative choices : Handled using if...else statements
+Multiple alternative tests : Handled using if...elif...else statements
+Sequential execution flow : Statements executed one after another without branching
+
+Question: Conditional statements help the program control to be transferred to a specific location depending on the output of the conditional expression[cite: 14].
+Type: truefalse
+Answer: true

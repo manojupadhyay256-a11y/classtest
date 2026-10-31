@@ -1,0 +1,289 @@
+Question: Which feature of Excel arranges data in ascending or descending order?
+Type: mcq
+A) Filtering
+B) Sorting
+C) Conditional Formatting
+D) Charting
+Answer: B
+
+Question: To remove all filters from a list, which tab and group command is used?
+Type: mcq
+A) Insert tab > Charts group
+B) Data tab > Sort & Filter group
+C) Home tab > Styles group
+D) Page Layout tab > Page Setup group
+Answer: B
+
+Question: What keyboard shortcut is used to insert a chart in the active worksheet?
+Type: mcq
+A) F1
+B) F5
+C) F11
+D) F12
+Answer: C
+
+Question: Which chart type is best suited when there is only one row or column of data shown as proportional to the sum of all items?
+Type: mcq
+A) Bar
+B) Column
+C) Pie
+D) Radar
+Answer: C
+
+Question: When sorting data in Excel, which order does Excel follow by default?
+Type: mcq
+A) Letters, numbers, blank cells
+B) Numbers, letters, blank cells
+C) Blank cells, numbers, letters
+D) Numbers, blank cells, letters
+Answer: B
+
+Question: Which tab contains the Conditional Formatting option?
+Type: mcq
+A) Data tab
+B) Home tab
+C) Insert tab
+D) Review tab
+Answer: B
+
+Question: How many new tabs appear on the Office Ribbon when a chart is inserted?
+Type: mcq
+A) Two
+B) Three
+C) Four
+D) Five
+Answer: B
+
+Question: Which button is used in the Sort dialog box to add more fields for sorting multiple criteria?
+Type: mcq
+A) Add Field
+B) Add Level
+C) Add Column
+D) Add Sort
+Answer: B
+
+Question: Which rule option under Conditional Formatting can be used to highlight cells containing values between specific limits?
+Type: mcq
+A) Top/Bottom Rules
+B) Color Scales
+C) Highlight Cells Rules
+D) Data Bars
+Answer: C
+
+Question: Which chart type is shaped like a doughnut?
+Type: mcq
+A) Pie
+B) Doughnut
+C) Bubble
+D) Surface
+Answer: B
+
+Question: ______ data means arranging the data in ascending or descending order for easy analysis.
+Type: fill
+Answer: Sorting
+
+Question: The ______ feature temporarily hides unwanted data and displays only records that meet specific criteria.
+Type: fill
+Answer: Filter
+
+Question: To prepare a filtered list at a new location in Advanced Filter, choose the ______ option.
+Type: fill
+Answer: Copy to another location
+
+Question: Excel allows you to apply formatting only to cells that satisfy a specific condition using ______ Formatting.
+Type: fill
+Answer: Conditional
+
+Question: Charts make your data easy to understand, attractive, and ______.
+Type: fill
+Answer: presentable
+
+Question: The ______ filter feature is used when you wish to add more than one criterion using logical operators.
+Type: fill
+Answer: Advanced
+
+Question: To clear conditional formatting, click on Conditional Formatting under the Home tab and select ______.
+Type: fill
+Answer: Clear Rules
+
+Question: The ______ tab appears under Chart Tools to change chart type or chart options.
+Type: fill
+Answer: Design
+
+Question: The ______ tab under Chart Tools is used to add titles, axis labels, and data labels to a chart.
+Type: fill
+Answer: Layout
+
+Question: Sort Z to A sorts text values in reverse alphabetical order and numeric values from ______ to lowest.
+Type: fill
+Answer: highest
+
+Question: Unscramble the letters to form an Excel feature used to arrange data in order: OSRNTIG
+Type: jumbled
+Answer: sorting
+
+Question: Unscramble the letters to form an Excel feature used to isolate specific data: IFLTRE
+Type: jumbled
+Answer: filter
+
+Question: Unscramble the letters to form a visual representation of data: TRCHA
+Type: jumbled
+Answer: chart
+
+Question: Unscramble the letters to form a chart type used for proportions: EPI
+Type: jumbled
+Answer: pie
+
+Question: Unscramble the letters to form a chart type used to show trends over time: ENIL
+Type: jumbled
+Answer: line
+
+Question: Unscramble the letters to form a chart element showing legend/labels explanation: EGDLNE
+Type: jumbled
+Answer: legend
+
+Question: Unscramble the letters to form the tab where formatting tools are located: EOHM
+Type: jumbled
+Answer: home
+
+Question: Unscramble the letters to form a chart type shaped like rings: TUDNOHUG
+Type: jumbled
+Answer: doughnut
+
+Question: Unscramble the letters to form the tab used for inserting charts: TSRENI
+Type: jumbled
+Answer: insert
+
+Question: Unscramble the letters to form a chart element displaying grid lines: SILDNIRGE
+Type: jumbled
+Answer: gridlines
+
+Question: Match the chart types to their primary uses.
+Type: match
+Answer:
+Pie : Proportional part to the sum of all items
+Bar : Comparison among individual items
+Line : Trend of data over a period of time
+XY/Scatter : Comparison without reference to time
+Doughnut : Same as pie chart but shaped like a doughnut
+
+Question: Match the conditional formatting features/options to their descriptions.
+Type: match
+Answer:
+Highlight Cells Rules : Highlights cells matching conditions like Between or Less Than
+Top/Bottom Rules : Used to find Top 10 Items or Above Average
+Clear Rules : Removes conditional formatting from selected range
+Between : Applies formatting to values in a specified range
+Data tab : Contains Sort & Filter commands
+
+Question: Match the chart tools ribbon tabs with their functions.
+Type: match
+Answer:
+Design Tab : Change chart type and chart layout presets
+Layout Tab : Insert chart title, axis titles, and data labels
+Format Tab : Change text colors, shapes, fonts, and outlines
+Data Tab : Access sorting and filtering tools
+Home Tab : Access conditional formatting rules
+
+Question: Match the sorting/filtering terminology to its function.
+Type: match
+Answer:
+Sort A to Z : Lowest to highest for numeric values
+Sort Z to A : Highest to lowest for numeric values
+Auto Filter : Automatically lists filtering options with drop-down arrows
+Advanced Filter : Uses complex multiple criteria ranges
+Add Level : Button used to sort by multiple columns
+
+Question: Match the chart components to their correct description.
+Type: match
+Answer:
+Chart Title : Name given to the chart overall
+Legend : Explains colors or patterns assigned to data series
+X-axis : Horizontal axis of the chart
+Y-axis : Vertical axis of the chart
+Gridlines : Lines extending across the plot area to aid reading values
+
+Question: Match the Excel function to the tab it resides under.
+Type: match
+Answer:
+Sort & Filter : Data tab
+Insert Chart : Insert tab
+Conditional Formatting : Home tab
+Layout Modifications : Layout tab under Chart Tools
+Formatting Chart Features : Format tab under Chart Tools
+
+Question: Match the default sort order sequence in Excel.
+Type: match
+Answer:
+First : Numbers
+Second : Letters
+Third : Blank cells
+Sort A to Z : Ascending order
+Sort Z to A : Descending order
+
+Question: Match the specific chart types with their distinct feature icons.
+Type: match
+Answer:
+Column Chart : Vertical bars showing comparisons
+Bar Chart : Horizontal bars showing comparisons
+Bubble Chart : Markers varying in size comparing items
+Radar Chart : Total value comparison across data series
+Surface Chart : Finds combination between two sets of data
+
+Question: Match the Excel action to its effect.
+Type: match
+Answer:
+Filtering : Temporarily hides unwanted data
+Sorting : Reorders data in rows
+F11 key : Quick shortcut to generate a chart
+Clear Rules : Clears conditional formatting
+Add Level : Adds secondary criteria for sorting
+
+Question: Match the criteria options in Advanced Filter.
+Type: match
+Answer:
+List range : Selected table range to be filtered
+Criteria range : Cells specifying filtering conditions
+Copy to : Target cell location for filtered output
+Filter the list in-place : Overwrites the original list
+Unique records only : Eliminates duplicate entries in results
+
+Question: Excel can sort data in a single field only.
+Type: truefalse
+Answer: false
+
+Question: Filtering data permanently deletes unwanted rows from the worksheet.
+Type: truefalse
+Answer: false
+
+Question: Pressing F11 inserts a chart into the active worksheet after selecting data.
+Type: truefalse
+Answer: true
+
+Question: The Conditional Formatting option is available under the Styles group of the Home tab.
+Type: truefalse
+Answer: true
+
+Question: A Pie chart can be used when there are multiple rows and columns of data series to compare.
+Type: truefalse
+Answer: false
+
+Question: When sorting data in ascending order, blank cells are always placed at the top.
+Type: truefalse
+Answer: false
+
+Question: Three new tabs (Design, Layout, and Format) appear on the Ribbon when a chart is inserted.
+Type: truefalse
+Answer: true
+
+Question: The Advanced Filter feature allows you to specify more than one criterion.
+Type: truefalse
+Answer: true
+
+Question: A Bar chart shows data comparisons using horizontal bars.
+Type: truefalse
+Answer: true
+
+Question: The Top/Bottom Rules option in Conditional Formatting cannot be modified to show custom numbers of items.
+Type: truefalse
+Answer: false

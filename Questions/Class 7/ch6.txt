@@ -1,0 +1,166 @@
+Question: Which tag is used to create an unordered list in HTML5?
+Type: mcq
+A) <ol>
+B) <ul>
+C) <dl>
+D) <list>
+Answer: B
+
+Question: Every element of a list is called a list item and is represented by the ______ tag.
+Type: fill
+Answer: <li>
+
+Question: Unscramble the letters to form an HTML tag name used to define table rows: RRT
+Type: jumbled
+Answer: tr
+
+Question: Match the HTML tags with their respective descriptions.
+Type: match
+Answer:
+<ul> : Unordered list
+<ol> : Ordered list
+<dl> : Description list
+<caption> : Table title
+
+Question: The default marker for an unordered list is a bullet or disc.
+Type: truefalse
+Answer: true
+
+Question: Which attribute is used with the <ul> tag to change the style of the list item marker to square?
+Type: mcq
+A) type="disc"
+B) type="circle"
+C) type="square"
+D) type="bullet"
+Answer: C
+
+Question: An ordered list is a ______ list of items.
+Type: fill
+Answer: numbered
+
+Question: Unscramble the letters to form a property used to set an image as a list-item marker: TSLIYTELEGAMI
+Type: jumbled
+Answer: list-style-image
+
+Question: Match the <ol> type attributes with their corresponding list styles.
+Type: match
+Answer:
+"1" : Numbers
+"a" : Lowercase letters
+"A" : Uppercase letters
+"I" : Upper case Roman numbers
+
+Question: The reversed attribute is a new attribute introduced in HTML5 to arrange items in descending order.
+Type: truefalse
+Answer: true
+
+Question: Which attribute is used to decide the start value of the first item in an ordered list?
+Type: mcq
+A) begin
+B) start
+C) index
+D) first
+Answer: B
+
+Question: A list inside another list forms a ______ list.
+Type: fill
+Answer: nested
+
+Question: Unscramble the letters to form a tag used to define a data term in a description list: TDD
+Type: jumbled
+Answer: dt
+
+Question: Match the description list tags with their functions.
+Type: match
+Answer:
+<dl> : Defines the description list
+<dt> : Defines the data term
+<dd> : Describes each term
+
+Question: The <dd> tag describes each term in a description list.
+Type: truefalse
+Answer: true
+
+Question: Which tag is used to define a table in HTML?
+Type: mcq
+A) <tab>
+B) <table>
+C) <tbl>
+D) <tabr>
+Answer: B
+
+Question: The ______ tag is a container tag used to define the title of a table.
+Type: fill
+Answer: <caption>
+
+Question: Unscramble the letters to form an HTML tag used for table headings: HTH
+Type: jumbled
+Answer: th
+
+Question: Match the table attributes with their functions.
+Type: match
+Answer:
+border : Specifies the width or thickness of the table borders
+cellspacing : Adjusts the space between two adjacent cells
+cellpadding : Adjusts the space between the border and the contents of a cell
+bgcolor : Changes the background colour of the table or cell
+
+Question: The default value of the table border attribute is zero.
+Type: truefalse
+Answer: true
+
+Question: Which attribute is applied when a single cell is extended for more than one row?
+Type: mcq
+A) colspan
+B) rowspan
+C) spanrow
+D) multiline
+Answer: B
+
+Question: The ______ attribute is used to display the position of text in a cell horizontally.
+Type: fill
+Answer: align
+
+Question: Unscramble the letters to form an attribute used for vertical alignment: NGLVIA
+Type: jumbled
+Answer: valign
+
+Question: Match the frame options with their border display descriptions.
+Type: match
+Answer:
+"box" or "border" : Four sides
+"above" : Top side
+"below" : Bottom side
+"void" : No border of table
+
+Question: The <tr> tag defines a table row.
+Type: truefalse
+Answer: true
+
+Question: Which tag is used to define table data, that is, the data inside the rows?
+Type: mcq
+A) <data>
+B) <td0>
+C) <td>
+D) <tdata>
+Answer: C
+
+Question: The ______ attribute allows you to display only the specified borders of the table.
+Type: fill
+Answer: frames
+
+Question: Unscramble the letters to form a property used to place list markers inside or outside: NOITISOPSLYTSIL
+Type: jumbled
+Answer: list-style-position
+
+Question: Match the list properties with their general descriptions.
+Type: match
+Answer:
+list-style-type : Sets the type of the list-item marker
+list-style-image : Sets an image as the list-item marker
+list-style-position : Sets where the list-item marker is placed
+list-style : Shorthand property for setting all list properties
+
+Question: CSS list properties allow you to beautify your lists by setting custom markers and images.
+Type: truefalse
+Answer: true

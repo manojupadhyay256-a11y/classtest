@@ -10,7 +10,8 @@ import {
   MessageSquare,
   Loader2,
   CheckCheck,
-  Check
+  Check,
+  ShieldAlert
 } from "lucide-react"
 import { toast } from "react-hot-toast"
 
@@ -24,6 +25,7 @@ interface Message {
   id: string
   content: string
   senderRole: string
+  type: string // "NORMAL" | "WARNING"
   createdAt: string
   isRead: boolean
 }
@@ -296,7 +298,30 @@ export default function StudentMessagesPage() {
                   <>
                     {messages.map((msg, i) => {
                       const isMe = msg.senderRole === "STUDENT"
+                      const isWarning = msg.type === "WARNING"
                       const showAvatar = i === messages.length - 1 || messages[i + 1]?.senderRole !== msg.senderRole
+
+                      // Render WARNING as a prominent full-width banner for student
+                      if (isWarning) {
+                        return (
+                          <div key={msg.id} className="flex justify-center my-3">
+                            <div className="w-full max-w-sm rounded-2xl border-2 border-amber-300 overflow-hidden shadow-xl animate-in zoom-in-95 duration-300">
+                              <div className="bg-gradient-to-r from-amber-500 to-red-500 px-4 py-2.5 flex items-center gap-2">
+                                <ShieldAlert size={18} className="text-white flex-shrink-0 animate-pulse" />
+                                <span className="text-white font-black text-xs uppercase tracking-widest flex-1">⚠️ Official Warning</span>
+                              </div>
+                              <div className="bg-gradient-to-b from-amber-50 to-red-50 px-4 py-4">
+                                <p className="text-sm font-semibold text-slate-800 leading-relaxed">{msg.content}</p>
+                                <div className="flex items-center justify-between mt-3">
+                                  <p className="text-[9px] font-black text-amber-600 uppercase tracking-widest">{formatTime(msg.createdAt)}</p>
+                                  <p className="text-[9px] font-bold text-red-500 uppercase tracking-wider">From your Teacher</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }
+
                       return (
                         <div key={msg.id} className={`flex gap-2 ${isMe ? "justify-end" : "justify-start"}`}>
                           {!isMe && showAvatar && (

@@ -5,6 +5,57 @@ import { authOptions } from "@/lib/auth"
 
 export const dynamic = 'force-dynamic'
 
+export async function DELETE(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  try {
+    const body = await req.json().catch(() => ({}))
+    const { messageIds, studentId, deleteAll } = body as {
+      messageIds?: string[]
+      studentId?: string
+      deleteAll?: boolean
+    }
+
+    // Delete specific messages by ID
+    if (messageIds && Array.isArray(messageIds) && messageIds.length > 0) {
+      const result = await prisma.message.deleteMany({
+        where: {
+          id: { in: messageIds },
+          teacherId: session.user.id // ensure ownership
+        }
+      })
+      return NextResponse.json({ success: true, deleted: result.count })
+    }
+
+    // Delete all messages in a specific thread (student ↔ teacher)
+    if (studentId && !deleteAll) {
+      const result = await prisma.message.deleteMany({
+        where: {
+          teacherId: session.user.id,
+          studentId: studentId
+        }
+      })
+      return NextResponse.json({ success: true, deleted: result.count })
+    }
+
+    // Delete ALL messages for this teacher
+    if (deleteAll) {
+      const result = await prisma.message.deleteMany({
+        where: { teacherId: session.user.id }
+      })
+      return NextResponse.json({ success: true, deleted: result.count })
+    }
+
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json({ error: "Internal error" }, { status: 500 })
+  }
+}
+
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions)
   if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TEACHER")) {
@@ -90,12 +141,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
+    const msgType = body.type === "WARNING" ? "WARNING" : "NORMAL"
+
     const message = await prisma.message.create({
       data: {
         studentId,
         teacherId: session.user.id as string,
         content,
-        senderRole: "TEACHER"
+        senderRole: "TEACHER",
+        type: msgType
       }
     })
 

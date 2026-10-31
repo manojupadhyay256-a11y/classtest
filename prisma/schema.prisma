@@ -126,6 +126,7 @@ model Message {
   teacher    Teacher  @relation(fields: [teacherId], references: [id])
   content    String
   senderRole String   // "STUDENT" | "TEACHER"
+  type       String   @default("NORMAL") // "NORMAL" | "WARNING"
   isRead     Boolean  @default(false)
   createdAt  DateTime @default(now())
 }

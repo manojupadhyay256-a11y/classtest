@@ -1,0 +1,173 @@
+Question: Which type of query asks for information from the user via a dialog box before displaying the datasheet?
+Type: mcq
+A) Select Query
+B) Parameter Query
+C) Action Query
+D) Crosstab Query
+Answer: B
+
+Question: What file extension is automatically assigned to MS Access 2010 database files?
+Type: mcq
+A) .docx
+B) .xlsx
+C) .accdb
+D) .pptx
+Answer: C
+
+Question: Which database object allows you to view, enter, modify, or delete data one record at a time?
+Type: mcq
+A) Query
+B) Form
+C) Report
+D) Table
+Answer: B
+
+Question: Which key field in a table stores values that match the Primary Key in another table to establish a relationship?
+Type: mcq
+A) Foreign Key
+B) Secondary Key
+C) Guest Key
+D) Compound Key
+Answer: A
+
+Question: Which query type is used to modify, delete, and add records from one table to another?
+Type: mcq
+A) Auto Lookup Query
+B) Crosstab Query
+C) Action Query
+D) Parameter Query
+Answer: C
+
+Question: Which tab in MS Access 2010 contains the Relationships button to link two tables?
+Type: mcq
+A) Home tab
+B) Create tab
+C) External Data tab
+D) Database Tools tab
+Answer: D
+
+Question: The ______ Key uniquely identifies each record in a database table.
+Type: fill
+Answer: Primary
+
+Question: A ______ is a database object used to analyze data and calculate results for printing or presentation.
+Type: fill
+Answer: Report
+
+Question: All tables, queries, forms, and reports created in a database are displayed in the ______ Pane.
+Type: fill
+Answer: Navigation
+
+Question: Arranging data in ascending or descending order in a table is done using a ______ Query.
+Type: fill
+Answer: Sort
+
+Question: The bottom-half of the Query window is called the Query Design ______.
+Type: fill
+Answer: Pane
+
+Question: To delete a relationship in the Relationships window, right-click on the relationship line and choose ______ from the context menu.
+Type: fill
+Answer: Delete
+
+Question: Unscramble the letters to form the database object used to ask questions about stored data: EUYRQ
+Type: jumbled
+Answer: query
+
+Question: Unscramble the letters to form the database object used for user-friendly data entry: OMFR
+Type: jumbled
+Answer: form
+
+Question: Unscramble the letters to form the object used for presenting and analyzing output: EROTRP
+Type: jumbled
+Answer: report
+
+Question: Unscramble the letters to form the field that uniquely identifies each record: IMPARRY
+Type: jumbled
+Answer: primary
+
+Question: Unscramble the letters to form the key that matches a Primary Key in another table: ERFIGNO
+Type: jumbled
+Answer: foreign
+
+Question: Unscramble the letters to form the Access extension format: BDCACA
+Type: jumbled
+Answer: accdb
+
+Question: Match the query types with their correct descriptions.
+Type: match
+Answer:
+Select Query : Displays selected data from one or more tables
+Parameter Query : Asks for user input via a dialog box before running
+Action Query : Modifies, deletes, or adds records between tables
+Totals/Summary Query : Calculates sums and averages without showing individual records
+Crosstab Query : Displays values with one field on top and another down the side
+
+Question: Match the database objects with their primary functions.
+Type: match
+Answer:
+Table : Stores raw data in rows and columns
+Query : Answers specific questions about stored data
+Form : Provides an easy-to-understand layout to enter or view one record at a time
+Report : Analyzes and formats data for printing or summaries
+Navigation Pane : Displays all objects created in the database
+
+Question: Match the dialog options or steps to their actions.
+Type: match
+Answer:
+Show Table : Box used to select tables for setting relationships or queries
+Run Button : Executes the designed query
+Edit Relationships : Dialog box used to drag and drop matching key fields
+Save Object As : Option under File tab to save an individual query or form
+Design View : Used to define fields, data types, and primary keys
+
+Question: Match the key concepts to their definitions.
+Type: match
+Answer:
+Primary Key : Field that uniquely identifies each record in a table
+Foreign Key : Field storing values matching a Primary Key in another table
+Datasheet View : Displays table data in grid format
+Query Design Pane : Bottom-half of the query window where criteria are specified
+.accdb : Default file extension for MS Access 2010
+
+Question: Match the form navigation buttons to their respective actions.
+Type: match
+Answer:
+First Record : Navigates directly to the very first record
+Previous Record : Moves back one record from the current record
+Next Record : Moves forward one record after the current record
+Last Record : Navigates directly to the final record in the table
+New (blank) Record : Opens a blank entry form to insert a new record
+
+Question: Match the MS Access tabs with their available commands.
+Type: match
+Answer:
+Database Tools tab : Contains the Relationships command
+Create tab : Contains options to build Queries, Forms, and Reports
+Design tab : Contains the Run button for executing queries
+File tab : Contains Save Database As options
+Home tab : Contains View toggle options
+
+Question: A query can only select and display data from a single table at a time.
+Type: truefalse
+Answer: false
+
+Question: All database files created in MS Access 2010 have the .accdb file extension.
+Type: truefalse
+Answer: true
+
+Question: A Form allows you to view, enter, modify, or delete data for multiple records simultaneously in a single view.
+Type: truefalse
+Answer: false
+
+Question: Parameter Queries require user input through a dialog box to display results.
+Type: truefalse
+Answer: true
+
+Question: MS Access provides seven primary types of queries.
+Type: truefalse
+Answer: true
+
+Question: To edit a table relationship, you can double-click on the relationship line in the Relationships window.
+Type: truefalse
+Answer: true
